@@ -1,4 +1,4 @@
-import UserCard from "../Components/UserCard";
+import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 
 interface Props {
@@ -8,19 +8,12 @@ interface Props {
 const Home = ({ children }: Props) => {
   return (
     <div className="flex flex-col  h-screen">
-      <div className="bg-[#F2F2F2] h-[55px] w-full flex justify-between ">
-        <img
-          className="w-[114px] h-[36px] my-[9px] ml-[29px]"
-          src="../src/assets/redlogodashboard.svg"
-          alt=""
-        />
-        <UserCard username="Brown Dan" tier="Admin for Association"></UserCard>
-      </div>
+      <NavBar></NavBar>
       <div className=" flex flex-1 w-full relative max-h-[calc(100vh-55px)]">
         <SideBar>home</SideBar>
 
         <div className="w-[76%] flex flex-col   items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
-          <p className=" font-[600] text-[32px] mt-8 ">
+          <p className=" font-[600] text-[32px] mt-4 ">
             Welcome back, Mr <span>{children}</span> !
           </p>
           <div className=" flex  w-[66%] h-[305px] bg-[#F2F2F2] rounded-[15px] mt-[53px] relative ">
@@ -49,7 +42,7 @@ const Home = ({ children }: Props) => {
               <img src="../src/assets/home-design.svg" alt="" />
             </div>
           </div>
-          <div className="flex gap-5 w-[66%] mt-[73px] mb-[20px]  justify-between">
+          <div className="flex gap-5 w-[66%] mt-[2.3%] mb-[20px]  justify-between">
             <div className="w-[460px] h-[286px] bg-[#F2F2F2] rounded-[15px] relative ">
               <p className="text-[32px] font-[600] ml-[19px] mt-[19px] ">
                 Incident Report
@@ -70,7 +63,7 @@ const Home = ({ children }: Props) => {
             </div>
             <div className="w-[460px] h-[286px] bg-[#F2F2F2] rounded-[15px] relative ">
               <p className="text-[32px] font-[600] ml-[19px] mt-[19px] ">
-                Incident Report
+                Weekly Report
               </p>
               <hr className="mt-[18px] ml-[26px] w-[222px] text-[#C9C9C9] " />
               <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">

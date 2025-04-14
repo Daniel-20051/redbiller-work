@@ -86,7 +86,7 @@ const SideBar = ({ children }: Props) => {
           <p className="text-[15px] font-[500] ">Weekly Report</p>
         </Link>
         <Link
-          to="/"
+          to="/home"
           className={
             children === "tasks"
               ? "text-white  flex w-full h-[65px] font-bold bg-primary gap-3 items-center "

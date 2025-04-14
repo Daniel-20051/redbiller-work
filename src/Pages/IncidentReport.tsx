@@ -1,4 +1,4 @@
-import UserCard from "../Components/UserCard";
+import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import IncidentItem from "../Components/IncidentItem";
 import { Link } from "react-router-dom";
@@ -6,14 +6,7 @@ import { Link } from "react-router-dom";
 const IncidentReport = () => {
   return (
     <div className="flex flex-col h-screen">
-      <div className="bg-[#F2F2F2] h-[55px] w-full flex justify-between ">
-        <img
-          className="w-[114px] h-[36px] my-[9px] ml-[29px]"
-          src="../src/assets/redlogodashboard.svg"
-          alt=""
-        />
-        <UserCard username="Brown Dan" tier="Admin for Association"></UserCard>
-      </div>
+      <NavBar></NavBar>
       <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
         <SideBar>incident-report</SideBar>
         <div className="w-[76%] flex ">

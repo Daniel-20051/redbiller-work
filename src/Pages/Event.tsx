@@ -1,4 +1,4 @@
-import UserCard from "../Components/UserCard";
+import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import { useState } from "react";
 import EventItem from "../Components/EventItem";
@@ -8,14 +8,7 @@ const Event = () => {
 
   return (
     <div className="flex flex-col h-screen ">
-      <div className="bg-[#F2F2F2] h-[55px] w-full flex justify-between">
-        <img
-          className="w-[114px] h-[36px] my-[9px] ml-[29px]"
-          src="../src/assets/redlogodashboard.svg"
-          alt=""
-        />
-        <UserCard username="Brown Dan" tier="Admin for Association"></UserCard>
-      </div>
+      <NavBar></NavBar>
       <div className=" flex flex-1 w-full overflow-y-auto  max-h-[calc(100vh-55px)] ">
         <SideBar>event</SideBar>
 
