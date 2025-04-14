@@ -2,6 +2,10 @@ import Inputfeild from "../Components/Inputfeild";
 const currentYear = new Date().getFullYear();
 
 const Login = () => {
+  const hnadleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <>
       <div className="flex h-screen">
@@ -29,7 +33,7 @@ const Login = () => {
             <p className="font-main font-normal text-[14px]  ">
               Using your Biller ID
             </p>
-            <form action="submit">
+            <form onClick={hnadleLogin}>
               <div className="mb-[32px] mt-[67px]">
                 <Inputfeild>Biller ID / Email</Inputfeild>
               </div>
