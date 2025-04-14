@@ -7,7 +7,7 @@ const Login = () => {
       <div className="flex h-screen">
         <div
           style={{ backgroundImage: "url('../src/assets/bg-pic.png')" }}
-          className="side-bar bg- w-[35%] bg-cover relative "
+          className="side-bar bg- w-[30%] bg-cover relative "
         >
           <img
             className="absolute top-0 left-0"
@@ -21,7 +21,7 @@ const Login = () => {
             It doesn’t end here....
           </p>
         </div>
-        <div className="main-content w-[64.5%] relative">
+        <div className="main-content w-[70%] relative">
           <div className="flex flex-col items-center h-screen justify-center ">
             <p className="font-main font-semibold text-[32px] mb-0 ">
               Login to your <span className="text-primary">account</span>
