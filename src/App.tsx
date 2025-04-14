@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import Login from "./Pages/Login";
 import Home from "./Pages/Home";
 import EventInfo from "./Pages/EventInfo";
@@ -8,8 +9,10 @@ import IncidentReport from "./Pages/IncidentReport";
 import IncidentCreate from "./Pages/IncidentCreate";
 import WeeklyCreate from "./Pages/WeeklyCreate";
 import Profile from "./Pages/Profile";
+import User from "./Pages/Users";
 
 const App = () => {
+  const [isAdmin, setIsAdmin] = useState(true);
   return (
     <div>
       <BrowserRouter>
@@ -21,6 +24,7 @@ const App = () => {
           <Route path="/weekly-report" element={<WeeklyReport />} />
           <Route path="/weekly-report/create" element={<WeeklyCreate />} />
           <Route path="/incident-report" element={<IncidentReport />} />
+          {isAdmin && <Route path="/users" element={<User />} />}
           <Route path="/incident-report/create" element={<IncidentCreate />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
