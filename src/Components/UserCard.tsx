@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 interface Props {
@@ -24,6 +25,12 @@ const UserCard = ({ username, tier }: Props) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    navigate("/login", { replace: true });
+  };
 
   return (
     <div
@@ -77,9 +84,14 @@ const UserCard = ({ username, tier }: Props) => {
             <img src="../src/assets/profile.svg" alt="" />
             <p className="font-[500] text-[14px] ">Profile</p>
           </Link>
-          <button className="flex gap-2 justify-center items-center mt-[38px] ">
+          <button
+            onClick={handleLogout}
+            className="flex gap-2 justify-center items-center mt-[38px] "
+          >
             <img src="../src/assets/logout-icon.svg" alt="" />
-            <p className=" text-primary font-[600] text-[14px] ">Logout</p>
+            <p className=" text-primary font-[600] text-[14px] cursor-[pointer]">
+              Logout
+            </p>
           </button>
         </div>
       )}

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Inputfeild from "../Components/Inputfeild";
 const currentYear = new Date().getFullYear();
 import { AuthApis } from "../api";
+import AlertCard from "../messageAlert/AlertCardProps";
 
 interface UserData {
   id: number;
@@ -27,7 +28,26 @@ const Login = () => {
   const [password, setPassword] = useState<any>("");
   const [userDetails, setUserDetails] = useState<any>({});
   const [loginSpiner, setLoginSpiner] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [alertType, setAlertType] = useState<
+    "success" | "error" | "info" | "warning"
+  >("info");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+
   const navigate = useNavigate();
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
+
+  const showAlertMessage = (
+    message: string,
+    type: "success" | "error" | "info" | "warning"
+  ) => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setShowAlert(true);
+  };
 
   const hnadleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,27 +57,45 @@ const Login = () => {
       const response = (await authApi.loginUser({ email, password })) as {
         data: LoginResponseData;
       };
-      const responseData = response.data as LoginResponseData;
+      const responseData = response.data;
 
-      setUserDetails(response);
-      if (userDetails.code === 500) {
-        console.log("BAD REQUEST");
-        return setLoginSpiner(false);
+      console.log(responseData);
+
+      if (responseData.code === 500) {
+        showAlertMessage("server error", "error");
+        setLoginSpiner(false);
+        return;
       }
       if (responseData.status === true) {
+        setUserDetails(response);
+        showAlertMessage("Login successful!", "success");
         setLoginSpiner(false);
-        return navigate("/home");
+        localStorage.setItem("authToken", responseData.data.authToken);
+        setTimeout(() => navigate("/home"), 1000);
+        return;
       }
-    } catch (err) {
+      showAlertMessage(responseData.message || "Login failed", "error");
+    } catch (err: any) {
+      showAlertMessage("An error occurred during login", "error");
       setLoginSpiner(false);
       console.log(err);
       return err;
+    } finally {
+      setLoginSpiner(false);
     }
   };
 
   return (
     <>
       <div className="flex h-screen">
+        <AlertCard
+          message={alertMessage}
+          type={alertType}
+          isOpen={showAlert}
+          onClose={handleCloseAlert}
+          autoClose={true}
+          autoCloseTime={5000}
+        />
         <div
           style={{ backgroundImage: "url('../src/assets/bg-pic.png')" }}
           className="side-bar bg- w-[30%] bg-cover relative "

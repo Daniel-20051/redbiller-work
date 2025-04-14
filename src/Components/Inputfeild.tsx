@@ -42,7 +42,7 @@ const Inputfeild = ({
         <input
           value={passwordValue}
           onChange={handlePasswordChange}
-          className="w-[394.71px] h-[61px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary "
+          className="w-[394.71px] h-[50px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary "
           type={showPassword ? "text" : "password"}
           required
         />
@@ -78,7 +78,7 @@ const Inputfeild = ({
         <input
           value={emailValue}
           onChange={handleEmailChange}
-          className="w-[394.71px] h-[61px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary"
+          className="w-[394.71px] h-[50px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary"
           type="email"
           required
         />

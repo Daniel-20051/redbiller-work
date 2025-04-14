@@ -21,8 +21,8 @@ export class AuthApis {
       console.log(response)
       return response;
     } catch (error: any) {
-      console.log(error.message);
-      return error as AxiosError;
+      console.log(error);
+      return error;
     }
   }
 }
