@@ -16,6 +16,7 @@ const Inputfeild = ({ children, type }: Props) => {
         <input
           className="w-[394.71px] h-[61px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary "
           type={showPassword ? "text" : "password"}
+          required
         />
         <button
           className=" absolute right-5 top-16 transform -translate-y-1/2 text-gray-500  "
@@ -46,6 +47,7 @@ const Inputfeild = ({ children, type }: Props) => {
         <input
           className="w-[394.71px] h-[61px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary"
           type="text"
+          required
         />
       </div>
     );
