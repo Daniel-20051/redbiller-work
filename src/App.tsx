@@ -24,7 +24,7 @@ const App = () => {
           <Route path="/weekly-report" element={<WeeklyReport />} />
           <Route path="/weekly-report/create" element={<WeeklyCreate />} />
           <Route path="/incident-report" element={<IncidentReport />} />
-          {isAdmin && <Route path="/users" element={<User />} />}
+          {isAdmin && <Route path="/users" element={<User total={40} />} />}
           <Route path="/incident-report/create" element={<IncidentCreate />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
