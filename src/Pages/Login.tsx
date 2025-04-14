@@ -35,6 +35,11 @@ const Login = () => {
             <div className="mb-[44px]">
               <Inputfeild type="pass">Password</Inputfeild>
             </div>
+            <div>
+              <button className="bg-primary text-white font-[800] text-[16px] py-5 rounded-[8px] w-[394.71px] hover:bg-red-900 cursor-pointer">
+                Login
+              </button>
+            </div>
           </div>
           <div className=" absolute bottom-[20px] right-[45px] text-[10px] text-right font-main">
             &copy; {currentYear} Redbiller. All rights reserved
