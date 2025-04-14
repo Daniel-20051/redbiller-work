@@ -17,8 +17,6 @@ const Inputfeild = ({
   const [passwordValue, setPasswordValue] = useState<any>("");
   const [emailValue, setEmailValue] = useState<string>("");
 
-  console.log(passwordValue, emailValue);
-
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setPasswordValue(newValue);
@@ -29,7 +27,6 @@ const Inputfeild = ({
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    console.log(newValue);
     setEmailValue(newValue);
     if (onEmailChange) {
       onEmailChange(newValue);
@@ -51,7 +48,10 @@ const Inputfeild = ({
         />
         <button
           className=" absolute right-5 top-16 transform -translate-y-1/2 text-gray-500  "
-          onClick={() => setShowPassword(!showPassword)}
+          onClick={(e) => {
+            e.preventDefault();
+            setShowPassword(!showPassword);
+          }}
         >
           {showPassword ? (
             <img

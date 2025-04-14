@@ -1,9 +1,58 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Inputfeild from "../Components/Inputfeild";
 const currentYear = new Date().getFullYear();
+import { AuthApis } from "../api";
+
+interface UserData {
+  id: number;
+  email: string;
+  billerId: string;
+  firstName: string;
+  lastName: string;
+}
+
+interface LoginResponseData {
+  status: boolean;
+  code: number;
+  message: string;
+  data: {
+    user: UserData;
+    authToken: string;
+  };
+}
 
 const Login = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<any>("");
+  const [userDetails, setUserDetails] = useState<any>({});
+  const [loginSpiner, setLoginSpiner] = useState<boolean>(false);
+  const navigate = useNavigate();
+
   const hnadleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoginSpiner(true);
+    try {
+      const authApi = new AuthApis();
+      const response = (await authApi.loginUser({ email, password })) as {
+        data: LoginResponseData;
+      };
+      const responseData = response.data as LoginResponseData;
+
+      setUserDetails(response);
+      if (userDetails.code === 500) {
+        console.log("BAD REQUEST");
+        return setLoginSpiner(false);
+      }
+      if (responseData.status === true) {
+        setLoginSpiner(false);
+        return navigate("/home");
+      }
+    } catch (err) {
+      setLoginSpiner(false);
+      console.log(err);
+      return err;
+    }
   };
 
   return (
@@ -33,19 +82,23 @@ const Login = () => {
             <p className="font-main font-normal text-[14px]  ">
               Using your Biller ID
             </p>
-            <form onClick={hnadleLogin}>
+            <form onSubmit={hnadleLogin}>
               <div className="mb-[32px] mt-[67px]">
-                <Inputfeild>Biller ID / Email</Inputfeild>
+                <Inputfeild type="email" onEmailChange={setEmail}>
+                  Biller ID / Email
+                </Inputfeild>
               </div>
               <div className="mb-[44px]">
-                <Inputfeild type="pass">Password</Inputfeild>
+                <Inputfeild type="pass" onPasswordChange={setPassword}>
+                  Password
+                </Inputfeild>
               </div>
               <div>
                 <button
                   type="submit"
-                  className="bg-primary text-white font-[800] text-[16px] py-5 rounded-[8px] w-[394.71px] hover:bg-red-900 cursor-pointer"
+                  className="bg-primary text-white font-[400] text-[16px] py-3 rounded-[8px] w-[394.71px] hover:bg-red-900 cursor-pointer"
                 >
-                  Login
+                  {loginSpiner ? "loading..." : "Login"}
                 </button>
               </div>
             </form>

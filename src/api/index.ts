@@ -11,12 +11,17 @@ export class AuthApis {
     try {
       const response = await axios.post(
         `${BASE_URL}/api/v1/auth/login-user`,
-        payload,
+        {
+          email_address: payload.email,
+           password: payload.password
+        }
+        ,
         { withCredentials: true }
       );
+      console.log(response)
       return response;
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error.message);
       return error as AxiosError;
     }
   }
