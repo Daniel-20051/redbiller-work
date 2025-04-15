@@ -14,31 +14,36 @@ const Event = () => {
 
         <div className="w-[76%] flex flex-col  ">
           <div className="flex mt-[78px] justify-center w-full relative items-center ">
-            <div className="flex w-[488px] h-[60px] bg-[#F2F2F2]  rounded-[60px] items-center justify-center font-[600] text-[24px] ">
-              <button
-                className={
-                  event == 0
-                    ? "w-[241px] h-[52px] bg-white rounded-[60px]  text-primary  "
-                    : "w-[241px] h-[52px] rounded-[60px]  text-[#898A8D]  "
-                }
-                onClick={() => {
-                  setEvent(0);
-                }}
-              >
-                Upcoming
+            <div className="flex flex-col gap-13">
+              <button className="bg-primary py-5 px-41 rounded-[15px] text-[20px] font-[400] text-white hover:cursor-pointer  ">
+                ADD EVENT
               </button>
-              <button
-                className={
-                  event == 0
-                    ? "w-[241px] h-[52px] rounded-[60px]  text-[#898A8D] "
-                    : "w-[241px] h-[52px] bg-white rounded-[60px]  text-primary   "
-                }
-                onClick={() => {
-                  setEvent(1);
-                }}
-              >
-                All Event
-              </button>
+              <div className="flex w-[488px] h-[60px] bg-[#F2F2F2]  rounded-[60px] items-center justify-center font-[600] text-[24px] ">
+                <button
+                  className={
+                    event == 0
+                      ? "w-[241px] h-[52px] bg-white rounded-[60px]  text-primary  "
+                      : "w-[241px] h-[52px] rounded-[60px]  text-[#898A8D]  "
+                  }
+                  onClick={() => {
+                    setEvent(0);
+                  }}
+                >
+                  Upcoming
+                </button>
+                <button
+                  className={
+                    event == 0
+                      ? "w-[241px] h-[52px] rounded-[60px]  text-[#898A8D] "
+                      : "w-[241px] h-[52px] bg-white rounded-[60px]  text-primary   "
+                  }
+                  onClick={() => {
+                    setEvent(1);
+                  }}
+                >
+                  All Event
+                </button>
+              </div>
             </div>
             <div
               className={

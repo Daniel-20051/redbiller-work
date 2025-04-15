@@ -1,7 +1,7 @@
 const EventItem = () => {
   return (
     <div className="flex justify-center items-center gap-12 mb-[20px] ">
-      <div className=" flex flex-col w-[117px] h-[65px] border-1 rounded-[10px] border-[#EEEEEE] ">
+      <div className=" flex flex-col w-[130px] h-[65px] border-1 rounded-[10px] border-[#EEEEEE] ">
         <div className=" flex ml-[10px] mt-[10px] ">
           <img
             className="w-[24px] h-[24px] "
@@ -19,7 +19,7 @@ const EventItem = () => {
           </p>
         </div>
       </div>
-      <div className="w-[784px] h-[141px] border-1 rounded-[10px] border-[#EEEEEE]">
+      <div className="w-[900px] h-[141px] border-1 rounded-[10px] border-[#EEEEEE]">
         <div className="flex mt-[16px] mb-[10px] ml-[14px] gap-5">
           <p className="text-primary  font-[700] text-[16px] ">
             Product Meeting
