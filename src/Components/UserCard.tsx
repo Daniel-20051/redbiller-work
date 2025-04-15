@@ -25,8 +25,19 @@ const UserCard = ({ username, tier }: Props) => {
     };
   }, []);
 
+  let storeDetails;
+  try {
+    const storedData = localStorage.getItem("userDetails");
+    console.log(storedData);
+    storeDetails = storedData ? JSON.parse(storedData) : null;
+  } catch (error) {
+    console.error("Error parsing user details from localStorage:", error);
+    storeDetails = null;
+  }
+
   const handleLogout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("userDetails");
     window.location.href = "/login";
   };
 
@@ -70,7 +81,7 @@ const UserCard = ({ username, tier }: Props) => {
             <div className="flex flex-col gap-4">
               <p className="font-[500] text-[12px] ">{username}</p>
               <p className="text-[#B2B2B2] font-[500] text-[12px]">
-                yourname@gmail.com
+                {storeDetails.email}
               </p>
             </div>
           </div>

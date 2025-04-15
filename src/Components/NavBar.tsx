@@ -4,8 +4,22 @@ import { userDetailsContext } from "../context/authLogin";
 
 const NavBar = () => {
   const { userDetails } = useContext(userDetailsContext);
+  if (userDetails?.data?.data?.user) {
+    localStorage.setItem(
+      "userDetails",
+      JSON.stringify(userDetails.data.data.user)
+    );
+  }
 
-  console.log(userDetails);
+  let storeDetails;
+  try {
+    const storedData = localStorage.getItem("userDetails");
+    console.log(storedData);
+    storeDetails = storedData ? JSON.parse(storedData) : null;
+  } catch (error) {
+    console.error("Error parsing user details from localStorage:", error);
+    storeDetails = null;
+  }
 
   return (
     <div className="bg-[#F2F2F2] h-[55px] w-full flex justify-between ">
@@ -15,8 +29,8 @@ const NavBar = () => {
         alt=""
       />
       <UserCard
-        username={`${userDetails.data?.data.user.firstName} ${userDetails.data?.data.user.lastName}`}
-        tier={userDetails.data?.data.user.role}
+        username={`${storeDetails?.firstName} ${storeDetails?.lastName}`}
+        tier={storeDetails?.role}
       ></UserCard>
     </div>
   );

@@ -2,6 +2,16 @@ import SideBar from "../Components/SideBar";
 import NavBar from "../Components/NavBar";
 
 const Profile = () => {
+  let storeDetails;
+  try {
+    const storedData = localStorage.getItem("userDetails");
+    console.log(storedData);
+    storeDetails = storedData ? JSON.parse(storedData) : null;
+  } catch (error) {
+    console.error("Error parsing user details from localStorage:", error);
+    storeDetails = null;
+  }
+
   return (
     <div className="flex flex-col h-screen">
       <NavBar></NavBar>
@@ -26,14 +36,16 @@ const Profile = () => {
                     Full Name
                   </p>
                   <p className="uppercase font-[500] text-[1.25em] ">
-                    Kelechi Onmusoro
+                    {storeDetails?.firstName}
                   </p>
                 </div>
                 <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     Department
                   </p>
-                  <p className="uppercase font-[500] text-[20px] ">Student</p>
+                  <p className="uppercase font-[500] text-[20px] ">
+                    {storeDetails?.occupation}
+                  </p>
                 </div>
               </div>
               <div className="flex w-[80%] mt-8 justify-between">
@@ -41,13 +53,17 @@ const Profile = () => {
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     Date of Birth
                   </p>
-                  <p className=" font-[500] text-[20px] ">2002-12-12</p>
+                  <p className=" font-[500] text-[20px] ">
+                    {storeDetails?.dob}
+                  </p>
                 </div>
                 <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     Nationality
                   </p>
-                  <p className="uppercase font-[500] text-[20px] ">NIGERIAN</p>
+                  <p className="uppercase font-[500] text-[20px] ">
+                    {storeDetails?.nationality}
+                  </p>
                 </div>
               </div>
               <div className="flex w-[77%] mt-8 justify-between">
@@ -56,7 +72,7 @@ const Profile = () => {
                     Contact Information
                   </p>
                   <p className=" font-[500] text-[20px] ">
-                    kelechidaniel122@gmail.com
+                    {storeDetails?.email}
                   </p>
                 </div>
                 <div className="flex flex-col gap-9">
@@ -77,7 +93,7 @@ const Profile = () => {
                       src="../src/assets/male.svg"
                       alt=""
                     />
-                    male
+                    {storeDetails?.gender}
                   </p>
                 </div>
               </div>
