@@ -21,10 +21,15 @@ const UserInfo = ({ name, PhoneNum, email, imgUrl, gender }: Props) => {
         onClick={() => setIsProfileOpen(true)}
         alt=""
       />
-      <p>{name}</p>
+      <p
+        className="hover:underline cursor-pointer"
+        onClick={() => setIsProfileOpen(true)}
+      >
+        {name}
+      </p>
       <p className="">{PhoneNum}</p>
       <p>{email}</p>
-      <div className="mr-8 flex gap-6 ">
+      <div className="mr-8 flex gap-6">
         <img
           className="hover:cursor-pointer"
           src="../src/assets/pen.svg"
