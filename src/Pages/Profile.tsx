@@ -1,4 +1,3 @@
-import UserCard from "../Components/UserCard";
 import SideBar from "../Components/SideBar";
 import NavBar from "../Components/NavBar";
 

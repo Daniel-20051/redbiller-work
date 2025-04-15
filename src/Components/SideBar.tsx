@@ -10,7 +10,7 @@ const SideBar = ({ children }: Props) => {
   const [isAdmin, setIsAdmin] = useState(true);
 
   return (
-    <div className=" flex flex-col items-start justify-between w-[26%] bg-[#D6CBCB]  ">
+    <div className=" flex flex-col items-start justify-between w-[18%] bg-[#D6CBCB]  ">
       <div className="w-full">
         <Link
           to="/home"
