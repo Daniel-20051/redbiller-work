@@ -20,7 +20,7 @@ const Home = () => {
 
         <div className="w-[76%] flex flex-col   items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
           <p className=" font-[600] text-[32px] mt-4 ">
-            Welcome back, Mr <span>{storeDetails.firstName}</span> !
+            Welcome back, Mr <span>{storeDetails?.firstName}</span> !
           </p>
           <div className=" flex  w-[66%] h-[305px] bg-[#F2F2F2] rounded-[15px] mt-[53px] relative ">
             <div className=" relative flex-1">

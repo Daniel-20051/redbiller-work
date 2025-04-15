@@ -29,21 +29,6 @@ const App = () => {
   return (
     <div>
       <AuthLogin>
-        {/* <BrowserRouter>
-        <Routes>
-          <Route index element={<Login />} />
-          <Route path="/home" element={<Home>Elvis</Home>} />
-          <Route path="/events" element={<Event />} />
-          <Route path="/events/:slug" element={<EventInfo />} />
-          <Route path="/weekly-report" element={<WeeklyReport />} />
-          <Route path="/weekly-report/create" element={<WeeklyCreate />} />
-          <Route path="/incident-report" element={<IncidentReport />} />
-          {isAdmin && <Route path="/users" element={<User total={40} />} />}
-          <Route path="/incident-report/create" element={<IncidentCreate />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </BrowserRouter> */}
-
         <BrowserRouter>
           <Routes>
             /* Public route */
@@ -61,7 +46,7 @@ const App = () => {
             />
             /* Protected routes */
             <Route element={<ProtectedRoute />}>
-              <Route path="/home" element={<Home>Elvis</Home>} />
+              <Route path="/home" element={<Home />} />
               <Route path="/events" element={<Event />} />
               <Route path="/events/:slug" element={<EventInfo />} />
               <Route path="/weekly-report" element={<WeeklyReport />} />
