@@ -87,7 +87,7 @@ const UserCard = ({ username, tier }: Props) => {
             className="flex gap-2 justify-center items-center mt-[38px] "
           >
             <img src="../src/assets/logout-icon.svg" alt="" />
-            <p className=" text-primary font-[600] text-[14px] cursor-[pointer]">
+            <p className=" text-primary font-[600] text-[14px] cursor-pointer">
               Logout
             </p>
           </button>
