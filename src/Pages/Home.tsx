@@ -1,11 +1,7 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 
-interface Props {
-  children: string;
-}
-
-const Home = ({ children }: Props) => {
+const Home = () => {
   let storeDetails;
   try {
     const storedData = localStorage.getItem("userDetails");

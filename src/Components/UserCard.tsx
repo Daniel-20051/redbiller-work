@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 
 interface Props {
   username: string;
-  tier: string;
+  role: string;
 }
 
-const UserCard = ({ username, tier }: Props) => {
+const UserCard = ({ username, role }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +58,7 @@ const UserCard = ({ username, tier }: Props) => {
       />
       <div className="flex flex-col text-center">
         <p className="text-[15px] font-extrabold ">{username}</p>
-        <p className="text-[10px]">{tier}</p>
+        <p className="text-[10px] uppercase">{role}</p>
       </div>
       <div>
         <img

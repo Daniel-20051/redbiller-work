@@ -30,7 +30,7 @@ const NavBar = () => {
       />
       <UserCard
         username={`${storeDetails?.firstName} ${storeDetails?.lastName}`}
-        tier={storeDetails?.role}
+        role={storeDetails?.role}
       ></UserCard>
     </div>
   );

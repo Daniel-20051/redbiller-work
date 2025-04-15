@@ -1,13 +1,19 @@
 import { Link } from "react-router-dom";
 import GroupCard from "./GroupCard";
 import { useState } from "react";
+import { useContext } from "react";
+import { userDetailsContext } from "../context/authLogin";
 
 interface Props {
   children?: string;
 }
 
 const SideBar = ({ children }: Props) => {
-  const [isAdmin, setIsAdmin] = useState(true);
+  const { userDetails } = useContext(userDetailsContext);
+  const [isAdmin, setIsAdmin] = useState(false);
+  if (userDetails.data?.data.user.role === "admin") {
+    setIsAdmin(true);
+  }
 
   return (
     <div className=" flex flex-col items-start justify-between w-[18%] bg-[#D6CBCB]  ">
