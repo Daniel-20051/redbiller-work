@@ -1,10 +1,16 @@
 import SideBar from "../Components/SideBar";
 import NavBar from "../Components/NavBar";
-import { useContext } from "react";
-import { userDetailsContext } from "../context/authLogin";
 
 const Profile = () => {
-  const { userDetails } = useContext(userDetailsContext);
+  let storeDetails;
+  try {
+    const storedData = localStorage.getItem("userDetails");
+    console.log(storedData);
+    storeDetails = storedData ? JSON.parse(storedData) : null;
+  } catch (error) {
+    console.error("Error parsing user details from localStorage:", error);
+    storeDetails = null;
+  }
 
   return (
     <div className="flex flex-col h-screen">
@@ -30,15 +36,17 @@ const Profile = () => {
                     Full Name
                   </p>
                   <p className="uppercase font-[500] text-[1.25em] ">
-                    {`${userDetails.data?.data.user.firstName} ${userDetails.data?.data.user.lastName}`}
+                    {storeDetails?.firstName}
                   </p>
                 </div>
-                {/* <div className="flex flex-col gap-9">
+                <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     Department
                   </p>
-                  <p className="uppercase font-[500] text-[20px] ">Student</p>
-                </div> */}
+                  <p className="uppercase font-[500] text-[20px] ">
+                    {storeDetails?.occupation}
+                  </p>
+                </div>
               </div>
               <div className="flex w-[80%] mt-8 justify-between">
                 <div className="flex flex-col gap-9">
@@ -46,7 +54,7 @@ const Profile = () => {
                     Date of Birth
                   </p>
                   <p className=" font-[500] text-[20px] ">
-                    {userDetails.data?.data.user.dob}
+                    {storeDetails?.dob}
                   </p>
                 </div>
                 <div className="flex flex-col gap-9">
@@ -54,7 +62,7 @@ const Profile = () => {
                     Nationality
                   </p>
                   <p className="uppercase font-[500] text-[20px] ">
-                    {userDetails.data?.data.user.nationality}
+                    {storeDetails?.nationality}
                   </p>
                 </div>
               </div>
@@ -64,15 +72,15 @@ const Profile = () => {
                     Contact Information
                   </p>
                   <p className=" font-[500] text-[20px] ">
-                    {userDetails.data?.data.user.email}
+                    {storeDetails?.email}
                   </p>
                 </div>
-                {/* <div className="flex flex-col gap-9">
+                <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     State
                   </p>
                   <p className="uppercase font-[500] text-[20px] ">Lagos</p>
-                </div> */}
+                </div>
               </div>
               <div className="flex w-[77%] mt-8 justify-between">
                 <div className="flex -ml-[1.5%] flex-col gap-9">
@@ -85,7 +93,7 @@ const Profile = () => {
                       src="../src/assets/male.svg"
                       alt=""
                     />
-                    {userDetails.data?.data.user.gender}
+                    {storeDetails?.gender}
                   </p>
                 </div>
               </div>
