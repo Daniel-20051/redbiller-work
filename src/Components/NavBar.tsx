@@ -1,6 +1,12 @@
 import UserCard from "./UserCard";
+import { useContext } from "react";
+import { userDetailsContext } from "../context/authLogin";
 
 const NavBar = () => {
+  const { userDetails } = useContext(userDetailsContext);
+
+  console.log(userDetails);
+
   return (
     <div className="bg-[#F2F2F2] h-[55px] w-full flex justify-between ">
       <img
@@ -8,7 +14,10 @@ const NavBar = () => {
         src="../src/assets/redlogodashboard.svg"
         alt=""
       />
-      <UserCard username="Adeola Daniel" tier="Admin "></UserCard>
+      <UserCard
+        username={`${userDetails.data?.data.user.firstName} ${userDetails.data?.data.user.lastName}`}
+        tier={userDetails.data?.data.user.role}
+      ></UserCard>
     </div>
   );
 };
