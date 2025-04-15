@@ -39,12 +39,14 @@ const User = ({ total }: Props) => {
               name="Nick Brown"
               email="nick11@gmail.com"
               PhoneNum={9047582930}
+              gender="male"
               imgUrl="https://s3-alpha-sig.figma.com/img/fd3d/4c48/a8b689cbbfb343fe22651fcb4dc1c2e0?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=R2Fx9-h2TDCj-tDRlVwtoz~9uOxjnp6amMz5TDEIkykHgrTJE4Avj4Kv3rU5JZ4QdbEB3yRnlGfqo0J87mIcHU1AfX7JdTFTATBxqWBKTuEQ7MM1q80aWdJVJ9iiJhO2di9t54ihpyslE7Aa4TULaEijJorUt09WyP6CShDMEp9dqll90-5EQZgqznyRF5thu-HaG-sdyD00MddWGHA6BPobrV6rxuIJ0ZCI2bCTpI19PSPLLAqTHR86KjnvTUYJ04Kx6kcm-oLYCHB8B01ci~SQshVUTNeuGDT4fH1RK4qTmhMfiALq5aFE~Mp15lOl5x~E8RqDreeLUDNUfYVsnQ__"
             ></UserInfo>
             <UserInfo
               name="Jamie Brown"
               email="nick1221@gmail.com"
               PhoneNum={9522582930}
+              gender="female"
               imgUrl="https://s3-alpha-sig.figma.com/img/fd3d/4c48/a8b689cbbfb343fe22651fcb4dc1c2e0?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=R2Fx9-h2TDCj-tDRlVwtoz~9uOxjnp6amMz5TDEIkykHgrTJE4Avj4Kv3rU5JZ4QdbEB3yRnlGfqo0J87mIcHU1AfX7JdTFTATBxqWBKTuEQ7MM1q80aWdJVJ9iiJhO2di9t54ihpyslE7Aa4TULaEijJorUt09WyP6CShDMEp9dqll90-5EQZgqznyRF5thu-HaG-sdyD00MddWGHA6BPobrV6rxuIJ0ZCI2bCTpI19PSPLLAqTHR86KjnvTUYJ04Kx6kcm-oLYCHB8B01ci~SQshVUTNeuGDT4fH1RK4qTmhMfiALq5aFE~Mp15lOl5x~E8RqDreeLUDNUfYVsnQ__"
             ></UserInfo>
           </div>
