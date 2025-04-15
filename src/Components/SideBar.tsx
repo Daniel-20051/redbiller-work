@@ -10,8 +10,8 @@ const SideBar = ({ children }: Props) => {
   const [isAdmin, setIsAdmin] = useState(true);
 
   return (
-    <div className="w-[26%] bg-[#D6CBCB] relative ">
-      <div>
+    <div className=" flex flex-col items-start justify-between w-[26%] bg-[#D6CBCB]  ">
+      <div className="w-full">
         <Link
           to="/home"
           className={
@@ -129,7 +129,7 @@ const SideBar = ({ children }: Props) => {
           <p className="text-[15px] font-[500] ">Tasks</p>
         </Link>
       </div>
-      <div className=" absolute  bottom-[80px] left-[50px] ">
+      <div className="place-self-center mb-15 ">
         <GroupCard></GroupCard>
       </div>
     </div>
