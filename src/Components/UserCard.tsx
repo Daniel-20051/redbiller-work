@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 interface Props {
@@ -26,10 +25,9 @@ const UserCard = ({ username, tier }: Props) => {
     };
   }, []);
 
-  const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    navigate("/login", { replace: true });
+    window.location.href = "/login";
   };
 
   return (
