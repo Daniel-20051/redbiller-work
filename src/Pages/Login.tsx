@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Inputfeild from "../Components/Inputfeild";
 const currentYear = new Date().getFullYear();
 import { AuthApis } from "../api";
 import AlertCard from "../messageAlert/AlertCardProps";
+import { userDetailsContext } from "../context/authLogin";
 
 interface UserData {
   id: number;
@@ -26,13 +27,14 @@ interface LoginResponseData {
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<any>("");
-  const [userDetails, setUserDetails] = useState<any>({});
+  // const [userDetails, setUserDetails] = useState<any>({});
   const [loginSpiner, setLoginSpiner] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>("");
   const [alertType, setAlertType] = useState<
     "success" | "error" | "info" | "warning"
   >("info");
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const { userDetails, setUserDetails } = useContext(userDetailsContext);
 
   const navigate = useNavigate();
 
@@ -59,9 +61,7 @@ const Login = () => {
       };
       const responseData = response.data;
 
-      console.log(responseData);
-
-      if (responseData.code === 500) {
+      if (responseData.code === 401) {
         showAlertMessage("server error", "error");
         setLoginSpiner(false);
         return;
