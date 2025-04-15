@@ -16,7 +16,7 @@ const NavBar = () => {
       />
       <UserCard
         username={`${userDetails.data?.data.user.firstName} ${userDetails.data?.data.user.lastName}`}
-        tier={userDetails.data?.data.user.role}
+        role={userDetails.data?.data.user.role}
       ></UserCard>
     </div>
   );

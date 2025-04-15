@@ -1,7 +1,11 @@
 import SideBar from "../Components/SideBar";
 import NavBar from "../Components/NavBar";
+import { useContext } from "react";
+import { userDetailsContext } from "../context/authLogin";
 
 const Profile = () => {
+  const { userDetails } = useContext(userDetailsContext);
+
   return (
     <div className="flex flex-col h-screen">
       <NavBar></NavBar>
@@ -26,28 +30,32 @@ const Profile = () => {
                     Full Name
                   </p>
                   <p className="uppercase font-[500] text-[1.25em] ">
-                    Kelechi Onmusoro
+                    {`${userDetails.data?.data.user.firstName} ${userDetails.data?.data.user.lastName}`}
                   </p>
                 </div>
-                <div className="flex flex-col gap-9">
+                {/* <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     Department
                   </p>
                   <p className="uppercase font-[500] text-[20px] ">Student</p>
-                </div>
+                </div> */}
               </div>
               <div className="flex w-[80%] mt-8 justify-between">
                 <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     Date of Birth
                   </p>
-                  <p className=" font-[500] text-[20px] ">2002-12-12</p>
+                  <p className=" font-[500] text-[20px] ">
+                    {userDetails.data?.data.user.dob}
+                  </p>
                 </div>
                 <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     Nationality
                   </p>
-                  <p className="uppercase font-[500] text-[20px] ">NIGERIAN</p>
+                  <p className="uppercase font-[500] text-[20px] ">
+                    {userDetails.data?.data.user.nationality}
+                  </p>
                 </div>
               </div>
               <div className="flex w-[77%] mt-8 justify-between">
@@ -56,15 +64,15 @@ const Profile = () => {
                     Contact Information
                   </p>
                   <p className=" font-[500] text-[20px] ">
-                    kelechidaniel122@gmail.com
+                    {userDetails.data?.data.user.email}
                   </p>
                 </div>
-                <div className="flex flex-col gap-9">
+                {/* <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     State
                   </p>
                   <p className="uppercase font-[500] text-[20px] ">Lagos</p>
-                </div>
+                </div> */}
               </div>
               <div className="flex w-[77%] mt-8 justify-between">
                 <div className="flex -ml-[1.5%] flex-col gap-9">
@@ -77,7 +85,7 @@ const Profile = () => {
                       src="../src/assets/male.svg"
                       alt=""
                     />
-                    male
+                    {userDetails.data?.data.user.gender}
                   </p>
                 </div>
               </div>
