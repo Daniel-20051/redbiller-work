@@ -5,7 +5,7 @@ const Profile = () => {
   let storeDetails;
   try {
     const storedData = localStorage.getItem("userDetails");
-    console.log(storedData);
+
     storeDetails = storedData ? JSON.parse(storedData) : null;
   } catch (error) {
     console.error("Error parsing user details from localStorage:", error);
@@ -39,14 +39,14 @@ const Profile = () => {
                     {storeDetails?.firstName}
                   </p>
                 </div>
-                <div className="flex flex-col gap-9">
+                {/* <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     Department
                   </p>
                   <p className="uppercase font-[500] text-[20px] ">
                     {storeDetails?.occupation}
                   </p>
-                </div>
+                </div> */}
               </div>
               <div className="flex w-[80%] mt-8 justify-between">
                 <div className="flex flex-col gap-9">
@@ -75,12 +75,12 @@ const Profile = () => {
                     {storeDetails?.email}
                   </p>
                 </div>
-                <div className="flex flex-col gap-9">
+                {/* <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     State
                   </p>
                   <p className="uppercase font-[500] text-[20px] ">Lagos</p>
-                </div>
+                </div> */}
               </div>
               <div className="flex w-[77%] mt-8 justify-between">
                 <div className="flex -ml-[1.5%] flex-col gap-9">

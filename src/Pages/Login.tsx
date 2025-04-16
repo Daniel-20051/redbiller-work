@@ -98,7 +98,7 @@ const Login = () => {
         />
         <div
           style={{ backgroundImage: "url('../src/assets/bg-pic.png')" }}
-          className="side-bar bg- w-[30%] bg-cover relative "
+          className="side-bar bg-  bg-cover relative w-[30%] hidden lg:inline"
         >
           <img
             className="absolute top-0 left-0"
@@ -112,15 +112,19 @@ const Login = () => {
             It doesn’t end here....
           </p>
         </div>
-        <div className="main-content w-[70%] relative">
+        <div className="main-content relative w-full lg:w-[70%]">
           <div className="flex flex-col items-center h-screen justify-center ">
+            <img
+              className="w-[170px] h-[170px] lg:hidden "
+              src="../src/assets/redlogodashboard.svg"
+            />
             <p className="font-main font-semibold text-[32px] mb-0 ">
               Login to your <span className="text-primary">account</span>
             </p>
             <p className="font-main font-normal text-[14px]  ">
               Using your Biller ID
             </p>
-            <form onSubmit={hnadleLogin}>
+            <form className="" onSubmit={hnadleLogin}>
               <div className="mb-[32px] mt-[67px]">
                 <Inputfeild type="email" onEmailChange={setEmail}>
                   Biller ID / Email

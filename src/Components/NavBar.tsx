@@ -14,7 +14,7 @@ const NavBar = () => {
   let storeDetails;
   try {
     const storedData = localStorage.getItem("userDetails");
-    console.log(storedData);
+
     storeDetails = storedData ? JSON.parse(storedData) : null;
   } catch (error) {
     console.error("Error parsing user details from localStorage:", error);

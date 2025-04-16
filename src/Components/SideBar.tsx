@@ -10,13 +10,14 @@ interface Props {
 
 const SideBar = ({ children }: Props) => {
   const { userDetails } = useContext(userDetailsContext);
-  const [isAdmin, setIsAdmin] = useState(false);
-  if (userDetails.data?.data.user.role === "admin") {
+  const [isAdmin, setIsAdmin] = useState(true);
+
+  if (userDetails.data?.data.user.role === "user") {
     setIsAdmin(true);
   }
 
   return (
-    <div className=" flex flex-col items-start justify-between w-[18%] bg-[#D6CBCB]  ">
+    <div className="  flex-col items-start justify-between w-[18%] bg-[#D6CBCB] hidden lg:flex  ">
       <div className="w-full">
         <Link
           to="/home"
@@ -135,7 +136,7 @@ const SideBar = ({ children }: Props) => {
           <p className="text-[15px] font-[500] ">Tasks</p>
         </Link>
       </div>
-      <div className="place-self-center mb-15 ">
+      <div className="place-self-center mb-15 hidden xl:inline ">
         <GroupCard></GroupCard>
       </div>
     </div>

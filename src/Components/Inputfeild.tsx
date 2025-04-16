@@ -47,7 +47,7 @@ const Inputfeild = ({
           required
         />
         <button
-          className=" absolute right-5 top-16 transform -translate-y-1/2 text-gray-500  "
+          className=" absolute right-5 top-15 transform -translate-y-1/2 text-gray-500  "
           onClick={(e) => {
             e.preventDefault();
             setShowPassword(!showPassword);
