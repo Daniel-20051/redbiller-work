@@ -1,28 +1,28 @@
-import { useState, useContext } from "react";
+import { useState, use } from "react";
 import { useNavigate } from "react-router-dom";
 import Inputfeild from "../Components/Inputfeild";
 const currentYear = new Date().getFullYear();
 import { AuthApis } from "../api";
 import AlertCard from "../messageAlert/AlertCardProps";
-import { userDetailsContext } from "../context/authLogin";
+import { UserDetailsContext } from "../context/AuthContext";
 
-interface UserData {
-  id: number;
-  email: string;
-  billerId: string;
-  firstName: string;
-  lastName: string;
-}
+// interface UserData {
+//   id: number;
+//   email: string;
+//   billerId: string;
+//   firstName: string;
+//   lastName: string;
+// }
 
-interface LoginResponseData {
-  status: boolean;
-  code: number;
-  message: string;
-  data: {
-    user: UserData;
-    authToken: string;
-  };
-}
+// interface LoginResponseData {
+//   status: boolean;
+//   code: number;
+//   message: string;
+//   data: {
+//     user: UserData;
+//     authToken: string;
+//   };
+// }
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -34,14 +34,15 @@ const Login = () => {
     "success" | "error" | "info" | "warning"
   >("info");
   const [showAlert, setShowAlert] = useState<boolean>(false);
-  const { userDetails, setUserDetails } = useContext(userDetailsContext);
+  const { userDetails } = use(UserDetailsContext);
+
+  console.log(userDetails);
 
   const navigate = useNavigate();
 
   const handleCloseAlert = () => {
     setShowAlert(false);
   };
-
   const showAlertMessage = (
     message: string,
     type: "success" | "error" | "info" | "warning"
@@ -56,18 +57,15 @@ const Login = () => {
     setLoginSpiner(true);
     try {
       const authApi = new AuthApis();
-      const response = (await authApi.loginUser({ email, password })) as {
-        data: LoginResponseData;
-      };
-      const responseData = response.data;
-
+      const response: any = await authApi.loginUser({ email, password });
+      const responseData = await response.data;
+      console.log(responseData);
       if (responseData.code === 401) {
         showAlertMessage("server error", "error");
         setLoginSpiner(false);
         return;
       }
       if (responseData.status === true) {
-        setUserDetails(response);
         showAlertMessage("Login successful!", "success");
         setLoginSpiner(false);
         localStorage.setItem("authToken", responseData.data.authToken);

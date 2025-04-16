@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, use } from "react";
 import { Link } from "react-router-dom";
+import { UserDetailsContext } from "../context/AuthContext";
 
 interface Props {
   username: string;
@@ -9,6 +10,7 @@ interface Props {
 const UserCard = ({ username, role }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { userDetails } = use(UserDetailsContext);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -25,15 +27,14 @@ const UserCard = ({ username, role }: Props) => {
     };
   }, []);
 
-  let storeDetails;
-  try {
-    const storedData = localStorage.getItem("userDetails");
-    console.log(storedData);
-    storeDetails = storedData ? JSON.parse(storedData) : null;
-  } catch (error) {
-    console.error("Error parsing user details from localStorage:", error);
-    storeDetails = null;
-  }
+  // let storeDetails;
+  // try {
+  //   const storedData = localStorage.getItem("userDetails");
+  //   storeDetails = storedData ? JSON.parse(storedData) : null;
+  // } catch (error) {
+  //   console.error("Error parsing user details from localStorage:", error);
+  //   storeDetails = null;
+  // }
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -81,7 +82,7 @@ const UserCard = ({ username, role }: Props) => {
             <div className="flex flex-col gap-4">
               <p className="font-[500] text-[12px] ">{username}</p>
               <p className="text-[#B2B2B2] font-[500] text-[12px]">
-                {storeDetails?.email}
+                {userDetails?.data.user.email}
               </p>
             </div>
           </div>

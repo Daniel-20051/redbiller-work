@@ -1,25 +1,27 @@
 import UserCard from "./UserCard";
-import { useContext } from "react";
-import { userDetailsContext } from "../context/authLogin";
+import { use } from "react";
+import { UserDetailsContext } from "../context/AuthContext";
 
 const NavBar = () => {
-  const { userDetails } = useContext(userDetailsContext);
-  if (userDetails?.data?.data?.user) {
-    localStorage.setItem(
-      "userDetails",
-      JSON.stringify(userDetails.data.data.user)
-    );
-  }
+  const { userDetails } = use(UserDetailsContext);
+  // if (userDetails?.data.user) {
+  //   localStorage.setItem("userDetails", JSON.stringify(userDetails.data.user));
+  // }
 
-  let storeDetails;
-  try {
-    const storedData = localStorage.getItem("userDetails");
-    console.log(storedData);
-    storeDetails = storedData ? JSON.parse(storedData) : null;
-  } catch (error) {
-    console.error("Error parsing user details from localStorage:", error);
-    storeDetails = null;
-  }
+  // let storeDetails;
+  // try {
+  //   const storedData = localStorage.getItem("userDetails");
+  //   console.log(storedData);
+  //   storeDetails = storedData ? JSON.parse(storedData) : null;
+  // } catch (error) {
+  //   console.error("Error parsing user details from localStorage:", error);
+  //   storeDetails = null;
+  // }
+
+  const formatName = (name?: string) => {
+    if (!name) return "";
+    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  };
 
   return (
     <div className="bg-[#F2F2F2] h-[55px] w-full flex justify-between ">
@@ -29,8 +31,10 @@ const NavBar = () => {
         alt=""
       />
       <UserCard
-        username={`${storeDetails?.firstName} ${storeDetails?.lastName}`}
-        role={storeDetails?.role}
+        username={`${formatName(userDetails?.data.user.firstName)} ${formatName(
+          userDetails?.data.user.lastName
+        )}`}
+        role={userDetails?.data.user.role}
       ></UserCard>
     </div>
   );

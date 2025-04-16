@@ -54,7 +54,7 @@ const AlertCard = ({
           <div className="flex items-center">
             {type === "success" && (
               <svg
-                className={`w-5 h-5 mr-2 ${iconColors[type]}`}
+                className={`w-6 h-6 mr-2 ${iconColors[type]}`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -67,7 +67,7 @@ const AlertCard = ({
             )}
             {type === "error" && (
               <svg
-                className={`w-5 h-5 mr-2 ${iconColors[type]}`}
+                className={`w-6 h-6 mr-2 ${iconColors[type]}`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -80,7 +80,7 @@ const AlertCard = ({
             )}
             {type === "warning" && (
               <svg
-                className={`w-5 h-5 mr-2 ${iconColors[type]}`}
+                className={`w-6 h-6 mr-2 ${iconColors[type]}`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -93,7 +93,7 @@ const AlertCard = ({
             )}
             {type === "info" && (
               <svg
-                className={`w-5 h-5 mr-2 ${iconColors[type]}`}
+                className={`w-6 h-6 mr-2 ${iconColors[type]}`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
