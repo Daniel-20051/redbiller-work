@@ -1,18 +1,17 @@
 import { Link } from "react-router-dom";
 import GroupCard from "./GroupCard";
 import { useState } from "react";
-import { useContext } from "react";
-import { userDetailsContext } from "../context/authLogin";
+import { use } from "react";
+import { UserDetailsContext } from "../context/AuthContext";
 
 interface Props {
   children?: string;
 }
 
 const SideBar = ({ children }: Props) => {
-  const { userDetails } = useContext(userDetailsContext);
-  const [isAdmin, setIsAdmin] = useState(true);
-
-  if (userDetails.data?.data.user.role === "user") {
+  const { userDetails } = use(UserDetailsContext);
+  const [isAdmin, setIsAdmin] = useState(false);
+  if (userDetails?.data.user.role === "admin") {
     setIsAdmin(true);
   }
 

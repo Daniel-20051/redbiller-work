@@ -1,23 +1,23 @@
 import NavBar from "../Components/NavBar";
+import { UserDetailsContext } from "../context/AuthContext";
+import { use } from "react";
 import SideBar from "../Components/SideBar";
 import { Link } from "react-router-dom";
+import SmallSpiner from "../Components/smallSpiner";
 
 const Home = () => {
-  let storeDetails;
-  try {
-    const storedData = localStorage.getItem("userDetails");
-    console.log(storedData);
-    storeDetails = storedData ? JSON.parse(storedData) : null;
-  } catch (error) {
-    console.error("Error parsing user details from localStorage:", error);
-    storeDetails = null;
-  }
-
+  const { userDetails } = use(UserDetailsContext);
   return (
-    <div className="flex flex-col  h-screen">
-      <NavBar></NavBar>
-      <div className=" flex flex-1 w-full relative max-h-[calc(100vh-55px)]">
-        <SideBar>home</SideBar>
+    <div>
+      {!userDetails ? (
+        <div className="w-full h-screen flex justify-center items-center bg-opacity-10">
+          <SmallSpiner />
+        </div>
+      ) : (
+        <div className="flex flex-col  h-screen">
+          <NavBar></NavBar>
+          <div className=" flex flex-1 w-full relative max-h-[calc(100vh-55px)]">
+            <SideBar>home</SideBar>
 
         <div className=" flex flex-col gap-10 flex-1 mb-8 items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
           <p className=" font-[600] text-[24px] md:text-[32px] mt-4  ">

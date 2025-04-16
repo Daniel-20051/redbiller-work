@@ -11,7 +11,8 @@ import WeeklyCreate from "./Pages/WeeklyCreate";
 import Profile from "./Pages/Profile";
 import User from "./Pages/Users";
 import ProtectedRoute from "./routs/protectedRoute";
-import AuthLogin from "./context/authLogin";
+import AuthLogin from "./context/AuthContext";
+// import AuthProvider from "./context/AuthContext";
 
 const App = () => {
   const [isAdmin, setIsAdmin] = useState(true);
@@ -28,52 +29,54 @@ const App = () => {
 
   return (
     <div>
-      <AuthLogin>
-        <BrowserRouter>
-          <Routes>
-            /* Public route */
+      {/* <AuthLogin> */}
+      <BrowserRouter>
+        <Routes>
+          /* Public route */
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? <Navigate to="/home" replace /> : <Login />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? <Navigate to="/home" replace /> : <Login />
+            }
+          />
+          /* Protected routes */
+          {/* <AuthProvider> */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/events" element={<Event />} />
+            <Route path="/events/:slug" element={<EventInfo />} />
+            <Route path="/weekly-report" element={<WeeklyReport />} />
+            <Route path="/weekly-report/create" element={<WeeklyCreate />} />
+            <Route path="/incident-report" element={<IncidentReport />} />
             <Route
-              path="/"
-              element={
-                isAuthenticated ? <Navigate to="/home" replace /> : <Login />
-              }
+              path="/incident-report/create"
+              element={<IncidentCreate />}
             />
-            <Route
-              path="/login"
-              element={
-                isAuthenticated ? <Navigate to="/home" replace /> : <Login />
-              }
-            />
-            /* Protected routes */
-            <Route element={<ProtectedRoute />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/events" element={<Event />} />
-              <Route path="/events/:slug" element={<EventInfo />} />
-              <Route path="/weekly-report" element={<WeeklyReport />} />
-              <Route path="/weekly-report/create" element={<WeeklyCreate />} />
-              <Route path="/incident-report" element={<IncidentReport />} />
-              <Route
-                path="/incident-report/create"
-                element={<IncidentCreate />}
-              />
-              <Route path="/profile" element={<Profile />} />
-              {isAdmin && <Route path="/users" element={<User total={40} />} />}
-            </Route>
-            /* Catch all - redirect to home if authenticated, otherwise to login
-            */
-            <Route
-              path="*"
-              element={
-                isAuthenticated ? (
-                  <Navigate to="/home" replace />
-                ) : (
-                  <Navigate to="/login" replace />
-                )
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </AuthLogin>
+            <Route path="/profile" element={<Profile />} />
+            {isAdmin && <Route path="/users" element={<User total={40} />} />}
+          </Route>
+          {/* </AuthProvider> */}
+          /* Catch all - redirect to home if authenticated, otherwise to login
+          */
+          <Route
+            path="*"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/home" replace />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+      {/* </AuthLogin> */}
     </div>
   );
 };
