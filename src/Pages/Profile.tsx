@@ -43,14 +43,14 @@ const Profile = () => {
                     {userDetails?.data.user.firstName}
                   </p>
                 </div>
-                <div className="flex flex-col gap-9">
-                  <p className="text-[#898A8D] font-[500] text-[15px] ">
+                {/* <div className="flex flex-col gap-9">
+                  <p className="text-[#898A8D] font-[500] text-[16px] ">
                     Department
                   </p>
                   <p className="uppercase font-[700] text-[16px] ">
                     {userDetails?.data.user.occupation}
                   </p>
-                </div>
+                </div> */}
               </div>
               <div className="flex w-[80%] mt-8 justify-between">
                 <div className="flex flex-col gap-9">
@@ -79,12 +79,12 @@ const Profile = () => {
                     {userDetails?.data.user.email}
                   </p>
                 </div>
-                <div className="flex flex-col gap-9">
+                {/* <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[16px] ">
                     State
                   </p>
                   <p className="uppercase font-[500] text-[20px] ">Lagos</p>
-                </div>
+                </div> */}
               </div>
               <div className="flex w-[77%] mt-8 justify-between">
                 <div className="flex -ml-[1.5%] flex-col gap-9">

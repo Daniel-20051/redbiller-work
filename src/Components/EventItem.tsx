@@ -1,7 +1,7 @@
 const EventItem = () => {
   return (
     <div className="flex justify-center items-center gap-12 mb-[20px] ">
-      <div className=" flex flex-col w-[130px] h-[65px] border-1 rounded-[10px] border-[#EEEEEE] ">
+      <div className=" flex-col w-[13%] h-[65px] border-1 rounded-[10px] border-[#EEEEEE]  hidden lg:flex ">
         <div className=" flex ml-[10px] mt-[10px] ">
           <img
             className="w-[24px] h-[24px] "
@@ -19,14 +19,14 @@ const EventItem = () => {
           </p>
         </div>
       </div>
-      <div className="w-[900px] h-[141px] border-1 rounded-[10px] border-[#EEEEEE]">
-        <div className="flex mt-[16px] mb-[10px] ml-[14px] gap-5">
+      <div className="w-[70%] h-[181px] lg:h-[141px] border-1 rounded-[10px] p-4 border-[#EEEEEE]">
+        <div className="flex mb-[10px] ml-[14px] gap-5">
           <p className="text-primary  font-[700] text-[16px] ">
             Product Meeting
           </p>
           <p className="text-[#C9C9C9] font-[400] text-[14px]">15 mins ago</p>
         </div>
-        <p className="font-[400] text-[14px] ml-[14px] text-[#4E4E4E] ">
+        <p className="font-[400] text-[14px]  text-[#4E4E4E] ">
           Lorem ipsum dolor sit amet consectetur ipsum dolor sit amet ipsum
           dolor sit amet consectetur ipsum dolor sit ame ipsum dolor sit amet
           consectetur.
