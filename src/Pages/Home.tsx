@@ -49,7 +49,7 @@ const Home = () => {
                     Wednesday
                   </p>
                 </div>
-                <div className="hidden md:inline">
+                <div className="hidden lg:inline">
                   <img
                     className="h-full"
                     src="../src/assets/home-design.svg"
@@ -69,11 +69,11 @@ const Home = () => {
                   <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] ">
                     Ireoma wearing rubber slippers during work....
                   </p>
-                  <p className="absolute bottom-4 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
+                  <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
                     Friday 07:30
                   </p>
                   <Link to="/incident-report/create">
-                    <button className="absolute bottom-4 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] ">
+                    <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] ">
                       Create
                     </button>
                   </Link>
@@ -89,11 +89,11 @@ const Home = () => {
                   <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] ">
                     Ireoma wearing rubber slippers during work....
                   </p>
-                  <p className="absolute bottom-4 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
+                  <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
                     Friday 07:30
                   </p>
                   <Link to="/weekly-report/create">
-                    <button className="absolute bottom-4 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] ">
+                    <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] ">
                       Create
                     </button>
                   </Link>

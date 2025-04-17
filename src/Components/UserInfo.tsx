@@ -72,12 +72,12 @@ const UserInfo = ({ name, PhoneNum, email, imgUrl, gender }: Props) => {
                   </p>
                   <p className="uppercase font-[500] text-[14px] ">{name}</p>
                 </div>
-                <div className="flex flex-col gap-9">
+                {/* <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[12px] ">
                     Department
                   </p>
                   <p className="uppercase font-[500] text-[14px] ">Student</p>
-                </div>
+                </div> */}
               </div>
               <div className="flex w-[80%] mt-8 justify-between">
                 <div className="flex flex-col gap-9">
@@ -100,12 +100,12 @@ const UserInfo = ({ name, PhoneNum, email, imgUrl, gender }: Props) => {
                   </p>
                   <p className=" font-[500] text-[14px] ">{email}</p>
                 </div>
-                <div className="flex flex-col gap-9">
+                {/* <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[12px] ">
                     State
                   </p>
                   <p className="uppercase font-[500] text-[14px] ">Lagos</p>
-                </div>
+                </div> */}
               </div>
               <div className="flex w-[77%] mt-8 justify-between">
                 <div className="flex -ml-[1.5%] flex-col gap-9">

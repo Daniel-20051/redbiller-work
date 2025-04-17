@@ -50,7 +50,7 @@ const Event = () => {
                 </button>
               </div>
             </div>
-            <div className=" bg-[#F2F2F2] w-[161px] px-[24px]  py-[17px] h-[50px] items-center font-[600] rounded-[8px] absolute right-[50px] hidden sm:flex">
+            <div className=" bg-[#F2F2F2] w-[161px] px-[24px]  py-[17px] h-[50px] items-center font-[600] rounded-[8px] absolute right-[50px] hidden md:flex">
               <img
                 className={event == 0 ? "w-[16px] h-[16px]" : "hidden"}
                 src="../src/assets/search.svg"
@@ -85,8 +85,8 @@ const Event = () => {
           onClose={() => setIsAddEventOpen(false)}
           className="relative z-50"
         >
-          <div className="fixed inset-0  flex w-screen items-center justify-center px-12 py-6 bg-black/40 ">
-            <DialogPanel className="w-[44%] h-[85%] rounded-[20px] items-start bg-white  px-12 py-6  ">
+          <div className="fixed inset-0  flex w-screen items-center justify-center md:px-12 px-7 py-6 bg-black/40 ">
+            <DialogPanel className="w-[95%] md:w-[70%] lg:w-[44%] h-[90%] md:h-[85%] rounded-[20px] items-start bg-white  px-12 py-6  ">
               <p className="font-[500] text-[24px] mb-12 place-self-center">
                 Add Event
               </p>
