@@ -24,14 +24,17 @@ const UserInfo = ({
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isDeleteDpiner, setIsDeleteSpiner] = useState(false);
 
   const handleConfirmationDelete = () => {
     setIsDeleteConfirmOpen(true);
   };
 
-  const confirmDelete = () => {
-    onDelete();
+  const confirmDelete = async () => {
+    setIsDeleteSpiner(true);
+    await onDelete();
     setIsDeleteConfirmOpen(false);
+    setIsDeleteSpiner(false);
   };
 
   return (
@@ -252,7 +255,7 @@ const UserInfo = ({
                 onClick={confirmDelete}
                 className="bg-red-500 text-white py-2 px-5 font-[500] text-[13px] rounded-[8px] hover:cursor-pointer hover:bg-red-600"
               >
-                Delete
+                {isDeleteDpiner ? "loading..." : "Delete"}
               </button>
             </div>
           </DialogPanel>
