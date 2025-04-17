@@ -11,8 +11,6 @@ import WeeklyCreate from "./Pages/WeeklyCreate";
 import Profile from "./Pages/Profile";
 import User from "./Pages/Users";
 import ProtectedRoute from "./routs/protectedRoute";
-import AuthLogin from "./context/AuthContext";
-// import AuthProvider from "./context/AuthContext";
 
 const App = () => {
   const [isAdmin, setIsAdmin] = useState(true);

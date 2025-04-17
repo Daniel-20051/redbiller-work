@@ -19,11 +19,13 @@ const Home = () => {
           <div className=" flex flex-1 w-full relative max-h-[calc(100vh-55px)]">
             <SideBar>home</SideBar>
 
-            <div className=" flex flex-col gap-10 flex-1 mb-8 items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
-              <p className=" font-[600] text-[24px] md:text-[32px] mt-4  ">
-                Welcome back, Mr{" "}
-                <span className="normal-case">
-                  {userDetails?.data.user.firstName}
+            <div className="w-[76%] flex flex-col   items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
+              <p className=" font-[600] text-[32px] mt-4 ">
+                Welcome back,{" "}
+                {userDetails.data.user.gender === "MALE" ? "Mr" : "Ms"}{" "}
+                <span>
+                  {userDetails?.data.user.firstName.charAt(0).toUpperCase() +
+                    userDetails?.data.user.firstName.slice(1).toLowerCase()}
                 </span>{" "}
                 !
               </p>

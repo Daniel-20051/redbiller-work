@@ -21,16 +21,17 @@ export class AuthApis {
       console.log(response)
       return response;
     } catch (error: any) {
-      console.log(error.message);
-      return error.message;
+      console.log(error);
+      return error;
     }
   }
 
   async getUserDetails() {
     try{
-      const token: any = localStorage.getItem("authToken")
+      const token = localStorage.getItem("authToken")
       if(!token){
-        return console.log("token not found")
+        console.log("token not found")
+        return null
       }
       const response = await axios.get(`${BASE_URL}/api/v1/auth/current-user`,
         {
@@ -39,8 +40,8 @@ export class AuthApis {
           }
         }
       )
-      const result = response;
-      return result;
+      console.log(response)
+      return response;
     }catch(err: any){
       console.error("Error fetching user details:", err);
       return err;
