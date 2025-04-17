@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import GroupCard from "./GroupCard";
-import { useState } from "react";
 import { use } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
 
@@ -10,7 +9,7 @@ interface Props {
 
 const SideBar = ({ children }: Props) => {
   const { userDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role === "user";
+  const isAdmin = userDetails?.data.user.role === "admin";
 
   return (
     <div className="  flex-col items-start justify-between w-[18%] bg-[#D6CBCB] hidden lg:flex  ">

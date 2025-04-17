@@ -3,8 +3,12 @@ import SideBar from "../Components/SideBar";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { useState } from "react";
 import EventItem from "../Components/EventItem";
+import { use } from "react";
+import { UserDetailsContext } from "../context/AuthContext";
 
 const Event = () => {
+  const { userDetails } = use(UserDetailsContext);
+  const isAdmin = userDetails?.data.user.role === "admin";
   const [event, setEvent] = useState(0);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
 
@@ -15,14 +19,16 @@ const Event = () => {
         <SideBar>event</SideBar>
 
         <div className="flex flex-1 items-center  flex-col  ">
-          <div className="flex mt-15 h-[15%] justify-center w-full relative items-center ">
+          <div className="flex mt-15 h-[10%] justify-center w-full relative items-center ">
             <div className="flex flex-col w-[70%] md:w-[30%] gap-7 xl:gap-10">
-              <button
-                onClick={() => setIsAddEventOpen(true)}
-                className="bg-primary py-5 px-5  rounded-[15px] text-[16px] lg:text-[20px] font-[400] text-white hover:cursor-pointer  "
-              >
-                ADD EVENT
-              </button>
+              {isAdmin && (
+                <button
+                  onClick={() => setIsAddEventOpen(true)}
+                  className="bg-primary py-5 px-5 mt-3 rounded-[15px] text-[16px] lg:text-[20px] font-[400] text-white hover:cursor-pointer  "
+                >
+                  ADD EVENT
+                </button>
+              )}
               <div className="flex w-[100%] h-[60px] bg-[#F2F2F2]  rounded-[60px] p-1 items-center justify-center font-[600] text-[15px] lg:text-[20px] xl:text-[24px] ">
                 <button
                   className={

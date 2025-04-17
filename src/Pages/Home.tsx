@@ -19,8 +19,8 @@ const Home = () => {
           <div className=" flex flex-1 w-full relative max-h-[calc(100vh-55px)]">
             <SideBar>home</SideBar>
 
-            <div className="w-[76%] flex flex-col   items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
-              <p className=" font-[600] text-[32px] mt-4 ">
+            <div className="flex flex-1 flex-col   items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
+              <p className=" font-[600] text-[32px]  mb-4 ">
                 Welcome back,{" "}
                 {userDetails.data.user.gender === "MALE" ? "Mr" : "Ms"}{" "}
                 <span>
@@ -59,7 +59,7 @@ const Home = () => {
                   />
                 </div>
               </div>
-              <div className=" md:flex gap-5 w-[80%] h-[40%] mb-[20px]  justify-between">
+              <div className=" md:flex gap-5 w-[80%] h-[35%] mb-[20px]  justify-between">
                 <div className=" w-full md:w-[47%] h-full bg-[#F2F2F2] rounded-[15px] mb-8 pt-5  relative ">
                   <p className=" text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
                     Incident Report
@@ -69,7 +69,7 @@ const Home = () => {
                     Compliance
                   </p>
                   <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] ">
-                    Ireoma wearing rubber slippers during work....
+                    Iruoma wearing rubber slippers during work....
                   </p>
                   <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
                     Friday 07:30
@@ -89,7 +89,7 @@ const Home = () => {
                     Compliance
                   </p>
                   <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] ">
-                    Ireoma wearing rubber slippers during work....
+                    Iruoma wearing rubber slippers during work....
                   </p>
                   <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
                     Friday 07:30
