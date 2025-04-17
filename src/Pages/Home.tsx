@@ -75,7 +75,7 @@ const Home = () => {
                     Friday 07:30
                   </p>
                   <Link to="/incident-report/create">
-                    <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] ">
+                    <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-[pointer]">
                       Create
                     </button>
                   </Link>
@@ -95,7 +95,7 @@ const Home = () => {
                     Friday 07:30
                   </p>
                   <Link to="/weekly-report/create">
-                    <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] ">
+                    <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-[pointer]">
                       Create
                     </button>
                   </Link>

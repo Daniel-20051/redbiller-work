@@ -7,13 +7,12 @@ import { UserDetailsContext } from "../context/AuthContext";
 import { AuthApis } from "../api";
 import AlertCard from "../messageAlert/AlertCardProps";
 
-interface Props {
-  total: number;
-}
+// interface Props {
+//   total: number;
+// }
 
-const User = ({ total }: Props) => {
-  const { allUser, setAllUser, spiner, fetchUserDetails } =
-    use(UserDetailsContext);
+const User = () => {
+  const { allUser, setAllUser, spiner, fetchAllUser } = use(UserDetailsContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [alertType, setAlertType] = useState<
     "success" | "error" | "info" | "warning"
@@ -39,14 +38,14 @@ const User = ({ total }: Props) => {
     setShowAlert(true);
     setTimeout(() => {
       setShowAlert(false);
-    }, 3000);
+    }, 4000);
   };
 
   const authApis = new AuthApis();
   const handleDeleteUser = async (id: any) => {
     try {
       await authApis.deleteSignleUser(id);
-      await fetchUserDetails();
+      await fetchAllUser();
       showAlertMessage("User has been deleted", "success");
     } catch (err) {
       showAlertMessage("Failed to delete user", "error");
@@ -56,7 +55,7 @@ const User = ({ total }: Props) => {
 
   return (
     <div className="flex flex-col  h-screen">
-      <NavBar></NavBar>
+      <NavBar />
       {showAlert && (
         <AlertCard
           message={alertMessage}
