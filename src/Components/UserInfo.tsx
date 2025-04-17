@@ -28,7 +28,7 @@ const UserInfo = ({ name, PhoneNum, email, imgUrl, gender }: Props) => {
         {name}
       </p>
       <p className="">{PhoneNum}</p>
-      <p className=" overflow-hidden whitespace-wrap">{email}</p>
+      <p className="overflow-hidden whitespace-wrap">{email}</p>
       <div className="hidden md:flex justify-center   gap-6">
         <img
           className="hover:cursor-pointer"
