@@ -20,7 +20,8 @@ const Home = () => {
 
             <div className="w-[76%] flex flex-col   items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
               <p className=" font-[600] text-[32px] mt-4 ">
-                Welcome back, Mr{" "}
+                Welcome back,{" "}
+                {userDetails.data.user.gender === "MALE" ? "Mr" : "Ms"}{" "}
                 <span>
                   {userDetails?.data.user.firstName.charAt(0).toUpperCase() +
                     userDetails?.data.user.firstName.slice(1).toLowerCase()}

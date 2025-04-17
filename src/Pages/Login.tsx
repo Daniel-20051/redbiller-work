@@ -4,39 +4,16 @@ import Inputfeild from "../Components/Inputfeild";
 const currentYear = new Date().getFullYear();
 import { AuthApis } from "../api";
 import AlertCard from "../messageAlert/AlertCardProps";
-import { UserDetailsContext } from "../context/AuthContext";
-
-// interface UserData {
-//   id: number;
-//   email: string;
-//   billerId: string;
-//   firstName: string;
-//   lastName: string;
-// }
-
-// interface LoginResponseData {
-//   status: boolean;
-//   code: number;
-//   message: string;
-//   data: {
-//     user: UserData;
-//     authToken: string;
-//   };
-// }
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<any>("");
-  // const [userDetails, setUserDetails] = useState<any>({});
   const [loginSpiner, setLoginSpiner] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>("");
   const [alertType, setAlertType] = useState<
     "success" | "error" | "info" | "warning"
   >("info");
   const [showAlert, setShowAlert] = useState<boolean>(false);
-  const { userDetails } = use(UserDetailsContext);
-
-  console.log(userDetails);
 
   const navigate = useNavigate();
 
@@ -58,29 +35,29 @@ const Login = () => {
     try {
       const authApi = new AuthApis();
       const response: any = await authApi.loginUser({ email, password });
-      const responseData = await response.data;
-      console.log(responseData);
-      if (responseData.code === 401) {
-        showAlertMessage("server error", "error");
-        setLoginSpiner(false);
-        return;
-      }
-      if (responseData.status === true) {
+      const responseData = await response;
+      if (responseData?.status === 200) {
         showAlertMessage("Login successful!", "success");
         setLoginSpiner(false);
-        localStorage.setItem("authToken", responseData.data.authToken);
+        localStorage.setItem("authToken", responseData.data.data.authToken);
         setTimeout(() => navigate("/home"), 1000);
+        window.location.reload();
         return;
       }
-      showAlertMessage(responseData.message || "Login failed", "error");
+      if (responseData?.response.status === 401) {
+        showAlertMessage("invalide passoword", "error");
+        setLoginSpiner(false);
+        return;
+      }
+      // showAlertMessage(responseData?.message || "Login failed", "error");
     } catch (err: any) {
       showAlertMessage("An error occurred during login", "error");
       setLoginSpiner(false);
       console.log(err);
       return err;
-    } finally {
-      setLoginSpiner(false);
-    }
+    } //finally {
+    //   setLoginSpiner(false);
+    // }
   };
 
   return (
