@@ -15,8 +15,8 @@ const Event = () => {
         <SideBar>event</SideBar>
 
         <div className="flex flex-1 items-center  flex-col  ">
-          <div className="flex mt-[78px] justify-center w-full relative items-center ">
-            <div className="flex flex-col w-[70%] md:w-[30%] gap-7 xl:gap-13">
+          <div className="flex mt-15 h-[15%] justify-center w-full relative items-center ">
+            <div className="flex flex-col w-[70%] md:w-[30%] gap-7 xl:gap-10">
               <button
                 onClick={() => setIsAddEventOpen(true)}
                 className="bg-primary py-5 px-5  rounded-[15px] text-[16px] lg:text-[20px] font-[400] text-white hover:cursor-pointer  "
@@ -67,7 +67,7 @@ const Event = () => {
               />
             </div>
           </div>
-          <div className="flex-1 mt-[30px] w-full overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  ">
+          <div className="flex-1 mt-17 w-full overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  ">
             <EventItem></EventItem>
             <EventItem></EventItem>
             <EventItem></EventItem>

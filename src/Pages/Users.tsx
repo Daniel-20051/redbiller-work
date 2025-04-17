@@ -16,12 +16,12 @@ const User = ({ total }: Props) => {
             Total Members : <span>{total}</span>
           </p>
           <p className="font-[700] text-[32px] ml-11 mt-11 mb-10">Users</p>
-          <div className="flex w-full bg-[#F8F8F8] py-6 px-4 justify-between items-center text-[#817979] ">
-            <p className="ml-14">Photo</p>
+          <div className="flex w-full bg-[#F8F8F8] py-6 px-4 justify-between items-center text-[#817979] text-md ">
+            <p className=" ml-0 md:ml-14">Photo</p>
             <p>Member Name</p>
             <p>Mobile(+234)</p>
-            <p>Email</p>
-            <div className="relative">
+            <p className="mr-10 md:mr-0">Email</p>
+            <div className="hidden md:inline relative">
               <img
                 className=" absolute left-3 top-16 transform -translate-y-12  text-gray-500 "
                 src="../src/assets/search.svg"

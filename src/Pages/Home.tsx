@@ -29,7 +29,7 @@ const Home = () => {
                 </span>{" "}
                 !
               </p>
-              <div className=" flex w-[80%] h-[38%] bg-[#F2F2F2]  rounded-[15px] pt-5 relative ">
+              <div className=" flex w-[80%] h-[38%] bg-[#F2F2F2] mb-5  rounded-[15px] pt-5 relative ">
                 <div className=" relative flex-1">
                   <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
                     Upcoming event

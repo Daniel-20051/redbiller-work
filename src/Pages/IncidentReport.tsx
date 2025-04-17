@@ -9,9 +9,9 @@ const IncidentReport = () => {
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
         <SideBar>incident-report</SideBar>
-        <div className="w-[76%] flex ">
-          <div className=" w-[49%] flex flex-col gap-6 items-center ">
-            <div className="flex gap-6 items-center justify-center   mt-[24px]">
+        <div className="flex w-full lg:w-[76%] ">
+          <div className=" w-[49%] flex flex-col gap-6  justify-center ">
+            <div className="flex gap-6  justify-center  mt-[24px]">
               <p className="font-[600] text-[23px]  ">Incident Reports</p>
               <div className="flex bg-[#F2F2F2] w-[162px] px-[24px]  py-[17px] h-[35px] items-center font-[600] rounded-[8px]  ">
                 <input
