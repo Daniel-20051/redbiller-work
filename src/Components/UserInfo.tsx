@@ -14,7 +14,7 @@ const UserInfo = ({ name, PhoneNum, email, imgUrl, gender }: Props) => {
   let [isUpdateOpen, setIsUpdateOpen] = useState(false);
 
   return (
-    <div className="flex ml-1 justify-between items-center bg-[#F8F8F8] border-t-1 border-[#E7E3E3] px-3 md:px-13 py-6 hover:bg-[#D6CBCB] ">
+    <div className="flex ml-1 justify-between items-center text-sm md:text-[16px]  bg-[#F8F8F8] border-t-1 border-[#E7E3E3] px-3 md:px-13 py-6 hover:bg-[#D6CBCB] ">
       <img
         className="rounded-full w-10 md:w-14 h-10 md:h-14 border-3 border-primary cursor-pointer"
         src={imgUrl}

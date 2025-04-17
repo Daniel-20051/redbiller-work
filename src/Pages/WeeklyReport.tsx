@@ -10,7 +10,7 @@ const WeeklyReport = () => {
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full overflow-y-auto  max-h-[calc(100vh-55px)]  ">
         <SideBar>weekly-report</SideBar>
-        <div className="w-[76%] flex flex-col items-center ">
+        <div className=" flex flex-1 flex-col items-center ">
           <div className=" mt-[67px] w-[90%]">
             <div className="flex justify-between items-center">
               <p className="font-[600] text-[20px] ">Weekly Reports</p>
