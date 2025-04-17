@@ -16,11 +16,11 @@ const User = ({ total }: Props) => {
             Total Members : <span>{total}</span>
           </p>
           <p className="font-[700] text-[32px] ml-11 mt-11 mb-10">Users</p>
-          <div className="flex w-full bg-[#F8F8F8] py-6 px-4 justify-between items-center text-[#817979] text-md ">
-            <p className=" ml-0 md:ml-14">Photo</p>
+          <div className="grid grid-cols-4 md:grid-cols-5  w-full bg-[#F8F8F8] py-6 px-3 md:px-14 justify-between items-center text-[#817979] text-md ">
+            <p>Photo</p>
             <p>Member Name</p>
             <p>Mobile(+234)</p>
-            <p className="mr-10 md:mr-0">Email</p>
+            <p>Email</p>
             <div className="hidden md:inline relative">
               <img
                 className=" absolute left-3 top-16 transform -translate-y-12  text-gray-500 "
@@ -28,7 +28,7 @@ const User = ({ total }: Props) => {
                 alt=""
               />
               <input
-                className="py-3 pl-9 bg-[#F2F2F2] rounded-[8px] focus:outline-0 "
+                className="w-full py-3 pl-9 bg-[#F2F2F2] rounded-[8px] focus:outline-0 "
                 placeholder="Search..."
                 type="text"
               />
