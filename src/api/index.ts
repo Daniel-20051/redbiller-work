@@ -40,11 +40,51 @@ export class AuthApis {
           }
         }
       )
-      console.log(response)
       return response;
     }catch(err: any){
       console.error("Error fetching user details:", err);
       return err;
+    }
+  }
+
+  async getAllUser() {
+    try{
+      const token = localStorage.getItem("authToken")
+      if(!token){
+        return null
+      }
+      const response = await axios.get(`${BASE_URL}/api/v1/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      return response
+    }catch(err){
+      console.log(err)
+      return err
+    }
+  }
+
+
+  async deleteSignleUser(id: number) {
+    try{
+      const token = localStorage.getItem("authToken")
+      if(!token){
+        return null
+      }
+      const response = await axios.delete(`${BASE_URL}/api/v1/admin/user-delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      return response;
+    }catch(err){
+      console.log(err)
+      return err
     }
   }
 }

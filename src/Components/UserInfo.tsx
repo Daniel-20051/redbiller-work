@@ -1,5 +1,6 @@
 import { Dialog, DialogPanel } from "@headlessui/react";
-import { useState } from "react";
+import { useState, use } from "react";
+import { UserDetailsContext } from "../context/AuthContext";
 
 interface Props {
   name: string;
@@ -7,11 +8,31 @@ interface Props {
   gender: string;
   email: string;
   imgUrl: string;
+  department: string;
+  onDelete: () => void;
 }
 
-const UserInfo = ({ name, PhoneNum, email, imgUrl, gender }: Props) => {
-  let [isProfileOpen, setIsProfileOpen] = useState(false);
-  let [isUpdateOpen, setIsUpdateOpen] = useState(false);
+const UserInfo = ({
+  name,
+  PhoneNum,
+  email,
+  imgUrl,
+  gender,
+  department,
+  onDelete,
+}: Props) => {
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
+  const handleConfirmationDelete = () => {
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = () => {
+    onDelete();
+    setIsDeleteConfirmOpen(false);
+  };
 
   return (
     <div className="flex ml-1 justify-between items-center text-sm md:text-[16px]  bg-[#F8F8F8] border-t-1 border-[#E7E3E3] px-3 md:px-13 py-6 hover:bg-[#D6CBCB] ">
@@ -39,6 +60,7 @@ const UserInfo = ({ name, PhoneNum, email, imgUrl, gender }: Props) => {
         <img
           className="hover:cursor-pointer"
           src="../src/assets/dust-bin.svg"
+          onClick={handleConfirmationDelete}
         />
       </div>
       <Dialog
@@ -72,12 +94,14 @@ const UserInfo = ({ name, PhoneNum, email, imgUrl, gender }: Props) => {
                   </p>
                   <p className="uppercase font-[500] text-[14px] ">{name}</p>
                 </div>
-                {/* <div className="flex flex-col gap-9">
+                <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[12px] ">
                     Department
                   </p>
-                  <p className="uppercase font-[500] text-[14px] ">Student</p>
-                </div> */}
+                  <p className="uppercase font-[500] text-[14px] ">
+                    {department}
+                  </p>
+                </div>
               </div>
               <div className="flex w-[80%] mt-8 justify-between">
                 <div className="flex flex-col gap-9">
@@ -100,12 +124,12 @@ const UserInfo = ({ name, PhoneNum, email, imgUrl, gender }: Props) => {
                   </p>
                   <p className=" font-[500] text-[14px] ">{email}</p>
                 </div>
-                {/* <div className="flex flex-col gap-9">
+                <div className="flex flex-col gap-9">
                   <p className="text-[#898A8D] font-[500] text-[12px] ">
                     State
                   </p>
                   <p className="uppercase font-[500] text-[14px] ">Lagos</p>
-                </div> */}
+                </div>
               </div>
               <div className="flex w-[77%] mt-8 justify-between">
                 <div className="flex -ml-[1.5%] flex-col gap-9">
@@ -193,6 +217,43 @@ const UserInfo = ({ name, PhoneNum, email, imgUrl, gender }: Props) => {
                   </button>
                 </div>
               </form>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
+      <Dialog
+        open={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-black/40">
+          <DialogPanel className="flex flex-col w-[350px] rounded-[20px] items-center bg-white p-6">
+            <div className="flex flex-col items-center mb-6">
+              <img
+                className="w-16 h-16 mb-4"
+                src="../src/assets/warning-icon.svg"
+                alt="Warning"
+              />
+              <h3 className="text-lg font-bold">Confirm Deletion</h3>
+              <p className="text-center text-gray-600 mt-2">
+                Are you sure you want to delete {name}'s profile? This action
+                cannot be undone.
+              </p>
+            </div>
+
+            <div className="flex gap-4 w-full justify-center">
+              <button
+                onClick={() => setIsDeleteConfirmOpen(false)}
+                className="bg-[#EFEFEF] py-2 px-5 font-[500] text-[13px] rounded-[8px] hover:cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="bg-red-500 text-white py-2 px-5 font-[500] text-[13px] rounded-[8px] hover:cursor-pointer hover:bg-red-600"
+              >
+                Delete
+              </button>
             </div>
           </DialogPanel>
         </div>

@@ -1,4 +1,4 @@
-import { useState, use } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Inputfeild from "../Components/Inputfeild";
 const currentYear = new Date().getFullYear();
@@ -36,7 +36,7 @@ const Login = () => {
       const authApi = new AuthApis();
       const response: any = await authApi.loginUser({ email, password });
       const responseData = await response;
-      if (responseData?.status === 200) {
+      if (responseData?.status === 200 || 201) {
         showAlertMessage("Login successful!", "success");
         setLoginSpiner(false);
         localStorage.setItem("authToken", responseData.data.data.authToken);

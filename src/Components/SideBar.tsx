@@ -9,8 +9,7 @@ interface Props {
 
 const SideBar = ({ children }: Props) => {
   const { userDetails } = use(UserDetailsContext);
-  console.log(userDetails);
-  const isAdmin = userDetails?.data.user.role === "user";
+  const isAdmin = userDetails?.data.user.role === "admin";
 
   return (
     <div className="  flex-col items-start justify-between w-[18%] bg-[#D6CBCB] hidden lg:flex  ">
