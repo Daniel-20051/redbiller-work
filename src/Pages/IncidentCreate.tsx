@@ -19,8 +19,8 @@ const IncidentCreate = () => {
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
         <SideBar>incident-report</SideBar>
-        <div className="w-[76%] flex items-center justify-center ">
-          <div className="w-[87.8%] h-[81%] border-1 border-[#D9D9D9] relative ">
+        <div className="flex flex-1 items-center justify-center ">
+          <div className="w-[87.8%] h-[85%] md:h-[81%] border-1 border-[#D9D9D9] relative ">
             <p className="font-[600] text-[13px] text-[#898A8D] absolute right-[62px] top-[22px]">
               {currentDate.toLocaleDateString("en-GB", {
                 day: "numeric",
@@ -29,11 +29,11 @@ const IncidentCreate = () => {
               })}
             </p>
             <div className="flex flex-col items-center justify-center h-full ">
-              <p className="text-[48px] font-[700] text-primary ">
+              <p className=" text-[30px] md:text-[48px] font-[700] text-primary ">
                 Incident Report
               </p>
               <div className="w-[69%] text-left mt-[15px]  ">
-                <p className="font-[400] text-[20px] mb-[11px] ">
+                <p className="font-[400] text-[17px] md:text-[20px] mb-[11px] ">
                   Reason for Complaints
                 </p>
                 <div className="w-full ">
@@ -44,7 +44,7 @@ const IncidentCreate = () => {
                     id=""
                   ></textarea>
                 </div>
-                <div className="flex justify-between mt-[15px]">
+                <div className="md:flex justify-between mt-[15px]">
                   <input
                     className="hidden "
                     ref={fileInputRef}
@@ -53,7 +53,7 @@ const IncidentCreate = () => {
                     type="file"
                   />
                   <button
-                    className=" flex justify-between items-center border-1 border-[#E7E3E3] rounded-[8px] w-auto px-[14px] h-auto py-[10px] "
+                    className=" flex justify-between items-center border-1 border-[#E7E3E3] rounded-[8px] w-full md:w-auto px-[14px] h-auto py-[10px] "
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <p className="text-[#817979] font-[400] text-[14px] mx-[17px] max-w-[200px] overflow-x-auto whitespace-nowrap hide-scrollbar scroll-smooth ">
@@ -66,7 +66,7 @@ const IncidentCreate = () => {
                     />
                   </button>
 
-                  <button className="w-auto h-auto px-[16px] py-[6.5px] text-white bg-primary rounded-[8px] ">
+                  <button className="w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white bg-primary rounded-[8px] ">
                     Submit
                   </button>
                 </div>

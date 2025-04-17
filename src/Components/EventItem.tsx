@@ -1,6 +1,6 @@
 const EventItem = () => {
   return (
-    <div className="flex justify-center items-center gap-12 mb-[20px] ">
+    <div className="flex justify-center items-center gap-12 mb-[20px] mt-1 ">
       <div className=" flex-col w-[13%] h-[65px] border-1 rounded-[10px] border-[#EEEEEE]  hidden lg:flex ">
         <div className=" flex ml-[10px] mt-[10px] ">
           <img

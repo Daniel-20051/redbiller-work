@@ -35,22 +35,22 @@ const UserInfo = ({
   };
 
   return (
-    <div className="flex ml-1 justify-between items-center text-sm md:text-[16px]  bg-[#F8F8F8] border-t-1 border-[#E7E3E3] px-3 md:px-13 py-6 hover:bg-[#D6CBCB] ">
+    <div className="grid grid-cols-4 md:grid-cols-5  ml-1 items-center  text-sm md:text-[16px]  bg-[#F8F8F8] border-t-1 border-[#E7E3E3] px-3 md:px-13 py-6 hover:bg-[#D6CBCB] ">
       <img
-        className="rounded-full w-10 md:w-14 h-10 md:h-14 border-3 border-primary cursor-pointer"
+        className="rounded-full  w-10 md:w-14 h-10 md:h-14 border-3 border-primary cursor-pointer justify-center"
         src={imgUrl}
         onClick={() => setIsProfileOpen(true)}
         alt=""
       />
       <p
-        className="hover:underline cursor-pointer"
+        className="hover:underline cursor-pointer "
         onClick={() => setIsProfileOpen(true)}
       >
         {name}
       </p>
       <p className="">{PhoneNum}</p>
-      <p>{email}</p>
-      <div className="hidden md:flex mr-8  gap-6">
+      <p className="overflow-hidden whitespace-wrap">{email}</p>
+      <div className="hidden md:flex justify-center   gap-6">
         <img
           className="hover:cursor-pointer"
           src="../src/assets/pen.svg"

@@ -57,9 +57,14 @@ const UserCard = ({ username, role }: Props) => {
         src="https://s3-alpha-sig.figma.com/img/1af2/0862/20affecd5f498aeca93f64918a91bf86?Expires=1744588800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=YNHGXpSB5xmhkmix9CVJmD6cy~Xds99uLV0H6V3gR3t1Oe7l6Ag520ekrHWiFy7uOLWTQwQjNrWM-4Ez320E1IEwzjg5oeV57zE6ycx8jf5YaGEOmzdSaWsPEl7SLCDx9CnQUGDQUG-LZIYLPebnh23oipuo1DPRUK~b4vqjprzrrLeEBkfpWuEiAKz-Tk9WfuO1ilyEokjqYrncyRm86slcnSm2B19jq6v0ySLqorKexLtF13htpzhhl6rloEPtTVo27grvWx6gvr1a9A54n2PJc0KqNeNZda4VaRxrvXw1Dk-JXWlWvrc-Pv8SdtbkkZRDEYivfYUBz~sPrt1~8w__"
         alt=""
       />
-      <div className="flex flex-col text-center">
-        <p className="text-[15px] font-extrabold ">{username}</p>
-        <p className="text-[10px] uppercase">{role}</p>
+      <div
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+        className="flex flex-col text-center cursor-pointer"
+      >
+        <p className="text-[13px] md:text-[15px] font-extrabold ">{username}</p>
+        <p className="text-[9px] md:text-[10px] uppercase">{role}</p>
       </div>
       <div>
         <img
