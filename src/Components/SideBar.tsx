@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import GroupCard from "./GroupCard";
-import { useState } from "react";
 import { use } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
 
@@ -10,6 +9,7 @@ interface Props {
 
 const SideBar = ({ children }: Props) => {
   const { userDetails } = use(UserDetailsContext);
+  console.log(userDetails);
   const isAdmin = userDetails?.data.user.role === "user";
 
   return (
