@@ -30,6 +30,7 @@ const IncidentReport = () => {
             </div>
             <div className="overflow-y-auto max-h-full hide-scrollbar scroll-smooth ">
               <IncidentItem></IncidentItem>
+              {/* <IncidentItem></IncidentItem>
               <IncidentItem></IncidentItem>
               <IncidentItem></IncidentItem>
               <IncidentItem></IncidentItem>
@@ -38,8 +39,7 @@ const IncidentReport = () => {
               <IncidentItem></IncidentItem>
               <IncidentItem></IncidentItem>
               <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem>
+              <IncidentItem></IncidentItem> */}
             </div>
           </div>
           <div className=" h-[full] w-[1px] bg-[#D9D9D9] "></div>

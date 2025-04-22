@@ -29,35 +29,35 @@ const Login = () => {
     setShowAlert(true);
   };
 
+  const authApi = new AuthApis();
+
   const hnadleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginSpiner(true);
     try {
-      const authApi = new AuthApis();
       const response: any = await authApi.loginUser({ email, password });
       const responseData = await response;
-      if (responseData?.status === 200 || 201) {
+      console.log(responseData);
+      console.log(responseData?.response);
+      if (responseData?.status === 200 || responseData?.status === 201) {
+        localStorage.setItem("authToken", responseData?.data.data.authToken);
         showAlertMessage("Login successful!", "success");
+        setTimeout(() => navigate("/home"), 5000);
         setLoginSpiner(false);
-        localStorage.setItem("authToken", responseData.data.data.authToken);
-        setTimeout(() => navigate("/home"), 1000);
         window.location.reload();
         return;
       }
-      if (responseData?.response.status === 401) {
+      if (responseData?.status === 401) {
         showAlertMessage("invalide passoword", "error");
         setLoginSpiner(false);
         return;
       }
-      // showAlertMessage(responseData?.message || "Login failed", "error");
     } catch (err: any) {
       showAlertMessage("An error occurred during login", "error");
       setLoginSpiner(false);
       console.log(err);
       return err;
-    } //finally {
-    //   setLoginSpiner(false);
-    // }
+    }
   };
 
   return (

@@ -231,13 +231,15 @@ const UserInfo = ({
       >
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-black/40">
           <DialogPanel className="flex flex-col w-[350px] rounded-[20px] items-center bg-white p-6">
-            <div className="flex flex-col items-center mb-6">
-              <img
+            <div className="flex flex-col items-center mb-8">
+              {/* <img
                 className="w-16 h-16 mb-4"
                 src="../src/assets/warning-icon.svg"
                 alt="Warning"
-              />
-              <h3 className="text-lg font-bold">Confirm Deletion</h3>
+              /> */}
+              <h3 className="text-lg font-bold bg-red-100 rounded px-2 text-red-700">
+                Confirm Deletion
+              </h3>
               <p className="text-center text-gray-600 mt-2">
                 Are you sure you want to delete {name}'s profile? This action
                 cannot be undone.
