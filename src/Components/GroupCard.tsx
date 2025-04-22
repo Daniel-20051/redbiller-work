@@ -1,6 +1,6 @@
 const GroupCard = () => {
   return (
-    <div className="xl:w-[240px] h-[216px] rounded-[20px]   relative flex flex-col bg-white  shadow-xl">
+    <div className=" w-[240px] h-[216px] rounded-[20px]   relative flex flex-col bg-white  shadow-xl">
       <img
         className="w-[20px] h-[20px] absolute right-[15px] top-[15px] "
         src="../src/assets/redbiller.png"

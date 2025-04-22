@@ -255,7 +255,7 @@ const UserInfo = ({
               </button>
               <button
                 onClick={confirmDelete}
-                className="bg-red-500 text-white py-2 px-5 font-[500] text-[13px] rounded-[8px] hover:cursor-pointer hover:bg-red-600"
+                className="bg-primary text-white py-2 px-5 font-[500] text-[13px] rounded-[8px] hover:cursor-pointer hover:bg-red-600"
               >
                 {isDeleteDpiner ? "loading..." : "Delete"}
               </button>

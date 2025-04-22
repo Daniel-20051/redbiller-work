@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import GroupCard from "./GroupCard";
-import { use } from "react";
+import { use, useRef, useEffect } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
+import { useSidebar } from "../context/SidebarContext";
 
 interface Props {
   children?: string;
@@ -10,16 +11,40 @@ interface Props {
 const SideBar = ({ children }: Props) => {
   const { userDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role === "admin";
+  const { isCollapsed, toggleCollapse } = useSidebar();
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node) &&
+        !isCollapsed
+      ) {
+        toggleCollapse();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCollapsed, toggleCollapse]);
 
   return (
-    <div className="  flex-col items-start justify-between w-[18%] bg-[#D6CBCB] hidden lg:flex  ">
+    <div
+      ref={sidebarRef}
+      className={`flex-col items-start justify-between lg:w-[25%] xl:w-[20%] bg-[#D6CBCB] transition-all ${
+        isCollapsed ? "w-0 overflow-hidden  " : "absolute z-40 w-[40%] h-full"
+      } lg:flex `}
+    >
       <div className="w-full">
         <Link
           to="/home"
           className={
             children === "home"
-              ? "text-white  flex w-full h-[65px] font-bold bg-primary gap-3 items-center "
-              : "text-black  flex w-full h-[65px] font-bold gap-3 items-center "
+              ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
+              : "text-black  flex w-full h-[55px] font-bold gap-3 items-center "
           }
         >
           <img
@@ -37,8 +62,8 @@ const SideBar = ({ children }: Props) => {
           to="/events"
           className={
             children === "event"
-              ? "text-white  flex w-full h-[65px] font-bold bg-primary gap-3 items-center "
-              : "text-black  flex w-full h-[65px] font-bold gap-3 items-center "
+              ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
+              : "text-black  flex w-full h-[55px] font-bold gap-3 items-center "
           }
         >
           <img
@@ -57,8 +82,8 @@ const SideBar = ({ children }: Props) => {
             to="/users"
             className={
               children === "users"
-                ? "text-white  flex w-full h-[65px] font-bold bg-primary gap-3 items-center "
-                : "text-black  flex w-full h-[65px] font-bold gap-3 items-center "
+                ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
+                : "text-black  flex w-full h-[55px] font-bold gap-3 items-center "
             }
           >
             <img
@@ -77,8 +102,8 @@ const SideBar = ({ children }: Props) => {
           to="/incident-report"
           className={
             children === "incident-report"
-              ? "text-white  flex w-full h-[65px] font-bold bg-primary gap-3 items-center "
-              : "text-black  flex w-full h-[65px] font-bold gap-3 items-center "
+              ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
+              : "text-black  flex w-full h-[55px] font-bold gap-3 items-center "
           }
         >
           <img
@@ -96,8 +121,8 @@ const SideBar = ({ children }: Props) => {
           to="/weekly-report"
           className={
             children === "weekly-report"
-              ? "text-white  flex w-full h-[65px] font-bold bg-primary gap-3 items-center "
-              : "text-black  flex w-full h-[65px] font-bold gap-3 items-center "
+              ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
+              : "text-black  flex w-full h-[55px] font-bold gap-3 items-center "
           }
         >
           <img
@@ -115,8 +140,8 @@ const SideBar = ({ children }: Props) => {
           to="/home"
           className={
             children === "tasks"
-              ? "text-white  flex w-full h-[65px] font-bold bg-primary gap-3 items-center "
-              : "text-black  flex w-full h-[65px] font-bold gap-3 items-center "
+              ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
+              : "text-black  flex w-full h-[55px] font-bold gap-3 items-center "
           }
         >
           <img
@@ -131,7 +156,7 @@ const SideBar = ({ children }: Props) => {
           <p className="text-[15px] font-[500] ">Tasks</p>
         </Link>
       </div>
-      <div className="place-self-center mb-15 hidden xl:inline ">
+      <div className="place-self-center mb-15 hidden  lg:inline ">
         <GroupCard></GroupCard>
       </div>
     </div>
