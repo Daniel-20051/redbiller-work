@@ -11,14 +11,18 @@ interface Props {
 const SideBar = ({ children }: Props) => {
   const { userDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role === "admin";
-  const { isCollapsed, toggleCollapse } = useSidebar();
+  const { isCollapsed, toggleCollapse, toggleRef } = useSidebar();
   const sidebarRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
       if (
         sidebarRef.current &&
-        !sidebarRef.current.contains(event.target as Node) &&
+        !sidebarRef.current.contains(target) &&
+        toggleRef.current &&
+        !toggleRef.current.contains(target) &&
         !isCollapsed
       ) {
         toggleCollapse();
@@ -26,10 +30,8 @@ const SideBar = ({ children }: Props) => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isCollapsed, toggleCollapse]);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isCollapsed, toggleCollapse, toggleRef]);
 
   return (
     <div

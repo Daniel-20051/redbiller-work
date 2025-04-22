@@ -23,17 +23,18 @@ const NavBar = () => {
     if (!name) return "";
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
   };
-  const { isCollapsed, toggleCollapse } = useSidebar();
+  const { isCollapsed, toggleCollapse, toggleRef } = useSidebar();
 
   return (
     <div className="bg-[#F2F2F2] h-[55px] w-full flex justify-between ">
       <div className="flex items-center ">
         <div className="group flex gap-2 items-center ">
           <img
+            ref={toggleRef}
             className="sidebar w-[35px] h-[35px] ml-5 lg:hidden p-2 rounded-md hover:bg-white cursor-pointer  "
             src="../src/assets/sidebarr-logo.svg"
             alt=""
-            onClick={toggleCollapse}
+            onClick={() => toggleCollapse()}
           />
           <div className=" absolute top-15 left-2 hidden group-hover:block bg-[#f2f2f2] px-3 py-2 rounded-md z-50 ">
             <p className="text-xs font-[700]">

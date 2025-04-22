@@ -1,27 +1,25 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useRef } from "react";
 
-interface SidebarContextType {
-  isCollapsed: boolean;
-  toggleCollapse: () => void;
-}
+const SidebarContext = createContext<any>(null);
 
-const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
-
-export const SidebarProvider = ({ children }: { children: ReactNode }) => {
+export const SidebarProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const toggleRef = useRef<HTMLImageElement | null>(null);
 
-  const toggleCollapse = () => {
-    setIsCollapsed((prev) => !prev);
-  };
+  const toggleCollapse = () => setIsCollapsed((prev) => !prev);
 
   return (
-    <SidebarContext.Provider value={{ isCollapsed, toggleCollapse }}>
+    <SidebarContext.Provider value={{ isCollapsed, toggleCollapse, toggleRef }}>
       {children}
     </SidebarContext.Provider>
   );
 };
 
-export const useSidebar = (): SidebarContextType => {
+export const useSidebar = () => {
   const context = useContext(SidebarContext);
   if (!context) {
     throw new Error("useSidebar must be used within a SidebarProvider");
