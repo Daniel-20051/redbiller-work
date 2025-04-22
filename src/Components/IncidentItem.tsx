@@ -52,12 +52,24 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
     }
   }, [incidentValue, searchTerm]);
 
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <p className="text-red-500 text-center">Loading...</p>
+      </div>
+    );
+  }
+
+  if (filteredIncidents.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <p className="text-[#767676] text-center">No incidents found</p>
+      </div>
+    );
+  }
+
   return (
     <ul className="w-[80%] space-y-2">
-      {error && <li className="text-red-500">Error loading incidents</li>}
-      {filteredIncidents.length === 0 && !error && (
-        <li className="text-[#767676]">No incidents found</li>
-      )}
       {filteredIncidents.map((incident, index) => (
         <li
           key={incident.id || index}
