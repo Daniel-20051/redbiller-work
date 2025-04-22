@@ -1,9 +1,15 @@
+import { useState } from "react";
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import IncidentItem from "../Components/IncidentItem";
 import { Link } from "react-router-dom";
 
 const IncidentReport = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <NavBar></NavBar>
@@ -20,6 +26,8 @@ const IncidentReport = () => {
                   className="w-[120px] h-[35px] outline-0  "
                   type="text"
                   placeholder="Search..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
                 />
               </div>
               <Link to="/incident-report/create">
@@ -29,17 +37,7 @@ const IncidentReport = () => {
               </Link>
             </div>
             <div className="overflow-y-auto max-h-full hide-scrollbar scroll-smooth ">
-              <IncidentItem></IncidentItem>
-              {/* <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem>
-              <IncidentItem></IncidentItem> */}
+              <IncidentItem searchTerm={searchTerm} />
             </div>
           </div>
           <div className=" h-[full] w-[1px] bg-[#D9D9D9] "></div>
