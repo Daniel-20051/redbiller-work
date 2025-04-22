@@ -69,7 +69,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
   }
 
   return (
-    <ul className="w-[80%] space-y-2">
+    <ul className="w-full space-y-2">
       {filteredIncidents.map((incident, index) => (
         <li
           key={incident.id || index}
