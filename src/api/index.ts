@@ -88,4 +88,38 @@ export class AuthApis {
     }
   }
   
+  async submitIncidentReport(bodyData: string){
+    try{
+      const token = localStorage.getItem("authToken")
+      const response = await axios.post(`${BASE_URL}/api/v1/incident/user/report`,
+      bodyData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    return response
+  }
+    catch(err){
+      return err
+    }
+  }
+
+  async getAllIncidentReport(){
+    try{
+      const token = localStorage.getItem("authToken")
+      const response = await axios.get(`${BASE_URL}/api/v1/report/admin-get/all-report`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      return response
+    }
+    catch(err){
+      return err
+    }
+  }
 }
