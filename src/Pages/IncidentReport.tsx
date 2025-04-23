@@ -43,7 +43,7 @@ const IncidentReport = () => {
                   />
                 </div>
                 <Link to="/incident-report/create">
-                  <button className="w-[80px] md:[110px] lg:w-[121px] bg-primary rounded-[8px] text-white font-[500] text-[11px] lg:text-[15px] h-[35px] ">
+                  <button className="w-[80px] md:[110px] lg:w-[121px] cursor-[pointer] bg-primary rounded-[8px] text-white font-[500] text-[11px] lg:text-[15px] h-[35px] ">
                     Make a report
                   </button>
                 </Link>

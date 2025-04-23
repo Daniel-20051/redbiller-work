@@ -88,11 +88,16 @@ export class AuthApis {
     }
   }
   
-  async submitIncidentReport(bodyData: string){
+  async submitIncidentReport(data: { message: string, subject: string, photo: File }){
     try{
       const token = localStorage.getItem("authToken")
+      const formData = new FormData();
+      formData.append('message', data.message);
+      formData.append('subject', data.subject);
+      formData.append('photo', data.photo);
+
       const response = await axios.post(`${BASE_URL}/api/v1/incident/user/report`,
-      bodyData,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`
