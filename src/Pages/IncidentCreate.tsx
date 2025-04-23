@@ -37,9 +37,14 @@ const IncidentCreate = () => {
                   Reason for Complaints
                 </p>
                 <div className="w-full ">
-                  <DropDown></DropDown>
+                  <input
+                    type="text"
+                    className=" border-1 p-2 w-full text-sm rounded-t-[5px] border-[#CCCCCC] focus:outline-0"
+                    name=""
+                    placeholder="Subject"
+                  />
                   <textarea
-                    className="resize-none p-[20px] w-full h-[337px] border-[1px] border-t-0 rounded-b-[5px] border-[#CCCCCC] focus:outline-0"
+                    className="resize-none p-[20px] w-full h-[250px] border-[1px] border-t-0 rounded-b-[5px] border-[#CCCCCC] focus:outline-0"
                     name=""
                     id=""
                   ></textarea>

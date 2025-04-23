@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { AuthApis } from "../api";
+import { use } from "react";
+import { UserDetailsContext } from "../context/AuthContext";
 
 const authApi = new AuthApis();
 
@@ -21,6 +23,8 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
   const [incidentValue, setIncidentValue] = useState<any>(null);
   const [filteredIncidents, setFilteredIncidents] = useState<Incident[]>([]);
   const [error, setError] = useState(false);
+  const { userDetails } = use(UserDetailsContext);
+  const isAdmin = userDetails?.data.user.role == "admin";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +73,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
   }
 
   return (
-    <ul className="w-full space-y-2">
+    <ul className="w-full space-y-2 hover:cursor-pointer">
       {filteredIncidents.map((incident, index) => (
         <li
           key={incident.id || index}
@@ -78,12 +82,14 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
           <div className="flex flex-col">
             <p className="text-primary font-semibold text-[16px]">
               {incident.subject}
-              <span className="text-[#767676] text-[10px] ml-2">
-                ➔{" "}
-                {incident.User.firstName.charAt(0).toUpperCase() +
-                  incident.User.firstName.slice(1).toLowerCase()}{" "}
-                {incident.User.lastName.toLowerCase()}
-              </span>
+              {isAdmin && (
+                <span className="text-[#767676] text-[10px] ml-2">
+                  ➔{" "}
+                  {incident.User.firstName.charAt(0).toUpperCase() +
+                    incident.User.firstName.slice(1).toLowerCase()}{" "}
+                  {incident.User.lastName.toLowerCase()}
+                </span>
+              )}
             </p>
             <p className="text-[#4E4E4E] text-[14px]">
               {incident.incidentMessage}
