@@ -12,7 +12,7 @@ const IncidentReport = () => {
     setSearchTerm(e.target.value);
   };
   const { userDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role == "amin";
+  const isAdmin = userDetails?.data.user.role == "admin";
 
   return (
     <div className="flex flex-col h-screen">
@@ -59,7 +59,7 @@ const IncidentReport = () => {
           </div>
           <div className=" h-[full] w-[1px] bg-[#D9D9D9] "></div>
           <div
-            className={`w-[49%] flex flex-col gap-8 justify-center px-7    ${
+            className={`w-[49%] flex flex-col gap-8 justify-center px-7  ${
               isAdmin ? "hidden" : "hidden  md:flex"
             } `}
           >
@@ -80,7 +80,7 @@ const IncidentReport = () => {
               date to resolve the issue.
             </p>
             <img
-              className="h-[454px] w-[319px] object-cover "
+              className="h-[454px] w-[319px] object-cover place-self-center"
               src="../src/assets/wifi-report.jpg"
               alt=""
             />
