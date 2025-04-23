@@ -31,6 +31,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
       setError(true);
       try {
         const response = await authApi.getAllIncidentReport();
+        console.log(response)
         setIncidentValue(response);
         setError(false);
       } catch (error) {
