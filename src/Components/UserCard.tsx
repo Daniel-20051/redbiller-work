@@ -54,7 +54,7 @@ const UserCard = ({ username, role }: Props) => {
       /> */}
       <img
         className="w-[35px] h-[35px] rounded-[15px]"
-        src="https://s3-alpha-sig.figma.com/img/1af2/0862/20affecd5f498aeca93f64918a91bf86?Expires=1744588800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=YNHGXpSB5xmhkmix9CVJmD6cy~Xds99uLV0H6V3gR3t1Oe7l6Ag520ekrHWiFy7uOLWTQwQjNrWM-4Ez320E1IEwzjg5oeV57zE6ycx8jf5YaGEOmzdSaWsPEl7SLCDx9CnQUGDQUG-LZIYLPebnh23oipuo1DPRUK~b4vqjprzrrLeEBkfpWuEiAKz-Tk9WfuO1ilyEokjqYrncyRm86slcnSm2B19jq6v0ySLqorKexLtF13htpzhhl6rloEPtTVo27grvWx6gvr1a9A54n2PJc0KqNeNZda4VaRxrvXw1Dk-JXWlWvrc-Pv8SdtbkkZRDEYivfYUBz~sPrt1~8w__"
+        src="../src/assets/blank-profile.png"
         alt=""
       />
       <div
@@ -81,7 +81,7 @@ const UserCard = ({ username, role }: Props) => {
           <div className="flex gap-6 items-center">
             <img
               className="w-[56px] h-[56px] ml-[15px] rounded-[50px]"
-              src="https://s3-alpha-sig.figma.com/img/d1de/8b14/dcdb224d3238629ee05b2850c42f6549?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TuQHovb-0s-6QBZycnSZFT-3k~12hGKgE0kKbTfLcnsgHhwkqOb9nkSKgnn9I9vzZICIgp85h42rfDNgMXiWKEY8zq0LMgR8EMv6OXB0krrHIutMqqfGHJMDaTdGd3LyAV9VqpVbtls~Jfii2-UuGWC~xBwfwwjVckQmoWyrHDJrkxalA6OQkSlspGfQhWn9L6laFwEHkJx7BUIoHFxhoxVxfeFLkEOFlD6iG9GzIl6vVWOlR--E24sURD4d1TPAh1h8-lJ~qfMTHFDKC8Mq9I4ZmexuaNkDYOJMkPKEcHxNPJu3AeHdCxiYSKRzmXB4gfsg3PpmmReGBIhzeaPBaQ__"
+              src="../src/assets/blank-profile.png"
               alt=""
             />
             <div className="flex flex-col gap-4">

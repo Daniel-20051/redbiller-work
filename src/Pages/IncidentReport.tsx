@@ -20,8 +20,13 @@ const IncidentReport = () => {
       <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
         <SideBar>incident-report</SideBar>
         <div className="flex flex-1 ">
-          <div className="  flex flex-1 flex-col gap-6">
-            <div className="flex   justify-between items-center px-3  mt-[24px]">
+          <div
+            className={`flex flex-1 flex-col gap-6 ${
+              isAdmin &&
+              "my-[4%] mx-[3%] border-1 border-[#D9D9D9] rounded-[8px]"
+            } `}
+          >
+            <div className="flex justify-between items-center px-3  mt-[24px]">
               <div>
                 <p className="font-[600] text-[19px] lg:text-[23px]  ">
                   Incident Reports
@@ -44,7 +49,11 @@ const IncidentReport = () => {
                 </Link>
               </div>
             </div>
-            <div className="overflow-y-auto max-h-full hide-scrollbar scroll-smooth  place-self-center w-[80%]  ">
+            <div
+              className={`overflow-y-auto max-h-full hide-scrollbar scroll-smooth  place-self-center w-[95%] ${
+                isAdmin && "mt-4"
+              } `}
+            >
               <IncidentItem searchTerm={searchTerm} />
             </div>
           </div>

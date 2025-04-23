@@ -13,22 +13,22 @@ const GroupCard = () => {
         <div className="flex  ">
           <img
             className="w-[45px] h-[45px] rounded-4xl border-2 border-primary mb-[14px] z-50 "
-            src="https://s3-alpha-sig.figma.com/img/fd3d/4c48/a8b689cbbfb343fe22651fcb4dc1c2e0?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=RzuYUaaUJ2V6YfLoqXQc1e0FKNbkeE-g18gzUpYVc3YuPFwrJrewPPqXLl8Z57~PIntsw~XXbcOMXwrqXC9KymfowzFLLS65UB~vuTAWeTDpLyJhNpFy9fGebt53XBarZR3IPCLYL~We3N9q8H4ogTzzK5tbjCiATKkE7Yetp4obITXIcE1O5hhABtfeQht-jZ-SoEhOJTJ4~GCezOpc-fxAFO-zvy735yavzfczIzzTxkTaG~pS~lsuAhmnBRZataviJ8Z3N~rQCpQFYVQcEzQiUzhOhGweGsnZc0e6y~aLUYcq4ckiZ2UYDayosBM~n7h3Mwr4nlmOsCnBfxisFg__"
+            src="../src/assets/blank-profile.png"
             alt=""
           />
           <img
             className="w-[45px] h-[45px] rounded-4xl border-2 border-primary mb-[14px] -ml-[22px] z-40 "
-            src="https://s3-alpha-sig.figma.com/img/fd3d/4c48/a8b689cbbfb343fe22651fcb4dc1c2e0?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=RzuYUaaUJ2V6YfLoqXQc1e0FKNbkeE-g18gzUpYVc3YuPFwrJrewPPqXLl8Z57~PIntsw~XXbcOMXwrqXC9KymfowzFLLS65UB~vuTAWeTDpLyJhNpFy9fGebt53XBarZR3IPCLYL~We3N9q8H4ogTzzK5tbjCiATKkE7Yetp4obITXIcE1O5hhABtfeQht-jZ-SoEhOJTJ4~GCezOpc-fxAFO-zvy735yavzfczIzzTxkTaG~pS~lsuAhmnBRZataviJ8Z3N~rQCpQFYVQcEzQiUzhOhGweGsnZc0e6y~aLUYcq4ckiZ2UYDayosBM~n7h3Mwr4nlmOsCnBfxisFg__"
+            src="../src/assets/blank-profile.png"
             alt=""
           />
           <img
             className="w-[45px] h-[45px] rounded-4xl border-2 border-primary mb-[14px] -ml-[22px] z-30 "
-            src="https://s3-alpha-sig.figma.com/img/fd3d/4c48/a8b689cbbfb343fe22651fcb4dc1c2e0?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=RzuYUaaUJ2V6YfLoqXQc1e0FKNbkeE-g18gzUpYVc3YuPFwrJrewPPqXLl8Z57~PIntsw~XXbcOMXwrqXC9KymfowzFLLS65UB~vuTAWeTDpLyJhNpFy9fGebt53XBarZR3IPCLYL~We3N9q8H4ogTzzK5tbjCiATKkE7Yetp4obITXIcE1O5hhABtfeQht-jZ-SoEhOJTJ4~GCezOpc-fxAFO-zvy735yavzfczIzzTxkTaG~pS~lsuAhmnBRZataviJ8Z3N~rQCpQFYVQcEzQiUzhOhGweGsnZc0e6y~aLUYcq4ckiZ2UYDayosBM~n7h3Mwr4nlmOsCnBfxisFg__"
+            src="../src/assets/blank-profile.png"
             alt=""
           />
           <img
             className="w-[45px] h-[45px] rounded-4xl border-2 border-primary mb-[14px] -ml-[22px] z-20 "
-            src="https://s3-alpha-sig.figma.com/img/fd3d/4c48/a8b689cbbfb343fe22651fcb4dc1c2e0?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=RzuYUaaUJ2V6YfLoqXQc1e0FKNbkeE-g18gzUpYVc3YuPFwrJrewPPqXLl8Z57~PIntsw~XXbcOMXwrqXC9KymfowzFLLS65UB~vuTAWeTDpLyJhNpFy9fGebt53XBarZR3IPCLYL~We3N9q8H4ogTzzK5tbjCiATKkE7Yetp4obITXIcE1O5hhABtfeQht-jZ-SoEhOJTJ4~GCezOpc-fxAFO-zvy735yavzfczIzzTxkTaG~pS~lsuAhmnBRZataviJ8Z3N~rQCpQFYVQcEzQiUzhOhGweGsnZc0e6y~aLUYcq4ckiZ2UYDayosBM~n7h3Mwr4nlmOsCnBfxisFg__"
+            src="../src/assets/blank-profile.png"
           />
         </div>
 

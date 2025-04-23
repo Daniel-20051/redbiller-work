@@ -37,7 +37,9 @@ const SideBar = ({ children }: Props) => {
     <div
       ref={sidebarRef}
       className={`flex-col items-start justify-between lg:w-[25%] xl:w-[20%] bg-[#D6CBCB] transition-all ${
-        isCollapsed ? "w-0 overflow-hidden  " : "absolute z-40 w-[40%] h-full"
+        isCollapsed
+          ? "w-0 overflow-hidden  "
+          : "absolute z-40 w-[50%] md:w-[40%] h-full"
       } lg:flex `}
     >
       <div className="w-full">
@@ -60,25 +62,7 @@ const SideBar = ({ children }: Props) => {
           />
           <p className="text-[15px] font-[500] ">Home</p>
         </Link>
-        <Link
-          to="/events"
-          className={
-            children === "event"
-              ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
-              : "text-black  flex w-full h-[55px] font-bold gap-3 items-center "
-          }
-        >
-          <img
-            className="w-[16px] h-[16px] ml-[30px] text-black "
-            src={
-              children === "event"
-                ? "../src/assets/event-logo-active.svg"
-                : "../src/assets/event-logo.svg"
-            }
-            alt=""
-          />
-          <p className="text-[15px] font-[500] ">Event</p>
-        </Link>
+
         {isAdmin && (
           <Link
             to="/users"
@@ -100,6 +84,25 @@ const SideBar = ({ children }: Props) => {
             <p className="text-[15px] font-[500] ">Users</p>
           </Link>
         )}
+        <Link
+          to="/events"
+          className={
+            children === "event"
+              ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
+              : "text-black  flex w-full h-[55px] font-bold gap-3 items-center "
+          }
+        >
+          <img
+            className="w-[16px] h-[16px] ml-[30px] text-black "
+            src={
+              children === "event"
+                ? "../src/assets/event-logo-active.svg"
+                : "../src/assets/event-logo.svg"
+            }
+            alt=""
+          />
+          <p className="text-[15px] font-[500] ">Event</p>
+        </Link>
         <Link
           to="/incident-report"
           className={
