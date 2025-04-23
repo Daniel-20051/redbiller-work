@@ -12,7 +12,7 @@ const IncidentReport = () => {
     setSearchTerm(e.target.value);
   };
   const { userDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role == "admin";
+  const isAdmin = userDetails?.data.user.role == "amin";
 
   return (
     <div className="flex flex-col h-screen">
@@ -50,8 +50,8 @@ const IncidentReport = () => {
               </div>
             </div>
             <div
-              className={`overflow-y-auto max-h-full hide-scrollbar scroll-smooth  place-self-center w-[95%] ${
-                isAdmin && "mt-4"
+              className={`overflow-y-auto max-h-full hide-scrollbar scroll-smooth  place-self-center w-[85%] ${
+                isAdmin && "mt-4 w-[95%]"
               } `}
             >
               <IncidentItem searchTerm={searchTerm} />
@@ -59,9 +59,31 @@ const IncidentReport = () => {
           </div>
           <div className=" h-[full] w-[1px] bg-[#D9D9D9] "></div>
           <div
-            className={`w-[49%]  ${isAdmin ? "hidden" : "hidden  md:flex"} `}
+            className={`w-[49%] flex flex-col gap-8 justify-center px-7    ${
+              isAdmin ? "hidden" : "hidden  md:flex"
+            } `}
           >
-            hi
+            <p className=" text-[16px] text-primary font-[600]  ">
+              Wifi network case broken
+              <span className="text-[#D9D9D9] font-[600] text-[13px] ml-5 ">
+                10 March
+              </span>
+            </p>
+            <p>
+                Kindly be informed that your subscription has been activated. ​
+              <br />
+              Please visit our online payment channels with your registered
+              email address to have your subscription automatically activated
+              whenever you make a payment. I sincerely apologize for our
+              prolonged date of resolution. This is due to our tight schedule.
+              However, our technical team will Revert if we can get an earlier
+              date to resolve the issue.
+            </p>
+            <img
+              className="h-[454px] w-[319px] object-cover "
+              src="../src/assets/wifi-report.jpg"
+              alt=""
+            />
           </div>
         </div>
       </div>

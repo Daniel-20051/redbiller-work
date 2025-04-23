@@ -20,7 +20,7 @@ const Home = () => {
             <SideBar>home</SideBar>
 
             <div className="flex flex-1 flex-col   items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
-              <p className=" font-[600] text-[32px]  mb-4 ">
+              <p className=" font-[600] text-[27px] md:text-[32px]  mb-4 ">
                 Welcome back,{" "}
                 {userDetails.data.user.gender === "MALE" ? "Mr" : "Ms"}{" "}
                 <span>
