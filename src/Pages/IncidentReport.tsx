@@ -15,6 +15,8 @@ const IncidentReport = () => {
   const { userDetails, setIncidentDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "amin";
 
+  console.log(activeIncident);
+
   const handleIncidentSelect = (incident: any) => {
     setActiveIncident(incident);
     setIncidentDetails(incident);
@@ -68,10 +70,16 @@ const IncidentReport = () => {
           </div>
           <div className=" h-[full] w-[1px] bg-[#D9D9D9] "></div>
           <div
-            className={`w-[49%] flex flex-col gap-8 justify-center px-7  ${
+            className={`w-[49%] flex flex-col gap-8 justify-center relative px-7  ${
               isAdmin && "hidden "
             } ${activeIncident ? "flex w-full md:w-[49%] " : "hidden"}`}
           >
+            <button
+              onClick={() => setActiveIncident(false)}
+              className="absolute top-10 right-10"
+            >
+              <img src="../src/assets/back.svg" alt="" />
+            </button>
             {activeIncident ? (
               <>
                 {/* <p className=" text-[16px] text-primary font-[600]  ">
