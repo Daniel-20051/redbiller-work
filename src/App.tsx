@@ -11,7 +11,7 @@ import WeeklyCreate from "./Pages/WeeklyCreate";
 import Profile from "./Pages/Profile";
 import User from "./Pages/Users";
 import ProtectedRoute from "./routs/protectedRoute";
-import UserDropdown from "./Pages/test";
+import SwipeActionCard from "./Pages/test";
 import IncidentView from "./Pages/IncidentView";
 
 const App = () => {
@@ -53,7 +53,22 @@ const App = () => {
             <Route path="/events/:slug" element={<EventInfo />} />
             <Route path="/weekly-report" element={<WeeklyReport />} />
             <Route path="/weekly-report/create" element={<WeeklyCreate />} />
-            <Route path="/test" element={<UserDropdown />} />
+            <Route
+              path="/test"
+              element={
+                <SwipeActionCard
+                  onEdit={() => alert("Edit clicked")}
+                  onDelete={() => alert("Delete clicked")}
+                >
+                  <div>
+                    <h2 className="font-bold text-lg">Swipeable Card</h2>
+                    <p className="text-gray-600 text-sm">
+                      Swipe left to edit or delete.
+                    </p>
+                  </div>
+                </SwipeActionCard>
+              }
+            />
             <Route path="/incident-report" element={<IncidentReport />} />
             <Route path="/incident-report/:id" element={<IncidentView />} />
             <Route

@@ -76,8 +76,8 @@ const User = () => {
               <p className=" ml-0 ">Photo</p>
               <p>Member Name</p>
               <p>Mobile(+234)</p>
-              <p className="mr-10 md:mr-0">Email</p>
-              <div className="hidden md:inline relative">
+              <p className="mr-10 md:mr-0 text-center">Email</p>
+              <div className="absolute top-17 md:top-0 right-5 md:inline md:relative">
                 <img
                   className=" absolute left-3 top-16 transform -translate-y-12  text-gray-500 "
                   src="../src/assets/search.svg"
