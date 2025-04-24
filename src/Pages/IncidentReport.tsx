@@ -8,11 +8,18 @@ import { UserDetailsContext } from "../context/AuthContext";
 
 const IncidentReport = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeIncident, setActiveIncident] = useState<any>(null);
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
   const { userDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role == "admin";
+  const isAdmin = userDetails?.data.user.role == "amin";
+
+  const handleIncidentSelect = (incident: any) => {
+    setActiveIncident(incident);
+  };
+
+  console.log(activeIncident);
 
   return (
     <div className="flex flex-col h-screen">
@@ -54,7 +61,10 @@ const IncidentReport = () => {
                 isAdmin && "mt-4 w-[95%]"
               } `}
             >
-              <IncidentItem searchTerm={searchTerm} />
+              <IncidentItem
+                searchTerm={searchTerm}
+                onIncidentSelect={handleIncidentSelect}
+              />
             </div>
           </div>
           <div className=" h-[full] w-[1px] bg-[#D9D9D9] "></div>
@@ -63,27 +73,53 @@ const IncidentReport = () => {
               isAdmin ? "hidden" : "hidden  md:flex"
             } `}
           >
-            <p className=" text-[16px] text-primary font-[600]  ">
-              Wifi network case broken
-              <span className="text-[#D9D9D9] font-[600] text-[13px] ml-5 ">
-                10 March
-              </span>
-            </p>
-            <p>
-                Kindly be informed that your subscription has been activated. ​
-              <br />
-              Please visit our online payment channels with your registered
-              email address to have your subscription automatically activated
-              whenever you make a payment. I sincerely apologize for our
-              prolonged date of resolution. This is due to our tight schedule.
-              However, our technical team will Revert if we can get an earlier
-              date to resolve the issue.
-            </p>
-            <img
-              className="h-[454px] w-[319px] object-cover place-self-center"
-              src="../src/assets/wifi-report.jpg"
-              alt=""
-            />
+            {activeIncident ? (
+              <>
+                <p className=" text-[16px] text-primary font-[600]  ">
+                  {`${activeIncident?.User.firstName} ${activeIncident?.User.lastName}`}
+                </p>
+                <p className=" text-[16px] text-primary font-[600]  ">
+                  {activeIncident?.subject}
+                  <span className="text-[#D9D9D9] font-[600] text-[13px] ml-5 ">
+                    {new Date(activeIncident?.updatedAt).toLocaleString()}
+                  </span>
+                </p>
+                <p>{activeIncident?.incidentMessage}</p>
+                {activeIncident?.incidentphoto ? (
+                  <img
+                    className="h-[150px] w-auto object-cover place-self-center"
+                    src={activeIncident?.incidentphoto || ""}
+                    alt="Incident photo"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="h-[254px] w-[319px] flex items-center justify-center text-gray-500 bg-gray-100 rounded">
+                    No image available for this incident
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="h-full w-full flex flex-col items-center justify-center text-gray-500">
+                <svg
+                  className="w-16 h-16 mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  ></path>
+                </svg>
+                <p className="text-lg font-medium">No Incident Selected</p>
+                <p className="text-sm mt-2 text-center max-w-md">
+                  Please select an incident from the list to view its details
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

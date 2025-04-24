@@ -17,13 +17,20 @@ interface Incident {
 
 interface IncidentItemProps {
   searchTerm?: string;
+  onIncidentSelect?: (incident: Incident) => void;
 }
 
-const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
+const IncidentItem: React.FC<IncidentItemProps> = ({
+  searchTerm = "",
+  onIncidentSelect,
+}) => {
   const [incidentValue, setIncidentValue] = useState<any>(null);
   const [filteredIncidents, setFilteredIncidents] = useState<Incident[]>([]);
   const [error, setError] = useState(false);
   const { userDetails } = use(UserDetailsContext);
+  const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
+    null
+  );
   const isAdmin = userDetails?.data.user.role == "admin";
 
   useEffect(() => {
@@ -73,10 +80,18 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
     );
   }
 
+  const handleClick = (incident: Incident) => {
+    setSelectedIncident(incident);
+    if (onIncidentSelect) {
+      onIncidentSelect(incident);
+    }
+  };
+
   return (
     <ul className="w-full space-y-2 hover:cursor-pointer">
       {filteredIncidents.map((incident, index) => (
         <li
+          onClick={() => handleClick(incident)}
           key={incident.id || index}
           className="list-none bg-[#D6CBCB2E] px-6 py-2 rounded-[4px] hover:bg-[#D6CBCB]"
         >
