@@ -15,8 +15,6 @@ const IncidentReport = () => {
   const { userDetails, setIncidentDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "amin";
 
-  console.log(userDetails);
-
   const handleIncidentSelect = (incident: any) => {
     setActiveIncident(incident);
     setIncidentDetails(incident);
@@ -71,7 +69,7 @@ const IncidentReport = () => {
           <div className=" h-[full] w-[1px] bg-[#D9D9D9] "></div>
           <div
             className={`w-[49%] flex flex-col gap-8 justify-center px-7  ${
-              isAdmin ? "hidden " : "hidden md:flex"
+              isAdmin && "hidden "
             } ${activeIncident ? "flex w-full md:w-[49%] " : "hidden"}`}
           >
             {activeIncident ? (
