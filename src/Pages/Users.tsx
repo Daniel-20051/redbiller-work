@@ -71,20 +71,22 @@ const User = () => {
             <p className="text-[#817979] text-lg absolute right-10 top-5 ">
               Total Members : <span>{allUser?.data.data.users.length}</span>
             </p>
-            <p className="font-[700] text-[32px] ml-11 mt-11 mb-10">Users</p>
-            <div className="grid grid-cols-4 md:grid-cols-5 w-full bg-[#F8F8F8] py-6 px-4 md:px-15 justify-between items-center text-[#817979] text-md ">
+            <p className="font-[700] text-[28px] md:text-[32px] ml-6 md:ml-11 mt-17 md:mt-11 mb-10">
+              Users
+            </p>
+            <div className="grid grid-cols-4 md:grid-cols-5 w-full bg-[#F8F8F8] py-6 px-4 md:px-15 justify-between items-center  text-sm md:text-[16px] text-[#817979] text-md ">
               <p className=" ml-0 ">Photo</p>
               <p>Member Name</p>
-              <p>Mobile(+234)</p>
-              <p className="mr-10 md:mr-0 text-center">Email</p>
+              <p>Mobile</p>
+              <p className="mr-10 md:mr-0 ml-1">Email</p>
               <div className="absolute top-17 md:top-0 right-5 md:inline md:relative">
                 <img
-                  className=" absolute left-3 top-16 transform -translate-y-12  text-gray-500 "
+                  className=" absolute left-3 top-15 md:top-16 transform -translate-y-12  text-gray-500 "
                   src="../src/assets/search.svg"
                   alt=""
                 />
                 <input
-                  className="py-3 pl-9 bg-[#F2F2F2] rounded-[8px] focus:outline-0 "
+                  className="py-3 pl-9 w-35 md:w-auto  bg-[#F2F2F2] rounded-[8px] focus:outline-0 "
                   placeholder="Search..."
                   type="text"
                   value={searchTerm}
