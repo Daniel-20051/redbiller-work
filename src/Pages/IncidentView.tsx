@@ -1,14 +1,10 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
-import { use } from "react";
-import { UserDetailsContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
 import { useParams } from "react-router-dom";
 
 const IncidentView = () => {
-  const { userDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role == "admin";
   const { id } = useParams();
 
   return (

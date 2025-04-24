@@ -34,6 +34,7 @@ const Login = () => {
   const hnadleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginSpiner(true);
+    setShowAlert(false);
     try {
       const response: any = await authApi.loginUser({ email, password });
       const responseData = await response;
