@@ -21,12 +21,11 @@ const Home = () => {
 
             <div className="flex flex-1 flex-col   items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
               <p className=" font-[600] text-[27px] md:text-[32px]  mb-4 ">
-                Welcome back,{" "}
-                {userDetails.data.user.gender === "MALE" ? "Mr" : "Ms"}{" "}
+                Welcome,{" "}
                 <span>
                   {userDetails?.data.user.firstName.charAt(0).toUpperCase() +
                     userDetails?.data.user.firstName.slice(1).toLowerCase()}
-                </span>{" "}
+                </span>
                 !
               </p>
               <div className=" flex w-[80%] h-[38%] bg-[#F2F2F2] mb-7  rounded-[15px] pt-5 relative ">
