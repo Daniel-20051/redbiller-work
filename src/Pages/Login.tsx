@@ -88,7 +88,7 @@ const Login = () => {
             It doesn’t end here....
           </p>
         </div>
-        <div className="main-content relative w-full lg:w-[70%]">
+        <div className="main-content relative w-full lg:w-[70%] items-center">
           <div className="flex flex-col items-center h-screen justify-center ">
             <img
               className="w-[170px] h-[170px] lg:hidden "
@@ -114,7 +114,7 @@ const Login = () => {
               <div>
                 <button
                   type="submit"
-                  className="bg-primary text-white font-[400] text-[16px] py-3 rounded-[8px] w-[394.71px] hover:bg-red-900 cursor-pointer"
+                  className="bg-primary text-white font-[400] text-[16px] py-3 rounded-[8px] w-[370px] hover:bg-red-900 cursor-pointer"
                 >
                   {loginSpiner ? "loading..." : "Login"}
                 </button>
