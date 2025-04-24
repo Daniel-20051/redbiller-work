@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { AuthApis } from "../api";
-import { use } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
@@ -28,11 +27,13 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   const [incidentValue, setIncidentValue] = useState<any>(null);
   const [filteredIncidents, setFilteredIncidents] = useState<Incident[]>([]);
   const [error, setError] = useState(false);
-  const { userDetails } = use(UserDetailsContext);
+  const { userDetails, setIncidentDetails } = use(UserDetailsContext);
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
     null
   );
   const isAdmin = userDetails?.data.user.role == "admin";
+
+  console.log(selectedIncident, "being sure");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,7 +82,9 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   }
 
   const handleClick = (incident: Incident) => {
+    console.log("clicked");
     setSelectedIncident(incident);
+    setIncidentDetails(selectedIncident);
     if (onIncidentSelect) {
       onIncidentSelect(incident);
     }

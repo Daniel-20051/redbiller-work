@@ -9,6 +9,8 @@ type UserDetailsContextType = {
   spiner: null;
   setSpiner: any;
   fetchAllUser: () => void;
+  incidentDetails: any;
+  setIncidentDetails: any;
 };
 
 const authApis = new AuthApis();
@@ -21,37 +23,17 @@ export const UserDetailsContext = createContext<UserDetailsContextType>({
   spiner: null,
   setSpiner: null,
   fetchAllUser: async () => {},
+  incidentDetails: null,
+  setIncidentDetails: null,
 });
 
 function AuthContext({ children }: { children: React.ReactNode }) {
   const [userDetails, setUserDetails] = useState<any>(null);
   const [allUser, setAllUser] = useState<any>(null);
   const [spiner, setSpiner] = useState<any>(true);
+  const [incidentDetails, setIncidentDetails] = useState<any>({});
 
-  // useEffect(() => {
-  //   const fetchUserDetails = async () => {
-  //     try {
-  //       const response = await authApis.getUserDetails();
-  //       setUserDetails(response?.data);
-  //     } catch (error) {
-  //       return console.error("Error fetching user details:", error);
-  //     }
-  //   };
-  //   fetchUserDetails();
-  // }, []);
-
-  // useEffect(() => {
-  //   const fetchAllUser = async () => {
-  //     try {
-  //       const response = await authApis.getAllUser();
-  //       setAllUser(response);
-  //       setSpiner(false);
-  //     } catch (err) {
-  //       return err;
-  //     }
-  //   };
-  //   fetchAllUser();
-  // }, []);
+  console.log(incidentDetails);
 
   const fetchUserDetails = async () => {
     try {
@@ -91,6 +73,8 @@ function AuthContext({ children }: { children: React.ReactNode }) {
         spiner,
         setSpiner,
         fetchAllUser,
+        incidentDetails,
+        setIncidentDetails,
       }}
     >
       {children}

@@ -1,11 +1,15 @@
+import { use } from "react";
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import { Link } from "react-router-dom";
-
+import { UserDetailsContext } from "../context/AuthContext.js";
 import { useParams } from "react-router-dom";
 
 const IncidentView = () => {
   const { id } = useParams();
+  const { incidentDetails } = use(UserDetailsContext);
+
+  console.log(incidentDetails, "here on incidentview");
 
   return (
     <div className="flex flex-col h-screen">

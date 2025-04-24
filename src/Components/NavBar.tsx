@@ -5,19 +5,6 @@ import { useSidebar } from "../context/SidebarContext";
 
 const NavBar = () => {
   const { userDetails } = use(UserDetailsContext);
-  // if (userDetails?.data.user) {
-  //   localStorage.setItem("userDetails", JSON.stringify(userDetails.data.user));
-  // }
-
-  // let storeDetails;
-  // try {
-  //   const storedData = localStorage.getItem("userDetails");
-  //   console.log(storedData);
-  //   storeDetails = storedData ? JSON.parse(storedData) : null;
-  // } catch (error) {
-  //   console.error("Error parsing user details from localStorage:", error);
-  //   storeDetails = null;
-  // }
 
   const formatName = (name?: string) => {
     if (!name) return "";

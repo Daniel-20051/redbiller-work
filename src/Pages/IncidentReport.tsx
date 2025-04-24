@@ -4,7 +4,7 @@ import SideBar from "../Components/SideBar";
 import IncidentItem from "../Components/IncidentItem";
 import { Link } from "react-router-dom";
 import { use } from "react";
-import { UserDetailsContext } from "../context/AuthContext";
+import { UserDetailsContext } from "../context/AuthContext.js";
 
 const IncidentReport = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,11 +12,12 @@ const IncidentReport = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
-  const { userDetails } = use(UserDetailsContext);
+  const { userDetails, setIncidentDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "admin";
 
   const handleIncidentSelect = (incident: any) => {
     setActiveIncident(incident);
+    setIncidentDetails(activeIncident);
   };
 
   console.log(activeIncident);
