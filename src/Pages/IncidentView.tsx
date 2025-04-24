@@ -9,7 +9,7 @@ const IncidentView = () => {
   const { id } = useParams();
   const { incidentDetails } = use(UserDetailsContext);
 
-  console.log(incidentDetails, "here on incidentview");
+  console.log(incidentDetails);
 
   return (
     <div className="flex flex-col h-screen">
@@ -33,37 +33,37 @@ const IncidentView = () => {
               />
               <div className="flex flex-col gap-2">
                 <p>
-                  Name: <span></span>
+                  Name:{" "}
+                  <span>{`${incidentDetails?.User?.firstName} ${incidentDetails?.User?.lastName}`}</span>
                 </p>
                 <p>
-                  Department: <span></span>
+                  Department: <span>{incidentDetails?.User?.occupation}</span>
                 </p>
                 <p>
-                  Biller ID: <span></span>
+                  Biller ID: <span>{incidentDetails?.User?.email}</span>
                 </p>
               </div>
             </div>
-            <p className=" text-[16px] text-primary font-[600]  ">
-              Wifi network case broken
-              <span className="text-[#D9D9D9] font-[600] text-[13px] ml-5 ">
-                10 March
-              </span>
-            </p>
-            <p>
-                Kindly be informed that your subscription has been activated. ​
-              <br />
-              Please visit our online payment channels with your registered
-              email address to have your subscription automatically activated
-              whenever you make a payment. I sincerely apologize for our
-              prolonged date of resolution. This is due to our tight schedule.
-              However, our technical team will Revert if we can get an earlier
-              date to resolve the issue.
-            </p>
-            <img
-              className="h-[300px] w-[200px] object-cover place-self-center"
-              src="../src/assets/wifi-report.jpg"
-              alt=""
-            />
+            <div className=" justify-center items-center">
+              <p className=" text-[16px] text-primary font-[600]  ">
+                {`Subject: ${incidentDetails?.subject}`}
+                <span className="text-[#b9b9b9] font-[600] text-[13px] ml-5 ">
+                  {new Date(incidentDetails?.updatedAt).toLocaleString()}
+                </span>
+              </p>
+              <p>{incidentDetails?.incidentMessage}</p>
+              {incidentDetails.incidentphoto ? (
+                <img
+                  className="h-[300px] w-[200px] object-cover place-self-center"
+                  src={incidentDetails.incidentphoto}
+                  alt="Incident photo"
+                />
+              ) : (
+                <div className="h-[254px] w-[319px] flex items-center justify-center text-gray-500 bg-gray-100 rounded">
+                  No image available for this incident
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

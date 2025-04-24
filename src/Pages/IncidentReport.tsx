@@ -15,12 +15,12 @@ const IncidentReport = () => {
   const { userDetails, setIncidentDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "amin";
 
+  console.log(userDetails);
+
   const handleIncidentSelect = (incident: any) => {
     setActiveIncident(incident);
-    setIncidentDetails(activeIncident);
+    setIncidentDetails(incident);
   };
-
-  console.log(activeIncident);
 
   return (
     <div className="flex flex-col h-screen">
