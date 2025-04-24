@@ -31,7 +31,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
     null
   );
-  const isAdmin = userDetails?.data.user.role == "admin";
+  const isAdmin = userDetails?.data.user.role == "amin";
 
   console.log(selectedIncident, "being sure");
 
@@ -101,7 +101,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
           {isAdmin ? (
             <Link
               to={`/incident-report/${incident.id}`}
-              className="flex flex-col"
+              className="flex flex-col hover:bg-[#D6CBCB]"
             >
               <p className="text-primary font-semibold text-[16px]">
                 {incident.subject}
@@ -119,7 +119,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
               </p>
             </Link>
           ) : (
-            <div className="flex flex-col">
+            <div className="flex flex-col hover:bg-[#D6CBCB] ">
               <p className="text-primary font-semibold text-[16px]">
                 {incident.subject}
                 {isAdmin && (

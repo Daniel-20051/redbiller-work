@@ -13,7 +13,7 @@ const IncidentReport = () => {
     setSearchTerm(e.target.value);
   };
   const { userDetails, setIncidentDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role == "admin";
+  const isAdmin = userDetails?.data.user.role == "amin";
 
   const handleIncidentSelect = (incident: any) => {
     setActiveIncident(incident);
@@ -32,7 +32,7 @@ const IncidentReport = () => {
             className={`flex flex-1 flex-col gap-6 ${
               isAdmin &&
               "my-[4%] mx-[3%] border-1 border-[#D9D9D9] rounded-[8px]"
-            } `}
+            } ${activeIncident && " hidden md:flex"} `}
           >
             <div className="flex justify-between items-center px-3  mt-[24px]">
               <div>
@@ -71,14 +71,14 @@ const IncidentReport = () => {
           <div className=" h-[full] w-[1px] bg-[#D9D9D9] "></div>
           <div
             className={`w-[49%] flex flex-col gap-8 justify-center px-7  ${
-              isAdmin ? "hidden" : "hidden  md:flex"
-            } `}
+              isAdmin && "hidden"
+            } ${activeIncident ? "flex  w-full" : "hidden"}`}
           >
             {activeIncident ? (
               <>
-                <p className=" text-[16px] text-primary font-[600]  ">
+                {/* <p className=" text-[16px] text-primary font-[600]  ">
                   {`${activeIncident?.User.firstName} ${activeIncident?.User.lastName}`}
-                </p>
+                </p> */}
                 <p className=" text-[16px] text-primary font-[600]  ">
                   {activeIncident?.subject}
                   <span className="text-[#D9D9D9] font-[600] text-[13px] ml-5 ">
