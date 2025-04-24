@@ -4,16 +4,6 @@ import NavBar from "../Components/NavBar";
 import { UserDetailsContext } from "../context/AuthContext";
 
 const Profile = () => {
-  // let storeDetails;
-  // try {
-  //   const storedData = localStorage.getItem("userDetails");
-  //   console.log(storedData);
-  //   storeDetails = storedData ? JSON.parse(storedData) : null;
-  // } catch (error) {
-  //   console.error("Error parsing user details from localStorage:", error);
-  //   storeDetails = null;
-  // }
-
   const { userDetails } = use(UserDetailsContext);
 
   return (
