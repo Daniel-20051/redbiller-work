@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AuthApis } from "../api";
 import { use } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const authApi = new AuthApis();
 
@@ -31,7 +32,6 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
       setError(true);
       try {
         const response = await authApi.getAllIncidentReport();
-        console.log(response);
         setIncidentValue(response);
         setError(false);
       } catch (error) {
@@ -80,22 +80,44 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
           key={incident.id || index}
           className="list-none bg-[#D6CBCB2E] px-6 py-2 rounded-[4px] hover:bg-[#D6CBCB]"
         >
-          <div className="flex flex-col">
-            <p className="text-primary font-semibold text-[16px]">
-              {incident.subject}
-              {isAdmin && (
-                <span className="text-[#767676] text-[10px] ml-2">
-                  ➔{" "}
-                  {incident.User.firstName.charAt(0).toUpperCase() +
-                    incident.User.firstName.slice(1).toLowerCase()}{" "}
-                  {incident.User.lastName.toLowerCase()}
-                </span>
-              )}
-            </p>
-            <p className="text-[#4E4E4E] text-[14px]">
-              {incident.incidentMessage}
-            </p>
-          </div>
+          {isAdmin ? (
+            <Link
+              to={`/incident-report/${incident.id}`}
+              className="flex flex-col"
+            >
+              <p className="text-primary font-semibold text-[16px]">
+                {incident.subject}
+                {isAdmin && (
+                  <span className="text-[#767676] text-[10px] ml-2">
+                    ➔{" "}
+                    {incident.User.firstName.charAt(0).toUpperCase() +
+                      incident.User.firstName.slice(1).toLowerCase()}{" "}
+                    {incident.User.lastName.toLowerCase()}
+                  </span>
+                )}
+              </p>
+              <p className="text-[#4E4E4E] text-[14px]">
+                {incident.incidentMessage}
+              </p>
+            </Link>
+          ) : (
+            <div className="flex flex-col">
+              <p className="text-primary font-semibold text-[16px]">
+                {incident.subject}
+                {isAdmin && (
+                  <span className="text-[#767676] text-[10px] ml-2">
+                    ➔{" "}
+                    {incident.User.firstName.charAt(0).toUpperCase() +
+                      incident.User.firstName.slice(1).toLowerCase()}{" "}
+                    {incident.User.lastName.toLowerCase()}
+                  </span>
+                )}
+              </p>
+              <p className="text-[#4E4E4E] text-[14px]">
+                {incident.incidentMessage}
+              </p>
+            </div>
+          )}
         </li>
       ))}
     </ul>

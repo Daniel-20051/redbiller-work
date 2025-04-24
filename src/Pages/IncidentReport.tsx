@@ -80,7 +80,7 @@ const IncidentReport = () => {
               date to resolve the issue.
             </p>
             <img
-              className="h-[454px] w-[319px] object-cover place-self-center"
+              className="h-[400px] w-[281px] object-cover place-self-center"
               src="../src/assets/wifi-report.jpg"
               alt=""
             />
