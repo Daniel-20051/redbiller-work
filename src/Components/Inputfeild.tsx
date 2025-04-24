@@ -35,20 +35,20 @@ const Inputfeild = ({
 
   if (type === "pass") {
     return (
-      <div className="flex flex-col relative  w-[394.71px]">
+      <div className="flex flex-col relative  w-[370px]">
         <label className=" text-[16px] font-normal mb-[9px] pb-0" htmlFor="">
           {children}
         </label>
         <input
           value={passwordValue}
           onChange={handlePasswordChange}
-          className="w-[394.71px] h-[50px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary "
+          className="w-[370px] h-[50px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary "
           type={showPassword ? "text" : "password"}
           required
         />
         <button
           type="button"
-          className=" absolute right-5 top-15 transform -translate-y-1/2 text-gray-500  "
+          className=" absolute right-4 top-15 transform -translate-y-1/2 text-gray-500  "
           onClick={(e) => {
             e.preventDefault();
             setShowPassword(!showPassword);
@@ -79,7 +79,7 @@ const Inputfeild = ({
         <input
           value={emailValue}
           onChange={handleEmailChange}
-          className="w-[394.71px] h-[50px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary"
+          className="w-[370px] h-[50px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary"
           type="text"
           required
         />
@@ -92,7 +92,7 @@ const Inputfeild = ({
           {children}
         </label>
         <input
-          className="w-[394.71px] h-[61px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary"
+          className="w-[370px] h-[61px] outline-1 rounded-md outline-[#00000033] px-3 focus:outline-primary"
           type="text"
           required
         />

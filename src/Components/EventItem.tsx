@@ -19,7 +19,7 @@ const EventItem = () => {
           </p>
         </div>
       </div>
-      <div className="w-[70%] h-[181px] lg:h-[141px] border-1 rounded-[10px] p-4 border-[#EEEEEE]">
+      <div className="w-[70%] h-[170px] lg:h-[141px] border-1 rounded-[10px] p-4 border-[#EEEEEE]">
         <div className="flex mb-[10px] ml-[14px] gap-5">
           <p className="text-primary  font-[700] text-[16px] ">
             Product Meeting

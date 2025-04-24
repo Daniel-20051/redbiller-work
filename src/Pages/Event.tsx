@@ -18,7 +18,7 @@ const Event = () => {
       <div className=" flex flex-1 w-full overflow-y-auto max-h-[calc(100vh-55px)] ">
         <SideBar>event</SideBar>
 
-        <div className="flex flex-1 items-center  flex-col  ">
+        <div className="flex flex-1   flex-col  ">
           <div className="flex mt-15 h-[10%] justify-center w-full relative items-center ">
             <div className="flex flex-col w-[70%] md:w-[30%] gap-7 xl:gap-10">
               {isAdmin && (
