@@ -1,51 +1,90 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
-
 const currentDate = new Date();
 import { useRef, useState } from "react";
+import AlertCard from "../messageAlert/AlertCardProps";
 import { AuthApis } from "../api";
-
 const authApis = new AuthApis();
 
 const IncidentCreate = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [textAreaValue, setTextAreaValue] = useState<string | null>(null);
-  const [subject, setSubject] = useState<string>("testing from ui");
+  const [subject, setSubject] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [incidentResponse, setIncidentResponse] = useState<any>(null);
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertType, setAlertType] = useState<
+    "success" | "error" | "info" | "warning"
+  >("info");
 
   console.log(incidentResponse);
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
+  const showAlertMessage = (
+    message: string,
+    type: "success" | "error" | "info" | "warning"
+  ) => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setShowAlert(true);
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setSelectedFile(file);
   };
-
   const handleTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     setTextAreaValue(newValue);
   };
+  const handleSubject = (e: any) => {
+    const newValue = e.target.value;
+    setSubject(newValue);
+  };
 
   const sendReport = async (e: any) => {
     e.preventDefault();
-    console.log("clicked");
+    if (!textAreaValue || !subject) {
+      return showAlertMessage("Empty message field", "error");
+    }
     try {
+      setLoading(true);
       const response = await authApis.submitIncidentReport({
         message: textAreaValue || "",
         subject: subject || "",
         photo: selectedFile as File,
       });
       setIncidentResponse(response);
-      console.log("success");
+      setLoading(false);
+      showAlertMessage("Incident report submitted successfully", "success");
+      setTextAreaValue(null);
+      setSubject("");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
       return response;
     } catch (error) {
+      setLoading(false);
+      showAlertMessage("An error occurred while sending report", "error");
       return error;
     }
   };
 
   return (
     <div className="flex flex-col h-screen">
+      <AlertCard
+        message={alertMessage}
+        type={alertType}
+        isOpen={showAlert}
+        onClose={handleCloseAlert}
+        autoClose={true}
+        autoCloseTime={3000}
+      />
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
         <SideBar>incident-report</SideBar>
@@ -71,6 +110,8 @@ const IncidentCreate = () => {
                 </p>
                 <div className="w-full ">
                   <input
+                    onChange={handleSubject}
+                    value={subject}
                     type="text"
                     className=" border-1 p-2 w-full text-sm rounded-t-[5px] border-[#CCCCCC] focus:outline-0"
                     name=""
@@ -78,6 +119,7 @@ const IncidentCreate = () => {
                   />
                   <textarea
                     onChange={handleTextArea}
+                    value={textAreaValue || ""}
                     className="resize-none p-[20px] w-full h-[337px] border-[1px] border-t-0 rounded-b-[5px] border-[#CCCCCC] focus:outline-0"
                     name=""
                     id=""
@@ -110,7 +152,7 @@ const IncidentCreate = () => {
                     type="submit"
                     className="w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white cursor-[pointer] bg-primary rounded-[8px"
                   >
-                    Submit
+                    {loading ? "loading..." : "Submit"}
                   </button>
                 </div>
               </form>

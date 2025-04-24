@@ -31,7 +31,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
       setError(true);
       try {
         const response = await authApi.getAllIncidentReport();
-        console.log(response)
+        console.log(response);
         setIncidentValue(response);
         setError(false);
       } catch (error) {
@@ -60,7 +60,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({ searchTerm = "" }) => {
   if (error) {
     return (
       <div className="flex justify-center items-center h-full w-full">
-        <p className="text-red-500 text-center">Loading...</p>
+        <p className="text-[#980000] text-center text-[1.1rem]">Loading...</p>
       </div>
     );
   }
