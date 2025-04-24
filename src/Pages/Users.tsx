@@ -72,8 +72,8 @@ const User = () => {
               Total Members : <span>{allUser?.data.data.users.length}</span>
             </p>
             <p className="font-[700] text-[32px] ml-11 mt-11 mb-10">Users</p>
-            <div className="flex w-full bg-[#F8F8F8] py-6 px-4 justify-between items-center text-[#817979] text-md ">
-              <p className=" ml-0 md:ml-14">Photo</p>
+            <div className="grid grid-cols-4 md:grid-cols-5 w-full bg-[#F8F8F8] py-6 px-4 md:px-15 justify-between items-center text-[#817979] text-md ">
+              <p className=" ml-0 ">Photo</p>
               <p>Member Name</p>
               <p>Mobile(+234)</p>
               <p className="mr-10 md:mr-0">Email</p>
@@ -95,13 +95,13 @@ const User = () => {
             {spiner ? (
               <SmallSpiner />
             ) : (
-              <div className="overflow-y-auto mt-5 max-h-full hide-scrollbar scroll-smooth ">
+              <div className="overflow-y-auto w-full mt-5 max-h-full hide-scrollbar scroll-smooth ">
                 {filteredUsers?.map((user: any, index: number) => (
                   <React.Fragment key={index}>
                     <UserInfo
                       name={`${user?.firstName} ${user?.lastName}`}
                       email={user?.email}
-                      PhoneNum={9058708101}
+                      PhoneNum={800000000}
                       gender={user?.gender}
                       department={user?.occupation}
                       imgUrl="../src/assets/blank-profile.png"
