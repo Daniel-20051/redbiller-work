@@ -33,8 +33,6 @@ function AuthContext({ children }: { children: React.ReactNode }) {
   const [spiner, setSpiner] = useState<any>(true);
   const [incidentDetails, setIncidentDetails] = useState<any>({});
 
-  console.log(incidentDetails);
-
   const fetchUserDetails = async () => {
     try {
       const response = await authApis.getUserDetails();
