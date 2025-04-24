@@ -12,6 +12,7 @@ import Profile from "./Pages/Profile";
 import User from "./Pages/Users";
 import ProtectedRoute from "./routs/protectedRoute";
 import UserDropdown from "./Pages/test";
+import IncidentView from "./Pages/IncidentView";
 
 const App = () => {
   const [isAdmin, setIsAdmin] = useState(true);
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/weekly-report/create" element={<WeeklyCreate />} />
             <Route path="/test" element={<UserDropdown />} />
             <Route path="/incident-report" element={<IncidentReport />} />
+            <Route path="/incident-report/:id" element={<IncidentView />} />
             <Route
               path="/incident-report/create"
               element={<IncidentCreate />}
