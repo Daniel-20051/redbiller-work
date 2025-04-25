@@ -58,7 +58,7 @@ const IncidentReport = () => {
               </div>
             </div>
             <div
-              className={`overflow-y-auto max-h-full hide-scrollbar scroll-smooth  place-self-center w-[85%] ${
+              className={`overflow-y-auto max-h-full hide-scrollbar scroll-smooth  place-self-center mb-5 w-[85%] ${
                 isAdmin && "mt-4 w-[95%]"
               } `}
             >
