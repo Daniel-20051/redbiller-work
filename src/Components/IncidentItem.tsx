@@ -111,7 +111,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
                   </span>
                 )}
               </p>
-              <p className="text-[#4E4E4E] text-[14px]">
+              <p className="text-[#4E4E4E] text-[14px] clamp-responsive ">
                 {incident.incidentMessage}
                 {/* <span>{new Date(incident.User.createdAt).toLocaleString()}</span> */}
               </p>
@@ -129,7 +129,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
                   </span>
                 )}
               </p>
-              <p className="text-[#4E4E4E] text-[14px]">
+              <p className="text-[#4E4E4E] text-[14px] clamp-responsive">
                 {incident.incidentMessage}
               </p>
             </div>

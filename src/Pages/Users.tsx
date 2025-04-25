@@ -74,7 +74,7 @@ const User = () => {
             <p className="font-[700] text-[28px] md:text-[32px] ml-6 md:ml-11 mt-17 md:mt-11 mb-10">
               Users
             </p>
-            <div className="grid grid-cols-4 md:grid-cols-5 w-full bg-[#F8F8F8] py-6 px-4 md:px-15 justify-between items-center  text-sm md:text-[16px] text-[#817979] text-md ">
+            <div className="grid grid-cols-4 gap-4 md:grid-cols-5 w-full bg-[#F8F8F8] py-6 px-4 md:px-15 justify-between items-center  text-sm md:text-[16px] text-[#817979] text-md ">
               <p className=" ml-0 ">Photo</p>
               <p>Member Name</p>
               <p>Mobile</p>

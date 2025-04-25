@@ -16,4 +16,14 @@
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE and Edge */
 }
+@media screen and (max-width: 750px) {
+  .clamp-responsive {
+    display: -webkit-box;
+    display: box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
 
