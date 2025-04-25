@@ -19,43 +19,7 @@ const Event = () => {
         <SideBar>event</SideBar>
 
         <div className="flex flex-1   flex-col  ">
-          <div className="flex mt-15 h-[10%] justify-center w-full relative items-center ">
-            <div className="flex flex-col w-[70%] md:w-[30%] gap-7 xl:gap-10">
-              {isAdmin && (
-                <button
-                  onClick={() => setIsAddEventOpen(true)}
-                  className="bg-primary py-5 px-5 mt-3 rounded-[15px] text-[16px] lg:text-[20px] font-[400] text-white hover:cursor-pointer  "
-                >
-                  ADD EVENT
-                </button>
-              )}
-              <div className="flex w-[100%] h-[60px] bg-[#F2F2F2]  rounded-[60px] p-1 items-center justify-center font-[600] text-[15px] lg:text-[20px] xl:text-[24px] ">
-                <button
-                  className={
-                    event == 0
-                      ? "w-[241px] h-[52px] bg-white rounded-[60px]  text-primary shadow-lg sm:shadow-none  "
-                      : "w-[241px] h-[52px] rounded-[60px]  text-[#898A8D]  "
-                  }
-                  onClick={() => {
-                    setEvent(0);
-                  }}
-                >
-                  Upcoming
-                </button>
-                <button
-                  className={
-                    event == 0
-                      ? "w-[241px] h-[52px] rounded-[60px]  text-[#898A8D] "
-                      : "w-[241px] h-[52px] bg-white rounded-[60px]  text-primary shadow-lg sm:shadow-none  "
-                  }
-                  onClick={() => {
-                    setEvent(1);
-                  }}
-                >
-                  All Event
-                </button>
-              </div>
-            </div>
+          <div className="flex h-[30%] justify-center w-full relative items-center ">
             <div className=" bg-[#F2F2F2] w-[161px] px-[24px]  py-[17px] h-[50px] items-center font-[600] rounded-[8px] absolute right-[50px] hidden md:flex">
               <img
                 className={event == 0 ? "w-[16px] h-[16px]" : "hidden"}
@@ -72,8 +36,37 @@ const Event = () => {
                 placeholder={event == 0 ? "Search..." : "Date"}
               />
             </div>
+            <div className="flex flex-col gap-6  w-[70%] md:w-[40%]">
+              {isAdmin && (
+                <button className="bg-primary text-white py-3 md:py-4 text-[17px] md:text-[22px] font-[400] rounded-[15px]">
+                  ADD EVENT
+                </button>
+              )}
+              <div className="bg-[#F2F2F2] rounded-[60px] p-1 flex">
+                <button
+                  onClick={() => {
+                    setEvent(0);
+                  }}
+                  className={` py-2 w-[50%] md:py-3 px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
+                    event == 0 ? "bg-white  text-primary" : "text-[#898A8D]"
+                  }`}
+                >
+                  Upcoming
+                </button>
+                <button
+                  onClick={() => {
+                    setEvent(1);
+                  }}
+                  className={` py-2 w-[50%] md:py-3 px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
+                    event == 1 ? "bg-white  text-primary" : "text-[#898A8D]"
+                  }`}
+                >
+                  All Event
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="flex-1 mt-17 w-full overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  ">
+          <div className="flex-1 w-full overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  ">
             <EventItem></EventItem>
             <EventItem></EventItem>
             <EventItem></EventItem>
