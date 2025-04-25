@@ -19,7 +19,7 @@ const IncidentView = () => {
         <div className="flex flex-1 relative  ">
           <Link to="/incident-report">
             <img
-              className="W-[17px] h-[27px] absolute top-12 right-17 "
+              className="w-[12.5px] md:w-[17px] h-[20] md:h-[27px] absolute md:top-12 top-8 right-10 md:right-17 "
               src="../src/assets/back.svg"
               alt=""
             />
@@ -27,11 +27,11 @@ const IncidentView = () => {
           <div className="flex flex-col w-[full] gap-4 px-15 justify-center">
             <div className="flex gap-4 items-center mb-10">
               <img
-                className="w-[75px] h-[75px] rounded-full border-2 border-primary"
+                className=" w-[55px] md:w-[75px] h-[55px] md:h-[75px] rounded-full border-2 border-primary"
                 src="../src/assets/blank-profile.png"
                 alt=""
               />
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col text-[11px] md:text-[18px] gap-2">
                 <p>
                   Name:{" "}
                   <span>{`${incidentDetails?.User?.firstName} ${incidentDetails?.User?.lastName}`}</span>
@@ -45,21 +45,23 @@ const IncidentView = () => {
               </div>
             </div>
             <div className=" justify-center items-center">
-              <p className=" text-[16px] text-primary font-[600]  ">
+              <p className="  text-[13px] md:text-[16px] text-primary font-[600]  ">
                 {`Subject: ${incidentDetails?.subject}`}
-                <span className="text-[#b9b9b9] font-[600] text-[13px] ml-5 ">
+                <span className="text-[#b9b9b9] font-[600] text-[13px] md:text-[16px] ml-5 ">
                   {new Date(incidentDetails?.updatedAt).toLocaleString()}
                 </span>
               </p>
-              <p>{incidentDetails?.incidentMessage}</p>
+              <p className="text-[13px] md:text-[16px]">
+                {incidentDetails?.incidentMessage}
+              </p>
               {incidentDetails.incidentphoto ? (
                 <img
-                  className="h-[300px] w-[200px] object-cover place-self-center"
+                  className="h-[300px] w-[200px] object-cover place-self-center mb-4"
                   src={incidentDetails.incidentphoto}
                   alt="Incident photo"
                 />
               ) : (
-                <div className="h-[254px] w-[319px] flex items-center justify-center text-gray-500 bg-gray-100 rounded">
+                <div className=" flex items-center justify-center text-gray-500 bg-gray-100 p-15 mb-4 rounded">
                   No image available for this incident
                 </div>
               )}

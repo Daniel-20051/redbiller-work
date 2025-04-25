@@ -17,3 +17,13 @@
   -ms-overflow-style: none;  /* IE and Edge */
 }
 
+.clamp-responsive {
+    display: -webkit-box;
+    display: box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+

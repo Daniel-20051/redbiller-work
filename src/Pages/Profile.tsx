@@ -12,8 +12,8 @@ const Profile = () => {
       <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
         <SideBar>home</SideBar>
         <div className="flex flex-1 items-center py-[30px] justify-center ">
-          <div className=" flex flex-col w-[87.8%] h-[70%] md:h-full border-1 border-[#D9D9D9] pb-5 relative ">
-            <div className="flex gap-[103px] mx-[20px] lg:mx-[90px] my-[20px] lg:my-[30px] items-center">
+          <div className=" flex flex-col w-[87.8%] h-[80%] md:h-full border-1 border-[#D9D9D9] pb-5 relative ">
+            <div className="flex  mx-[45px] justify-between  lg:mx-[90px] my-[20px]  lg:my-[30px] items-center">
               <img
                 className="border-3 border-primary rounded-full w-[70px] h-[70px] lg:w-[90px] lg:h-[90px] "
                 src="../src/assets/blank-profile.png"

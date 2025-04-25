@@ -82,7 +82,7 @@ const UserInfo = ({
         </button>
       </div>
       <div
-        className={`grid grid-cols-4 md:grid-cols-5 relative z-10 transition-transform duration-300 ease-in-out ${
+        className={`grid grid-cols-4 gap-4 md:grid-cols-5 relative z-10 transition-transform duration-300 ease-in-out ${
           isSwiped ? "-translate-x-30" : "translate-x-0"
         }
         ml-1 items-center  text-sm md:text-[16px]  bg-[#F8F8F8] border-t-1 border-[#E7E3E3] px-3 md:px-13 py-6 hover:bg-[#D6CBCB] `}
