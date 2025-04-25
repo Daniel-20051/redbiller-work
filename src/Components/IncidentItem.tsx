@@ -31,7 +31,9 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
     null
   );
-  const isAdmin = userDetails?.data.user.role == "amin";
+  const isAdmin = userDetails?.data.user.role == "admin";
+
+  console.log(incidentValue);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -113,7 +115,6 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
               </p>
               <p className="text-[#4E4E4E] text-[14px]">
                 {incident.incidentMessage}
-                {/* <span>{new Date(incident.User.createdAt).toLocaleString()}</span> */}
               </p>
             </Link>
           ) : (

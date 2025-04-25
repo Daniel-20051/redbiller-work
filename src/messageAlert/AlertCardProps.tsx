@@ -49,7 +49,7 @@ const AlertCard = ({
 
   return (
     <div className="fixed top-5 right-5 z-50 max-w-md">
-      <div className={`border-l-4 p-8 rounded shadow-md ${bgColors[type]}`}>
+      <div className={`border-l-4 p-6 rounded shadow-md ${bgColors[type]}`}>
         <div className="flex justify-between items-start">
           <div className="flex items-center">
             {type === "success" && (

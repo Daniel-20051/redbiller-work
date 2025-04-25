@@ -53,6 +53,10 @@ const Login = () => {
         setLoginSpiner(false);
         return;
       }
+      if (responseData?.code === "ERR_NETWORK") {
+        showAlertMessage("Network Error", "error");
+        setLoginSpiner(false);
+      }
     } catch (err: any) {
       showAlertMessage("An error occurred during login", "error");
       setLoginSpiner(false);
@@ -70,7 +74,7 @@ const Login = () => {
           isOpen={showAlert}
           onClose={handleCloseAlert}
           autoClose={true}
-          autoCloseTime={5000}
+          autoCloseTime={3000}
         />
         <div
           style={{ backgroundImage: "url('../src/assets/bg-pic.png')" }}
