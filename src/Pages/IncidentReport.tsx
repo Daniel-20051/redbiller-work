@@ -15,8 +15,6 @@ const IncidentReport = () => {
   const { userDetails, setIncidentDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "admin";
 
-  console.log(activeIncident);
-
   const handleIncidentSelect = (incident: any) => {
     setActiveIncident(incident);
     setIncidentDetails(incident);
