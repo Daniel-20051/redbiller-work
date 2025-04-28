@@ -75,16 +75,14 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
 
   if (filteredIncidents.length === 0) {
     return (
-      <div className="flex justify-center items-center h-full w-full">
-        <div className="flex flex-col gap-2 justify-center items-center h-[50%] ">
-          <Icon
-            icon="line-md:document-delete"
-            width="60"
-            height="60"
-            color="#93221D"
-          />
-          <p className=" font-[600] text-lg">No Incident found</p>
-        </div>
+      <div className="flex justify-center items-center h-full w-full ">
+        <Icon
+          icon="line-md:document-delete"
+          width="60"
+          height="60"
+          color="#93221D"
+        />
+        <p className=" font-[600] text-lg">No Incident found</p>
       </div>
     );
   }
