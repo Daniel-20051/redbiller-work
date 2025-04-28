@@ -100,7 +100,7 @@ const IncidentCreate = () => {
               })}
             </p>
             <div className="flex flex-col items-center justify-center h-full ">
-              <p className=" text-[30px] md:text-[48px] font-[700] text-primary ">
+              <p className=" text-[24px] md:text-[48px] font-[700] text-primary ">
                 Incident Report
               </p>
               <form
@@ -152,7 +152,7 @@ const IncidentCreate = () => {
 
                   <button
                     type="submit"
-                    className="w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white cursor-[pointer] bg-primary rounded-[8px"
+                    className="w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white cursor-[pointer] bg-primary rounded-[8px]"
                   >
                     {loading ? "loading..." : "Submit"}
                   </button>
