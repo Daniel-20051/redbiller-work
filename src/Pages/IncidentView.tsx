@@ -13,12 +13,17 @@ const IncidentView = () => {
       <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
         <SideBar>incident-report</SideBar>
         <div className="flex flex-1 relative  ">
-          <Link to="/incident-report">
+          <Link
+            to="/incident-report"
+            className=" flex items-center gap-2 rounded-lg absolute md:top-10 top-8 left-10 md:right-17 w-[65px] md:w-[80px] border-1 border-[#b9b9b9]
+            font-[600] text-[13px] md:text-[16px] p-2 md:p-3"
+          >
             <img
-              className="w-[12.5px] md:w-[17px] h-[20] md:h-[27px] absolute md:top-12 top-8 right-10 md:right-17 "
+              className="w-[8px] md:w-[10px] h-[20] md:h-[27px]  "
               src="../src/assets/back.svg"
               alt=""
             />
+            Back
           </Link>
           <div className="flex flex-col w-[full] gap-4 px-15 justify-center">
             <div className="flex gap-4 items-center mb-10">

@@ -36,7 +36,7 @@ const SideBar = ({ children }: Props) => {
   return (
     <div
       ref={sidebarRef}
-      className={`flex-col items-start justify-between lg:w-[25%] xl:w-[20%] bg-[#D6CBCB] transition-all ${
+      className={`flex-col items-start justify-between lg:w-[25%] xl:w-[20%] bg-[#F2F2F2] transition-all ${
         isCollapsed
           ? "w-0 overflow-hidden  "
           : "absolute z-40 w-[50%] md:w-[40%] h-full"
