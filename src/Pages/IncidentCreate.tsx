@@ -19,6 +19,8 @@ const IncidentCreate = () => {
     "success" | "error" | "info" | "warning"
   >("info");
 
+  console.log(incidentResponse);
+
   const handleCloseAlert = () => {
     setShowAlert(false);
   };
