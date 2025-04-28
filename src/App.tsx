@@ -33,14 +33,14 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           /* Public route */
-          {/* <Route
-            path="/Login"
+          <Route
+            path="/"
             element={
               isAuthenticated ? <Navigate to="/home" replace /> : <Login />
             }
-          /> */}
+          />
           <Route
-            path="/"
+            path="/Login"
             element={
               isAuthenticated ? <Navigate to="/home" replace /> : <Login />
             }
