@@ -17,15 +17,47 @@ import IncidentView from "./Pages/IncidentView";
 const App = () => {
   const [isAdmin] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const INACTIVE_TIMEOUT = 5 * 60 * 1000;
+
+  console.log(isAuthenticated);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
       setIsAuthenticated(true);
-      // const userData = JSON.parse(localStorage.getItem("user") || "{}");
-      // setIsAdmin(userData.isAdmin || false);
     }
   }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    let inactivityTimer: any;
+    const resetTimer = () => {
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(logoutDueToInactivity, INACTIVE_TIMEOUT);
+    };
+    const logoutDueToInactivity = () => {
+      localStorage.removeItem("authToken");
+      setIsAuthenticated(false);
+      alert("You have been logged out due to inactivity");
+    };
+    const events = [
+      "mousedown",
+      "mousemove",
+      "keypress",
+      "scroll",
+      "touchstart",
+    ];
+    events.forEach((event) => {
+      document.addEventListener(event, resetTimer);
+    });
+    resetTimer();
+    return () => {
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+      events.forEach((event) => {
+        document.removeEventListener(event, resetTimer);
+      });
+    };
+  }, [isAuthenticated]);
 
   return (
     <div>

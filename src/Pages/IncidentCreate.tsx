@@ -67,7 +67,6 @@ const IncidentCreate = () => {
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
-      console.log(response);
       return response;
     } catch (error) {
       console.log(error);
