@@ -12,7 +12,7 @@ const authApi = new AuthApis();
 
 const Home = () => {
   const { userDetails } = use(UserDetailsContext);
-  const [incidentreportHome, setIncidentreportHome] = useState<any>();
+  const [incidentreportHome, setIncidentreportHome] = useState<any>(null);
   const [spiner, setSpiner] = useState<any>(false);
 
   useEffect(() => {
