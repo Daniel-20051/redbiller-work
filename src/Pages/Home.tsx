@@ -81,41 +81,51 @@ const Home = () => {
               </div>
               <div className=" md:flex gap-5 w-[80%] h-[35%] mb-[20px]  justify-between">
                 <div className=" w-full md:w-[47%] h-full bg-[#F2F2F2] rounded-[15px] mb-8 pt-5  relative ">
-                  {spiner ? (
+                  {incidentreportHome?.data?.data.incidents[0]
+                    .incidentMessage ? (
                     <>
-                      <p className=" text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
-                        Incident Report
-                      </p>
-                      <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
-                      <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
-                        {incidentreportHome?.data?.data.incidents[0].subject}
-                      </p>
-                      <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
-                        {
-                          incidentreportHome?.data?.data.incidents[0]
-                            .incidentMessage
-                        }
-                      </p>
-                      <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
-                        {new Date(
-                          incidentreportHome?.data?.data.incidents[0].createdAt
-                        ).toLocaleString()}
-                      </p>
-                      <Link to="/incident-report/create">
-                        <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">
-                          Create
-                        </button>
-                      </Link>
+                      {spiner ? (
+                        <>
+                          <p className=" text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
+                            Incident Report
+                          </p>
+                          <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
+                          <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
+                            {
+                              incidentreportHome?.data?.data.incidents[0]
+                                .subject
+                            }
+                          </p>
+                          <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
+                            {
+                              incidentreportHome?.data?.data.incidents[0]
+                                .incidentMessage
+                            }
+                          </p>
+                          <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
+                            {new Date(
+                              incidentreportHome?.data?.data.incidents[0].createdAt
+                            ).toLocaleString()}
+                          </p>
+                          <Link to="/incident-report/create">
+                            <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">
+                              Create
+                            </button>
+                          </Link>
+                        </>
+                      ) : (
+                        <div className="flex justify-center items-center h-full">
+                          <Icon
+                            icon="svg-spinners:ring-resize"
+                            width="30"
+                            height="30"
+                            color="#93221D"
+                          />
+                        </div>
+                      )}
                     </>
                   ) : (
-                    <div className="flex justify-center items-center h-full">
-                      <Icon
-                        icon="svg-spinners:ring-resize"
-                        width="30"
-                        height="30"
-                        color="#93221D"
-                      />
-                    </div>
+                    "no incident"
                   )}
                 </div>
                 <div className="w-full md:w-[47%]  h-full bg-[#F2F2F2] rounded-[15px] pt-5  relative ">
