@@ -20,7 +20,7 @@ const IncidentView = () => {
           >
             <img
               className="w-[8px] md:w-[10px] h-[20] md:h-[27px]  "
-              src="../src/assets/back.svg"
+              src="/assets/back.svg"
               alt=""
             />
             Back
@@ -29,7 +29,7 @@ const IncidentView = () => {
             <div className="flex gap-4 items-center mb-10">
               <img
                 className=" w-[55px] md:w-[75px] h-[55px] md:h-[75px] rounded-full border-2 border-primary"
-                src="../src/assets/blank-profile.png"
+                src="/assets/blank-profile.png"
                 alt=""
               />
               <div className="flex flex-col text-[11px] md:text-[18px] gap-2">

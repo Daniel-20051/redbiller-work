@@ -49,12 +49,12 @@ const UserCard = ({ username, role }: Props) => {
     >
       {/* <img
         className="w-[25px] h-[25px] "
-        src="../src/assets/dummynot.svg"
+        src="/assets/dummynot.svg"
         alt=""
       /> */}
       <img
         className="w-[35px] h-[35px] rounded-[15px]"
-        src="../src/assets/blank-profile.png"
+        src="/assets/blank-profile.png"
         alt=""
       />
       <div
@@ -69,7 +69,7 @@ const UserCard = ({ username, role }: Props) => {
       <div>
         <img
           className="cursor-pointer"
-          src="../src/assets/drop-icon.svg"
+          src="/assets/drop-icon.svg"
           onClick={() => {
             setIsOpen(!isOpen);
           }}
@@ -81,7 +81,7 @@ const UserCard = ({ username, role }: Props) => {
           <div className="flex gap-6 items-center">
             <img
               className="w-[56px] h-[56px] ml-[15px] rounded-[50px]"
-              src="../src/assets/blank-profile.png"
+              src="/assets/blank-profile.png"
               alt=""
             />
             <div className="flex flex-col gap-4">
@@ -96,14 +96,14 @@ const UserCard = ({ username, role }: Props) => {
             to="/profile"
             className="flex gap-3 bg-[#F2F2F2] p-[15px] rounded-[8px] hover:bg-[#d6cbcb]"
           >
-            <img src="../src/assets/profile.svg" alt="" />
+            <img src="/assets/profile.svg" alt="" />
             <p className="font-[500] text-[14px] ">Profile</p>
           </Link>
           <button
             onClick={handleLogout}
             className="flex gap-2 justify-center items-center mt-[38px] "
           >
-            <img src="../src/assets/logout-icon.svg" alt="" />
+            <img src="/assets/logout-icon.svg" alt="" />
             <p className=" text-primary font-[600] text-[14px] cursor-pointer">
               Logout
             </p>

@@ -15,7 +15,7 @@ const EventInfo = () => {
               <div className="flex gap-4 absolute top-[55px] left-[40px] items-center ">
                 <img
                   className="w[9.14px] h-[16.17px] "
-                  src="../src/assets/back.svg"
+                  src="/assets/back.svg"
                   alt=""
                 />
                 <p className="font-[800] text-[16px] ">Event</p>
@@ -29,7 +29,7 @@ const EventInfo = () => {
               <div className="flex mt-[81px] items-start ">
                 <img
                   className="w-[18px] h-[19.5px] mr-[35px] "
-                  src="../src/assets/Calendar.svg"
+                  src="/assets/Calendar.svg"
                   alt=""
                 />
                 <div className="flex flex-col -mt-[5px]  ">

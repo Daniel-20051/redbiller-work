@@ -23,7 +23,7 @@ const Event = () => {
             <div className=" bg-[#F2F2F2] w-[161px] px-[24px]  py-[17px] h-[50px] items-center font-[600] rounded-[8px] absolute right-[50px] hidden md:flex">
               <img
                 className={event == 0 ? "w-[16px] h-[16px]" : "hidden"}
-                src="../src/assets/search.svg"
+                src="/assets/search.svg"
                 alt=""
               />
               <input

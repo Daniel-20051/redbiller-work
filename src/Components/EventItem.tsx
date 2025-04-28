@@ -5,7 +5,7 @@ const EventItem = () => {
         <div className=" flex ml-[10px] mt-[10px] ">
           <img
             className="w-[24px] h-[24px] "
-            src="../src/assets/Calendar.svg"
+            src="/assets/Calendar.svg"
             alt=""
           />
           <p className="font-[500] text-[14px] ml-[8px] text-[#959595] ">

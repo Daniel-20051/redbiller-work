@@ -55,8 +55,8 @@ const SideBar = ({ children }: Props) => {
             className="w-[16px] h-[16px] ml-[30px] text-black "
             src={
               children === "home"
-                ? "../src/assets/home-logo-active.png"
-                : "../src/assets/home-logo.svg"
+                ? "/assets/home-logo-active.png"
+                : "/assets/home-logo.svg"
             }
             alt=""
           />
@@ -76,8 +76,8 @@ const SideBar = ({ children }: Props) => {
               className="w-[16px] h-[16px] ml-[30px] text-black "
               src={
                 children === "users"
-                  ? "../src/assets/users-active.svg"
-                  : "../src/assets/users.svg"
+                  ? "/assets/users-active.svg"
+                  : "/assets/users.svg"
               }
               alt=""
             />
@@ -96,8 +96,8 @@ const SideBar = ({ children }: Props) => {
             className="w-[16px] h-[16px] ml-[30px] text-black "
             src={
               children === "event"
-                ? "../src/assets/event-logo-active.svg"
-                : "../src/assets/event-logo.svg"
+                ? "/assets/event-logo-active.svg"
+                : "/assets/event-logo.svg"
             }
             alt=""
           />
@@ -115,8 +115,8 @@ const SideBar = ({ children }: Props) => {
             className="w-[16px] h-[16px] ml-[30px] text-black "
             src={
               children === "incident-report"
-                ? "../src/assets/incident-logo-active.svg"
-                : "../src/assets/incident-logo.svg"
+                ? "/assets/incident-logo-active.svg"
+                : "/assets/incident-logo.svg"
             }
             alt=""
           />
@@ -134,8 +134,8 @@ const SideBar = ({ children }: Props) => {
             className="w-[16px] h-[16px] ml-[30px] text-black "
             src={
               children === "weekly-report"
-                ? "../src/assets/weekly-logo-active.svg"
-                : "../src/assets/weekly-logo.svg"
+                ? "/assets/weekly-logo-active.svg"
+                : "/assets/weekly-logo.svg"
             }
             alt=""
           />
@@ -153,8 +153,8 @@ const SideBar = ({ children }: Props) => {
             className="w-[16px] h-[16px] ml-[30px] text-black "
             src={
               children === "tasks"
-                ? "../src/assets/task-logo.svg"
-                : "../src/assets/task-logo.svg"
+                ? "/assets/task-logo.svg"
+                : "/assets/task-logo.svg"
             }
             alt=""
           />

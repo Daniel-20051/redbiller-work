@@ -143,7 +143,7 @@ const IncidentCreate = () => {
                     </p>
                     <img
                       className="ml-[30px] mr-[11px] "
-                      src="../src/assets/upload.svg"
+                      src="/assets/upload.svg"
                       alt=""
                     />
                   </button>

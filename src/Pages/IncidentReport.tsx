@@ -76,7 +76,7 @@ const IncidentReport = () => {
               onClick={() => setActiveIncident(false)}
               className="absolute top-10 right-10"
             >
-              <img src="../src/assets/back.svg" alt="" />
+              <img src="/assets/back.svg" alt="" />
             </button>
             {activeIncident ? (
               <>

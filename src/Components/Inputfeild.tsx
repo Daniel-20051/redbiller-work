@@ -57,13 +57,13 @@ const Inputfeild = ({
           {showPassword ? (
             <img
               className="w-[20px] h-[17px] hover:cursor-pointer"
-              src="../src/assets/passlogooff.png"
+              src="/assets/passlogooff.png"
               alt=""
             />
           ) : (
             <img
               className="w-[20px] h-[13.75px] hover:cursor-pointer"
-              src="../src/assets/passlogo.png"
+              src="/assets/passlogo.png"
               alt=""
             />
           )}
