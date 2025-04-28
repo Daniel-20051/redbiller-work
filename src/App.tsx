@@ -34,17 +34,17 @@ const App = () => {
         <Routes>
           /* Public route */
           <Route
-            path="/"
+            path="/Login"
             element={
               isAuthenticated ? <Navigate to="/home" replace /> : <Login />
             }
           />
-          <Route
-            path="/login"
+          {/* <Route
+            path="/Login"
             element={
               isAuthenticated ? <Navigate to="/home" replace /> : <Login />
             }
-          />
+          /> */}
           /* Protected routes */
           {/* <AuthProvider> */}
           <Route element={<ProtectedRoute />}>
@@ -87,7 +87,7 @@ const App = () => {
               isAuthenticated ? (
                 <Navigate to="/home" replace />
               ) : (
-                <Navigate to="/login" replace />
+                <Navigate to="/Login" replace />
               )
             }
           />
