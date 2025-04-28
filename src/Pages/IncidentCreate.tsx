@@ -12,7 +12,7 @@ const IncidentCreate = () => {
   const [textAreaValue, setTextAreaValue] = useState<string | null>(null);
   const [subject, setSubject] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [incidentResponse, setIncidentResponse] = useState<any>(null);
+  const [setIncidentResponse] = useState<any>(null);
   const [alertMessage, setAlertMessage] = useState<string>("");
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertType, setAlertType] = useState<

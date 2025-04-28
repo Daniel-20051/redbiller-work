@@ -1,4 +1,6 @@
-import axios, { AxiosResponse, AxiosError } from "axios";
+
+import axios, { AxiosError, AxiosResponse, } from 'axios';
+
 const BASE_URL = "https://r-report-v1.onrender.com";
 
 interface loginPayload {

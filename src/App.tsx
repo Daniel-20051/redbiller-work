@@ -15,7 +15,7 @@ import SwipeActionCard from "./Pages/test";
 import IncidentView from "./Pages/IncidentView";
 
 const App = () => {
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const App = () => {
               element={<IncidentCreate />}
             />
             <Route path="/profile" element={<Profile />} />
-            {isAdmin && <Route path="/users" element={<User total={40} />} />}
+            {isAdmin && <Route path="/users" element={<User />} />}
           </Route>
           {/* </AuthProvider> */}
           /* Catch all - redirect to home if authenticated, otherwise to login

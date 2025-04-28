@@ -31,6 +31,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
     null
   );
+  console.log(selectedIncident);
   const isAdmin = userDetails?.data.user.role == "admin";
 
   useEffect(() => {

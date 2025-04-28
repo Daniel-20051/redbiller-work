@@ -7,12 +7,8 @@ import { UserDetailsContext } from "../context/AuthContext";
 import { AuthApis } from "../api";
 import AlertCard from "../messageAlert/AlertCardProps";
 
-// interface Props {
-//   total: number;
-// }
-
 const User = () => {
-  const { allUser, setAllUser, spiner, fetchAllUser } = use(UserDetailsContext);
+  const { allUser, spiner, fetchAllUser } = use(UserDetailsContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [alertType, setAlertType] = useState<
     "success" | "error" | "info" | "warning"
