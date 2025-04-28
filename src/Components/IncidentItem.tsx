@@ -76,7 +76,9 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   if (filteredIncidents.length === 0) {
     return (
       <div className="flex justify-center items-center h-full w-full">
-        <p className="text-[#767676] text-center">No incidents found</p>
+        <p className="text-[#767676] text-2xl text-center">
+          NO INCIDENTS FOUND
+        </p>
       </div>
     );
   }

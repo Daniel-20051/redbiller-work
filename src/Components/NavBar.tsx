@@ -1,5 +1,6 @@
 import UserCard from "./UserCard";
 import { use } from "react";
+import { Link } from "react-router-dom";
 import { UserDetailsContext } from "../context/AuthContext";
 import { useSidebar } from "../context/SidebarContext";
 
@@ -10,7 +11,7 @@ const NavBar = () => {
     if (!name) return "";
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
   };
-  const { isCollapsed, toggleCollapse, toggleRef } = useSidebar();
+  const { toggleCollapse, toggleRef } = useSidebar();
 
   return (
     <div className="bg-[#C9C9C9] h-[55px] w-full flex justify-between ">
@@ -23,17 +24,14 @@ const NavBar = () => {
             alt=""
             onClick={() => toggleCollapse()}
           />
-          <div className=" absolute top-15 left-2 hidden group-hover:block bg-[#f2f2f2] px-3 py-2 rounded-md z-50 ">
-            <p className="text-xs font-[700]">
-              {isCollapsed ? "Open Sidebar" : "Close Sidebar"}
-            </p>
-          </div>
         </div>
-        <img
-          className="w-[114px] h-[36px] my-[9px] lg:ml-7"
-          src="/assets/redlogodashboard.svg"
-          alt=""
-        />
+        <Link to="/home">
+          <img
+            className="w-[114px] h-[36px] my-[9px] lg:ml-7"
+            src="/assets/redlogodashboard.svg"
+            alt=""
+          />
+        </Link>
       </div>
 
       <UserCard
