@@ -104,6 +104,7 @@ export class AuthApis {
         }
       }
     )
+    console.log(response)
     return response
   }
     catch(err){
