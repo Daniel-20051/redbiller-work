@@ -19,7 +19,7 @@ const NavBar = () => {
           <img
             ref={toggleRef}
             className="sidebar w-[35px] h-[35px] ml-5 lg:hidden p-2 rounded-md hover:bg-white cursor-pointer  "
-            src="../src/assets/sidebarr-logo.svg"
+            src="/assets/sidebarr-logo.svg"
             alt=""
             onClick={() => toggleCollapse()}
           />
@@ -31,7 +31,7 @@ const NavBar = () => {
         </div>
         <img
           className="w-[114px] h-[36px] my-[9px] lg:ml-7"
-          src="../src/assets/redlogodashboard.svg"
+          src="/assets/redlogodashboard.svg"
           alt=""
         />
       </div>

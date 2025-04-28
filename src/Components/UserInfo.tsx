@@ -69,7 +69,7 @@ const UserInfo = ({
           }}
           className="w-1/2 flex  items-center justify-center transition-all"
         >
-          <img src="../src/assets/pen.svg" alt="pic" />
+          <img src="/assets/pen.svg" alt="pic" />
         </button>
 
         <button
@@ -78,7 +78,7 @@ const UserInfo = ({
           }}
           className="w-1/2 flex  items-center justify-center transition-all"
         >
-          <img src="../src/assets/dust-bin.svg" alt="pic" />
+          <img src="/assets/dust-bin.svg" alt="pic" />
         </button>
       </div>
       <div
@@ -104,13 +104,13 @@ const UserInfo = ({
         <div className=" hidden  md:flex justify-center   gap-6">
           <img
             className="hover:cursor-pointer"
-            src="../src/assets/pen.svg"
+            src="/assets/pen.svg"
             onClick={() => setIsUpdateOpen(true)}
           />
 
           <img
             className="hover:cursor-pointer"
-            src="../src/assets/dust-bin.svg"
+            src="/assets/dust-bin.svg"
             onClick={handleConfirmationDelete}
           />
         </div>
@@ -126,7 +126,7 @@ const UserInfo = ({
                 className="place-self-end cursor-pointer "
                 onClick={() => setIsProfileOpen(false)}
               >
-                <img src="../src/assets/cancel-icon.svg" alt="" />
+                <img src="/assets/cancel-icon.svg" alt="" />
               </button>
 
               <div className="flex justify-between mx-[50px]  items-center">
@@ -193,7 +193,7 @@ const UserInfo = ({
                     <p className="flex gap-6 uppercase font-[500]  text-[14px] ">
                       <img
                         className="w-[20px] h-[20px] "
-                        src="../src/assets/male.svg"
+                        src="/assets/male.svg"
                         alt=""
                       />
                       {gender}
@@ -219,7 +219,7 @@ const UserInfo = ({
                   className="place-self-end cursor-pointer "
                   onClick={() => setIsUpdateOpen(false)}
                 >
-                  <img src="../src/assets/cancel-icon.svg" alt="" />
+                  <img src="/assets/cancel-icon.svg" alt="" />
                 </button>
               </div>
               <div>
@@ -287,7 +287,7 @@ const UserInfo = ({
               <div className="flex flex-col items-center mb-8">
                 {/* <img
                 className="w-16 h-16 mb-4"
-                src="../src/assets/warning-icon.svg"
+                src="/assets/warning-icon.svg"
                 alt="Warning"
               /> */}
                 <h3 className="text-lg font-bold bg-red-100 rounded px-2 text-red-700">

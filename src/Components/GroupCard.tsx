@@ -3,7 +3,7 @@ const GroupCard = () => {
     <div className=" w-[240px] h-[216px] rounded-[20px]   relative flex flex-col bg-white  shadow-xl">
       <img
         className="w-[20px] h-[20px] absolute right-[15px] top-[15px] "
-        src="../src/assets/redbiller.png"
+        src="/assets/redbiller.png"
         alt=""
       />
 
@@ -13,22 +13,22 @@ const GroupCard = () => {
         <div className="flex  ">
           <img
             className="w-[45px] h-[45px] rounded-4xl border-2 border-primary mb-[14px] z-50 "
-            src="../src/assets/blank-profile.png"
+            src="/assets/blank-profile.png"
             alt=""
           />
           <img
             className="w-[45px] h-[45px] rounded-4xl border-2 border-primary mb-[14px] -ml-[22px] z-40 "
-            src="../src/assets/blank-profile.png"
+            src="/assets/blank-profile.png"
             alt=""
           />
           <img
             className="w-[45px] h-[45px] rounded-4xl border-2 border-primary mb-[14px] -ml-[22px] z-30 "
-            src="../src/assets/blank-profile.png"
+            src="/assets/blank-profile.png"
             alt=""
           />
           <img
             className="w-[45px] h-[45px] rounded-4xl border-2 border-primary mb-[14px] -ml-[22px] z-20 "
-            src="../src/assets/blank-profile.png"
+            src="/assets/blank-profile.png"
           />
         </div>
 
