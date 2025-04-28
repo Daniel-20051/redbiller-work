@@ -68,15 +68,21 @@ const IncidentReport = () => {
           </div>
           <div className=" h-[full] w-[1px] bg-[#D9D9D9] "></div>
           <div
-            className={`w-[49%] flex flex-col gap-8 justify-center relative px-7  ${
+            className={`w-[49%] flex flex-col gap-8 pt-30 relative px-7 overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  ${
               isAdmin && "hidden "
             } ${activeIncident ? "flex w-full md:w-[49%] " : "hidden"}`}
           >
             <button
               onClick={() => setActiveIncident(false)}
-              className="absolute top-10 right-10"
+              className="flex items-center gap-2 rounded-lg absolute md:top-10 top-7 right-7 md:right-10 w-[65px] md:w-[80px] border-1 border-[#b9b9b9]
+            font-[600] text-[13px] md:text-[16px] p-2 "
             >
-              <img src="/assets/back.svg" alt="" />
+              <img
+                className="w-[8px] md:w-[10px] h-[20px] md:h-[27px]  "
+                src="/assets/back.svg"
+                alt=""
+              />
+              Back
             </button>
             {activeIncident ? (
               <>
@@ -92,7 +98,7 @@ const IncidentReport = () => {
                 <p>{activeIncident?.incidentMessage}</p>
                 {activeIncident?.incidentphoto ? (
                   <img
-                    className="h-[150px] w-auto object-cover place-self-center"
+                    className="h-[350px] w-auto object-cover place-self-center"
                     src={activeIncident?.incidentphoto || ""}
                     alt="Incident photo"
                     loading="lazy"
