@@ -1,12 +1,30 @@
+import { useEffect, useState } from "react";
 import NavBar from "../Components/NavBar";
 import { UserDetailsContext } from "../context/AuthContext";
 import { use } from "react";
 import SideBar from "../Components/SideBar";
 import { Link } from "react-router-dom";
 import SmallSpiner from "../Components/smallSpiner";
+import { AuthApis } from "../api";
+
+const authApi = new AuthApis();
 
 const Home = () => {
   const { userDetails } = use(UserDetailsContext);
+  const [incidentreportHome, setIncidentreportHome] = useState<any>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await authApi.getAllIncidentReport();
+        setIncidentreportHome(response);
+      } catch (error) {
+        return error;
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div>
       {!userDetails ? (
@@ -65,13 +83,15 @@ const Home = () => {
                   </p>
                   <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
                   <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
-                    Compliance
+                    {incidentreportHome?.data.data.incidents[0].subject}
                   </p>
-                  <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] ">
-                    Iruoma wearing rubber slippers during work....
+                  <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
+                    {incidentreportHome?.data.data.incidents[0].incidentMessage}
                   </p>
                   <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
-                    Friday 07:30
+                    {new Date(
+                      incidentreportHome?.data.data.incidents[0].createdAt
+                    ).toLocaleString()}
                   </p>
                   <Link to="/incident-report/create">
                     <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">

@@ -61,6 +61,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
             .includes(searchTerm.toLowerCase())
       );
       setFilteredIncidents(filtered);
+      console.log(filtered);
     }
   }, [incidentValue, searchTerm]);
 
