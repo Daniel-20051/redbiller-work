@@ -50,10 +50,10 @@ const IncidentView = () => {
               <p className="text-[13px] md:text-[16px]">
                 {incidentDetails?.incidentMessage}
               </p>
-              {incidentDetails.incidentphoto ? (
+              {incidentDetails?.incidentphoto ? (
                 <img
                   className="h-[300px] w-[200px] object-cover place-self-center mb-4"
-                  src={incidentDetails.incidentphoto}
+                  src={incidentDetails?.incidentphoto}
                   alt="Incident photo"
                 />
               ) : (
