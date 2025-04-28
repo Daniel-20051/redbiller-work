@@ -16,7 +16,7 @@ const Profile = () => {
             <div className="flex  mx-[45px] justify-between  lg:mx-[90px] my-[20px]  lg:my-[30px] items-center">
               <img
                 className="border-3 border-primary rounded-full w-[70px] h-[70px] lg:w-[90px] lg:h-[90px] "
-                src="../src/assets/blank-profile.png"
+                src="/assets/blank-profile.png"
                 alt=""
               />
               <p className="text-primary text-[17px] md:text-[19px] font-[800] ">
@@ -86,7 +86,7 @@ const Profile = () => {
                   <p className="flex gap-5 uppercase font-[500] text-[1em] md:text-[1.25em]  ">
                     <img
                       className="w-[35px] h-[35px] "
-                      src="../src/assets/male.svg"
+                      src="/assets/male.svg"
                       alt=""
                     />
                     {userDetails?.data.user.gender}

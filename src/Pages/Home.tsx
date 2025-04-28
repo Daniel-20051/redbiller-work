@@ -43,7 +43,7 @@ const Home = () => {
                     dolor sit amet consectetur.
                   </p>
                   <div className="flex gap-1 absolute bottom-[10px] md:bottom-[25px] left-[40px] text-[14px] font-[400] text-[#4E4E4E] ">
-                    <img src="../src/assets/MapPin.svg" alt="" />
+                    <img src="/assets/MapPin.svg" alt="" />
                     <p>Conference Room</p>
                   </div>
                   <p className="absolute right-[21px] bottom-[10px] md:bottom-[25px] text-[14px] font-[400] text-[#4E4E4E]">
@@ -53,7 +53,7 @@ const Home = () => {
                 <div className="hidden lg:inline">
                   <img
                     className="h-full"
-                    src="../src/assets/home-design.svg"
+                    src="/assets/home-design.svg"
                     alt=""
                   />
                 </div>

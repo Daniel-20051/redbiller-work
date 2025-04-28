@@ -22,7 +22,7 @@ const WeeklyReport = () => {
                 >
                   <img
                     className="w-[16px] h-[16px]  "
-                    src="../src/assets/plus-icon.svg"
+                    src="/assets/plus-icon.svg"
                     alt=""
                   />
                   <button className=" text-white font-[400] text-[12px]  ">

@@ -78,7 +78,7 @@ const User = () => {
               <div className="absolute top-17 md:top-0 right-5 md:inline md:relative">
                 <img
                   className=" absolute left-3 top-15 md:top-16 transform -translate-y-12  text-gray-500 "
-                  src="../src/assets/search.svg"
+                  src="/assets/search.svg"
                   alt=""
                 />
                 <input
@@ -102,7 +102,7 @@ const User = () => {
                       PhoneNum={800000000}
                       gender={user?.gender}
                       department={user?.occupation}
-                      imgUrl="../src/assets/blank-profile.png"
+                      imgUrl="/assets/blank-profile.png"
                       onDelete={() => handleDeleteUser(user?.id)}
                     />
                   </React.Fragment>
