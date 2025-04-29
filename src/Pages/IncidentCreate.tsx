@@ -149,7 +149,7 @@ const IncidentCreate = () => {
                   />
                   <button
                     type="button"
-                    className=" flex justify-between items-center border-1 border-[#E7E3E3] rounded-[8px] w-full md:w-auto px-[14px] h-auto py-[10px] "
+                    className=" flex cursor-pointer justify-between items-center border-1 border-[#E7E3E3] rounded-[8px] w-full md:w-auto px-[14px] h-auto py-[10px] "
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <p className="text-[#817979] font-[400] text-[14px] mx-[17px] max-w-[200px] overflow-x-auto whitespace-nowrap hide-scrollbar scroll-smooth ">

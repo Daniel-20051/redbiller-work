@@ -46,9 +46,9 @@ const IncidentView = () => {
               </div>
             </div>
             <div className=" justify-center items-center">
-              <p className="  text-[16px] md:text-[20px] text-primary font-[600]  ">
-                {`Subject: ${incidentDetails?.subject}`}
-                <span className="text-[#b9b9b9] font-[600] text-[13px] md:text-[16px] ml-5 ">
+              <p className="flex gap-5 items-center  text-[16px] md:text-[20px] text-primary font-[600]  ">
+                {` ${incidentDetails?.subject}`}
+                <span className="text-[#b9b9b9] font-[600] text-[12px]">
                   {new Date(incidentDetails?.updatedAt).toLocaleString()}
                 </span>
               </p>
