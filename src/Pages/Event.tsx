@@ -38,7 +38,7 @@ const Event = () => {
             </div>
             <div className="flex flex-col gap-6  w-[70%] md:w-[40%]">
               {isAdmin && (
-                <button className="bg-primary text-white py-3 md:py-4 text-[17px] md:text-[22px] font-[400] rounded-[15px]">
+                <button className="bg-primary cursor-pointer text-white py-3 md:py-4 text-[17px] md:text-[22px] font-[400] rounded-[15px]">
                   ADD EVENT
                 </button>
               )}
@@ -47,7 +47,7 @@ const Event = () => {
                   onClick={() => {
                     setEvent(0);
                   }}
-                  className={` py-2 w-[50%] md:py-3 px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
+                  className={` py-2 w-[50%] cursor-pointer md:py-3 px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
                     event == 0 ? "bg-white  text-primary" : "text-[#898A8D]"
                   }`}
                 >
@@ -57,7 +57,7 @@ const Event = () => {
                   onClick={() => {
                     setEvent(1);
                   }}
-                  className={` py-2 w-[50%] md:py-3 px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
+                  className={` py-2 w-[50%] md:py-3 cursor-pointer px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
                     event == 1 ? "bg-white  text-primary" : "text-[#898A8D]"
                   }`}
                 >
