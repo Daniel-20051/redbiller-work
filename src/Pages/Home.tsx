@@ -115,9 +115,17 @@ const Home = () => {
                         </div>
                       )}
                       <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
+                        {/* {new Date(
+                          incidentreportHome?.data?.data.incidents[0].createdAt
+                        ).toLocaleString()} */}
                         {new Date(
                           incidentreportHome?.data?.data.incidents[0].createdAt
-                        ).toLocaleString()}
+                        ).toLocaleString(undefined, {
+                          day: "numeric",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </p>
                       <Link to="/incident-report/create">
                         <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">
