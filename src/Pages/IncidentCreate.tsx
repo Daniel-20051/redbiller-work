@@ -50,6 +50,9 @@ const IncidentCreate = () => {
 
   const sendReport = async (e: any) => {
     e.preventDefault();
+    if (loading) {
+      return;
+    }
     if (!textAreaValue || !subject) {
       return showAlertMessage("Empty message field", "error");
     }
@@ -65,15 +68,17 @@ const IncidentCreate = () => {
       showAlertMessage("Incident report submitted successfully", "success");
       setTextAreaValue(null);
       setSubject("");
+      setSelectedFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
       return response;
     } catch (error) {
       console.log(error);
-      setLoading(false);
       showAlertMessage("An error occurred while sending report", "error");
       return error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -141,7 +146,7 @@ const IncidentCreate = () => {
                 </div>
                 <div className="md:flex justify-between mt-[15px]">
                   <input
-                    className="hidden "
+                    className="hidden"
                     ref={fileInputRef}
                     onChange={handleFileChange}
                     accept=".jpg,.jpeg,.png,.gif,.webp,.svg"
@@ -163,10 +168,19 @@ const IncidentCreate = () => {
                   </button>
 
                   <button
+                    disabled={loading}
                     type="submit"
-                    className="w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white cursor-[pointer] bg-primary rounded-[8px]"
+                    className={
+                      loading
+                        ? "bg-[#6b6b6b] w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white rounded-[8px]"
+                        : "w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white cursor-[pointer] bg-primary rounded-[8px]"
+                    }
                   >
-                    {loading ? "loading..." : "Submit"}
+                    {loading ? (
+                      <p className=" cursor-not-allowed">loading...</p>
+                    ) : (
+                      "Submit"
+                    )}
                   </button>
                 </div>
               </form>
