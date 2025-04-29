@@ -35,8 +35,6 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   console.log(selectedIncident);
   const isAdmin = userDetails?.data.user.role == "admin";
 
-  console.log(filteredIncidents);
-
   useEffect(() => {
     const fetchData = async () => {
       setError(true);

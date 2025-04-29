@@ -49,7 +49,12 @@ const IncidentView = () => {
               <p className="flex gap-5 items-center  text-[16px] md:text-[20px] text-primary font-[600]  ">
                 {` ${incidentDetails?.subject}`}
                 <span className="text-[#b9b9b9] font-[600] text-[12px]">
-                  {new Date(incidentDetails?.updatedAt).toLocaleString()}
+                  {new Date(incidentDetails?.createdAt).toLocaleString()}
+                  {/* {incidentDetails?.createdAt.toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })} */}
                 </span>
               </p>
               <p className="text-[13px] md:text-[16px]">
