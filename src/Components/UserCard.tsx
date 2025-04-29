@@ -84,7 +84,7 @@ const UserCard = ({ username, role }: Props) => {
               src="/assets/blank-profile.png"
               alt=""
             />
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
               <p className="font-[500] text-[12px] ">{username}</p>
               <p className="text-[#B2B2B2] font-[500] text-[12px]">
                 {userDetails?.data.user.email}
