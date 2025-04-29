@@ -15,7 +15,7 @@ const IncidentView = () => {
         <div className="flex flex-1 relative  ">
           <Link
             to="/incident-report"
-            className=" flex items-center gap-2 rounded-lg absolute md:top-10 top-8 left-10 md:right-17 w-[65px] md:w-[80px] border-1 border-[#b9b9b9]
+            className=" flex items-center gap-2 rounded-lg absolute md:top-10 top-4 right-5 md:right-10 w-[65px] md:w-[80px] border-1 border-[#b9b9b9]
             font-[600] text-[13px] md:text-[16px] p-2 md:p-3"
           >
             <img
@@ -46,7 +46,7 @@ const IncidentView = () => {
               </div>
             </div>
             <div className=" justify-center items-center">
-              <p className="  text-[13px] md:text-[16px] text-primary font-[600]  ">
+              <p className="  text-[16px] md:text-[20px] text-primary font-[600]  ">
                 {`Subject: ${incidentDetails?.subject}`}
                 <span className="text-[#b9b9b9] font-[600] text-[13px] md:text-[16px] ml-5 ">
                   {new Date(incidentDetails?.updatedAt).toLocaleString()}
