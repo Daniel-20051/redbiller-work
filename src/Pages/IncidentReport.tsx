@@ -126,7 +126,16 @@ const IncidentReport = () => {
                 <p className=" text-[16px] text-primary font-[600]  ">
                   {activeIncident?.subject}
                   <span className="text-[#D9D9D9] font-[600] text-[13px] ml-5 ">
-                    {new Date(activeIncident?.updatedAt).toLocaleString()}
+                    {/* {new Date(activeIncident?.updatedAt).toLocaleString()} */}
+                    {new Date(activeIncident?.updatedAt).toLocaleString(
+                      undefined,
+                      {
+                        day: "numeric",
+                        month: "short",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }
+                    )}
                   </span>
                 </p>
                 <p>{activeIncident?.incidentMessage}</p>

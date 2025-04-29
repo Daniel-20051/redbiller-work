@@ -35,6 +35,8 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   console.log(selectedIncident);
   const isAdmin = userDetails?.data.user.role == "admin";
 
+  console.log(filteredIncidents);
+
   useEffect(() => {
     const fetchData = async () => {
       setError(true);
@@ -132,7 +134,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
             <div className="flex flex-col hover:bg-[#D6CBCB] ">
               <p className="text-primary font-[600] text-[16px]">
                 {incident.subject}
-                {isAdmin && (
+                {!isAdmin && (
                   <span className="text-[#767676] text-[10px] ml-2">
                     ➔{" "}
                     {incident.User.firstName.charAt(0).toUpperCase() +
