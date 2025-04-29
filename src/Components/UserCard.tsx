@@ -61,10 +61,10 @@ const UserCard = ({ username, role }: Props) => {
         onClick={() => {
           setIsOpen(!isOpen);
         }}
-        className="flex flex-col text-center cursor-pointer"
+        className="flex flex-col text-left cursor-pointer"
       >
         <p className="text-[13px] md:text-[15px] font-extrabold ">{username}</p>
-        <p className="text-[9px] md:text-[10px] uppercase">{role}</p>
+        <p className="text-[9px] font-[500] md:text-[11px] ">{role}</p>
       </div>
       <div>
         <img

@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import AlertCard from "../messageAlert/AlertCardProps";
 import { AuthApis } from "../api";
 const authApis = new AuthApis();
+import { Link } from "react-router-dom";
 
 const IncidentCreate = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -89,9 +90,21 @@ const IncidentCreate = () => {
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
         <SideBar>incident-report</SideBar>
-        <div className="flex flex-1 items-center justify-center ">
+        <div className="flex flex-1 items-center justify-center relative ">
+          <Link
+            to="/incident-report"
+            className="flex items-center gap-2 rounded-lg absolute md:top-5 top-2 left-7 md:left-10 w-[65px] md:w-[80px] border-1 border-[#b9b9b9]
+            font-[600] text-[13px] md:text-[16px] p-2 "
+          >
+            <img
+              className="w-[8px] md:w-[10px] h-[20px] md:h-[27px]  "
+              src="/assets/back.svg"
+              alt=""
+            />
+            Back
+          </Link>
           <div className="w-[87.8%] h-[85%] md:h-[81%] border-1 border-[#D9D9D9] relative ">
-            <p className="font-[600] text-[13px] text-[#898A8D] absolute right-[62px] top-[22px]">
+            <p className="font-[600] text-[13px] text-[#898A8D] absolute right-2 md:right-[62px] top-2 md:top-[22px]">
               {currentDate.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "long",

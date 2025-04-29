@@ -80,7 +80,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
 
   if (filteredIncidents.length === 0) {
     return (
-      <div className="flex justify-center items-center h-full w-full ">
+      <div className="flex justify-center items-center h-[75vh] w-full ">
         <Icon
           icon="line-md:document-delete"
           width="60"
