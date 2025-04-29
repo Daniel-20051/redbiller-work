@@ -5,7 +5,6 @@ import { useRef, useState } from "react";
 import AlertCard from "../messageAlert/AlertCardProps";
 import { AuthApis } from "../api";
 const authApis = new AuthApis();
-import { Link } from "react-router-dom";
 
 const IncidentCreate = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
