@@ -3,6 +3,7 @@ import GroupCard from "./GroupCard";
 import { use, useRef, useEffect } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
 import { useSidebar } from "../context/SidebarContext";
+import useMobile from "../hooks/UseMobile";
 
 interface Props {
   children?: string;
@@ -13,6 +14,7 @@ const SideBar = ({ children }: Props) => {
   const isAdmin = userDetails?.data.user.role === "admin";
   const { isCollapsed, toggleCollapse, toggleRef } = useSidebar();
   const sidebarRef = useRef<HTMLDivElement | null>(null);
+  const { isMobile } = useMobile();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -33,18 +35,24 @@ const SideBar = ({ children }: Props) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isCollapsed, toggleCollapse, toggleRef]);
 
+  const handleMobileCollapse = () => {
+    if (isMobile) {
+      toggleCollapse();
+    }
+  };
+
   return (
     <div
       ref={sidebarRef}
-      className={`flex-col items-start justify-between lg:w-[25%] xl:w-[20%] bg-[#F2F2F2] transition-all ${
+      className={`flex-col items-start justify-between  bg-[#F2F2F2] transition-all ${
         isCollapsed
-          ? "w-0 overflow-hidden  "
-          : "absolute z-40 w-[50%] md:w-[40%] h-full"
+          ? "w-0  lg:w-[25%] xl:w-[20%] overflow-hidden  "
+          : "absolute z-40 w-[50%] lg:w-[25%] xl:w-[20%] h-full"
       } lg:flex `}
     >
       <div className="w-full">
         <Link
-          onClick={toggleCollapse}
+          onClick={handleMobileCollapse}
           to="/home"
           className={
             children === "home"
@@ -66,7 +74,7 @@ const SideBar = ({ children }: Props) => {
 
         {isAdmin && (
           <Link
-            onClick={toggleCollapse}
+            onClick={handleMobileCollapse}
             to="/users"
             className={
               children === "users"
@@ -88,7 +96,7 @@ const SideBar = ({ children }: Props) => {
         )}
         <Link
           to="/events"
-          onClick={toggleCollapse}
+          onClick={handleMobileCollapse}
           className={
             children === "event"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -108,7 +116,7 @@ const SideBar = ({ children }: Props) => {
         </Link>
         <Link
           to="/incident-report"
-          onClick={toggleCollapse}
+          onClick={handleMobileCollapse}
           className={
             children === "incident-report"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -128,7 +136,7 @@ const SideBar = ({ children }: Props) => {
         </Link>
         <Link
           to="/weekly-report"
-          onClick={toggleCollapse}
+          onClick={handleMobileCollapse}
           className={
             children === "weekly-report"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -148,7 +156,7 @@ const SideBar = ({ children }: Props) => {
         </Link>
         <Link
           to="/home"
-          onClick={toggleCollapse}
+          onClick={handleMobileCollapse}
           className={
             children === "tasks"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
