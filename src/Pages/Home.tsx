@@ -40,7 +40,7 @@ const Home = () => {
           <div className=" flex flex-1 w-full relative max-h-[calc(100vh-55px)]">
             <SideBar>home</SideBar>
 
-            <div className="flex flex-1 flex-col   items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
+            <div className="flex flex-1 flex-col pb-6  items-center justify-center overflow-y-auto max-h-full relative hide-scrollbar scroll-smooth  ">
               <p className=" font-[600] text-[27px] md:text-[32px]  mb-4 ">
                 Welcome,{" "}
                 <span>
@@ -79,8 +79,8 @@ const Home = () => {
                   />
                 </div>
               </div>
-              <div className=" md:flex gap-5 w-[80%] h-[35%] mb-[20px]  justify-between">
-                <div className=" w-full md:w-[47%] h-full bg-[#F2F2F2] rounded-[15px] mb-8 pt-5  relative ">
+              <div className=" md:flex gap-5 w-[80%] h-[37%] md:h-[40%] justify-between">
+                <div className=" w-full md:w-[47%] h-full  bg-[#F2F2F2] rounded-[15px] mb-8 pt-5  relative ">
                   {spiner ? (
                     <>
                       <p className=" text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
@@ -136,7 +136,7 @@ const Home = () => {
                     </div>
                   )}
                 </div>
-                <div className="w-full md:w-[47%]  h-full bg-[#F2F2F2] rounded-[15px] pt-5  relative ">
+                <div className="w-full md:w-[47%]  h-full  bg-[#F2F2F2] rounded-[15px] pt-5  relative ">
                   <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
                     Weekly Report
                   </p>
