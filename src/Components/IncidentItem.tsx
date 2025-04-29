@@ -67,7 +67,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   if (error) {
     return (
       <div className="flex justify-center items-center h-[75vh] w-full">
-        <p className="text-[#980000] text-center text-[1.1rem]">Loading...</p>
+        <p className="text-[#980000] text-center text-[1.1rem]">Loading..</p>
       </div>
     );
   }
