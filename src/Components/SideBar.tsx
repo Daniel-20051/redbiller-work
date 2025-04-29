@@ -44,6 +44,7 @@ const SideBar = ({ children }: Props) => {
     >
       <div className="w-full">
         <Link
+          onClick={toggleCollapse}
           to="/home"
           className={
             children === "home"
@@ -65,6 +66,7 @@ const SideBar = ({ children }: Props) => {
 
         {isAdmin && (
           <Link
+            onClick={toggleCollapse}
             to="/users"
             className={
               children === "users"
@@ -86,6 +88,7 @@ const SideBar = ({ children }: Props) => {
         )}
         <Link
           to="/events"
+          onClick={toggleCollapse}
           className={
             children === "event"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -105,6 +108,7 @@ const SideBar = ({ children }: Props) => {
         </Link>
         <Link
           to="/incident-report"
+          onClick={toggleCollapse}
           className={
             children === "incident-report"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -124,6 +128,7 @@ const SideBar = ({ children }: Props) => {
         </Link>
         <Link
           to="/weekly-report"
+          onClick={toggleCollapse}
           className={
             children === "weekly-report"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -143,6 +148,7 @@ const SideBar = ({ children }: Props) => {
         </Link>
         <Link
           to="/home"
+          onClick={toggleCollapse}
           className={
             children === "tasks"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
