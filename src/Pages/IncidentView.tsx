@@ -12,7 +12,7 @@ const IncidentView = () => {
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
         <SideBar>incident-report</SideBar>
-        <div className="flex flex-1 relative  ">
+        <div className="flex flex-1 relative overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  ">
           <Link
             to="/incident-report"
             className=" flex items-center gap-2 rounded-lg absolute md:top-10 top-4 right-5 md:right-10 w-[65px] md:w-[80px] border-1 border-[#b9b9b9]

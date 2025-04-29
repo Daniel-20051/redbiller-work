@@ -63,7 +63,7 @@ const IncidentReport = () => {
                         outline-1 bg-white w-[115px] md:w-[170px]  outline-[#E7E3E3]
                       `}
                       type="text"
-                      placeholder="Biller ID"
+                      placeholder="Search"
                       value={searchTerm}
                       onChange={handleSearchChange}
                     />
