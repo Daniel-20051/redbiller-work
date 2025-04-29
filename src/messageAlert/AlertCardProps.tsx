@@ -49,12 +49,12 @@ const AlertCard = ({
 
   return (
     <div className="fixed top-5 right-5 z-50 max-w-md">
-      <div className={`border-l-4 p-6 rounded shadow-md ${bgColors[type]}`}>
+      <div className={`border-l-4 p-5 rounded shadow-md ${bgColors[type]}`}>
         <div className="flex justify-between items-start">
           <div className="flex items-center">
             {type === "success" && (
               <svg
-                className={`w-8 h-6 mr-2 ${iconColors[type]}`}
+                className={`w-8 h-6 mr-1 ${iconColors[type]}`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >

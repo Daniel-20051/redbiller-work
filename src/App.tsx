@@ -19,8 +19,6 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const INACTIVE_TIMEOUT = 5 * 60 * 1000;
 
-  console.log(isAuthenticated);
-
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {

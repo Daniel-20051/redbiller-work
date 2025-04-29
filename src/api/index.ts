@@ -30,7 +30,6 @@ export class AuthApis {
     try{
       const token = localStorage.getItem("authToken")
       if(!token){
-        console.log("token not found")
         return null
       }
       const response = await axios.get(`${BASE_URL}/api/v1/auth/current-user`,
