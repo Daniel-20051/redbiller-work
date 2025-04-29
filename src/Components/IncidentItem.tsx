@@ -67,7 +67,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-[75vh]">
+      <div className={`flex justify-center items-center h-[55vh] `}>
         <Icon
           icon="svg-spinners:ring-resize"
           width="30"
@@ -80,7 +80,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
 
   if (filteredIncidents.length === 0) {
     return (
-      <div className="flex justify-center items-center h-[75vh] w-full ">
+      <div className="flex justify-center items-center h-[55vh] w-full ">
         <Icon
           icon="line-md:document-delete"
           width="60"
@@ -101,12 +101,12 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   };
 
   return (
-    <ul className="w-full space-y-2 hover:cursor-pointer">
+    <ul className="flex flex-col  w-[95%] gap-2 hover:cursor-pointer overflow-y-auto max-h-full  scroll-smooth ">
       {filteredIncidents.map((incident, index) => (
         <li
           onClick={() => handleClick(incident)}
           key={incident.id || index}
-          className="list-none bg-[#D6CBCB2E] px-6 py-2 rounded-[4px] hover:bg-[#D6CBCB]"
+          className="list-none bg-[#D6CBCB14] px-6 py-2 rounded-[4px] w-full hover:bg-[#D6CBCB]"
         >
           {isAdmin ? (
             <Link
@@ -116,7 +116,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
               <p className="text-primary font-semibold text-[16px]">
                 {incident.subject}
                 {isAdmin && (
-                  <span className="text-[#767676] text-[10px] ml-2">
+                  <span className="text-[#898A8D] font-[400] text-[12px] ml-2">
                     ➔{" "}
                     {incident.User.firstName.charAt(0).toUpperCase() +
                       incident.User.firstName.slice(1).toLowerCase()}{" "}
@@ -130,7 +130,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
             </Link>
           ) : (
             <div className="flex flex-col hover:bg-[#D6CBCB] ">
-              <p className="text-primary font-semibold text-[16px]">
+              <p className="text-primary font-[600] text-[16px]">
                 {incident.subject}
                 {isAdmin && (
                   <span className="text-[#767676] text-[10px] ml-2">

@@ -27,26 +27,60 @@ const IncidentReport = () => {
         <SideBar>incident-report</SideBar>
         <div className="flex flex-1 ">
           <div
-            className={`flex flex-1 flex-col gap-6 ${
+            className={`flex flex-1 flex-col my-15 items-center ${
               isAdmin &&
-              "my-[4%] mx-[3%] border-1 border-[#D9D9D9] rounded-[8px]"
+              "my-[4%] mx-[3%] border-1  border-[#D9D9D9] rounded-[8px]"
             } ${activeIncident && " hidden md:flex"} `}
           >
-            <div className="flex justify-between items-center px-3  mt-[24px]">
+            <div
+              className={`flex items-center justify-between w-[95%]  ${
+                isAdmin && "flex-col gap-3 md:gap-6 py-3 items-start w-[95%]"
+              }`}
+            >
               <div>
-                <p className="font-[600] text-[19px] lg:text-[23px]  ">
-                  Incident Reports
+                <p className="font-[600] text-[19px] lg:text-[24px]  ">
+                  Incident Report
                 </p>
               </div>
-              <div className="flex gap-3">
-                <div className="flex bg-[#F2F2F2] w-[162px] px-[24px]  py-[17px] h-[35px] items-center font-[600] rounded-[8px]  ">
+              <div
+                className={`flex  gap-3 ${
+                  isAdmin && " w-full justify-between"
+                }`}
+              >
+                <div className="flex py-[17px] h-[35px] items-center font-[600]   ">
                   <input
-                    className="w-[120px] h-[35px] outline-0  "
+                    className={`w-[120px] h-[35px] px-4 bg-[#F2F2F2] rounded-[8px]  outline-0 ${
+                      isAdmin && "hidden"
+                    } `}
                     type="text"
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                   />
+                  {isAdmin && (
+                    <input
+                      className={` h-[35px] px-4  rounded-l-[8px] 
+                        outline-1 bg-white w-[115px] md:w-[170px]  outline-[#E7E3E3]
+                      `}
+                      type="text"
+                      placeholder="Biller ID"
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                    />
+                  )}
+                  {isAdmin && (
+                    <div className="bg-[#E7E3E3] w-[12px] py-[18.5px] "></div>
+                  )}
+                  {isAdmin && (
+                    <input
+                      className={` h-[35px] px-4  rounded-r-[8px] 
+                        outline-1 bg-white w-[115px] md:w-[170px]  outline-[#E7E3E3]
+                      `}
+                      type="date"
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                    />
+                  )}
                 </div>
                 <Link to="/incident-report/create">
                   <button className="w-[80px] md:[110px] lg:w-[121px] cursor-[pointer] bg-primary rounded-[8px] text-white font-[500] text-[11px] lg:text-[15px] h-[35px] ">
@@ -56,8 +90,8 @@ const IncidentReport = () => {
               </div>
             </div>
             <div
-              className={`overflow-y-auto max-h-full hide-scrollbar scroll-smooth  place-self-center mb-5 w-[85%] ${
-                isAdmin && "mt-4 w-[95%]"
+              className={`flex flex-1 justify-center pt-10 overflow-y-auto max-h-full hide-scrollbar scroll-smooth  w-[95%] ${
+                isAdmin && "w-full bg-[#FBFBFB] "
               } `}
             >
               <IncidentItem
