@@ -67,8 +67,13 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-[75vh] w-full">
-        <p className="text-[#980000] text-center text-[1.1rem]">Loading...</p>
+      <div className="flex justify-center items-center h-[75vh]">
+        <Icon
+          icon="svg-spinners:ring-resize"
+          width="30"
+          height="30"
+          color="#93221D"
+        />
       </div>
     );
   }
