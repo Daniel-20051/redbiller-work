@@ -49,7 +49,7 @@ const Login = () => {
         return;
       }
       if (responseData?.status === 401) {
-        showAlertMessage("invalide passoword", "error");
+        showAlertMessage("invalid Password", "error");
         setLoginSpiner(false);
         return;
       }

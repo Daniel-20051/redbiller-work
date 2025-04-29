@@ -12,7 +12,7 @@ const authApi = new AuthApis();
 
 const Home = () => {
   const { userDetails } = use(UserDetailsContext);
-  const [incidentreportHome, setIncidentreportHome] = useState<any>();
+  const [incidentreportHome, setIncidentreportHome] = useState<any>(null);
   const [spiner, setSpiner] = useState<any>(false);
 
   useEffect(() => {
@@ -87,18 +87,36 @@ const Home = () => {
                         Incident Report
                       </p>
                       <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
-                      <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
-                        {incidentreportHome?.data.data.incidents[0].subject}
-                      </p>
-                      <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
-                        {
-                          incidentreportHome?.data.data.incidents[0]
-                            .incidentMessage
-                        }
-                      </p>
+                      {incidentreportHome?.data?.data.incidents[0]
+                        .incidentMessage ? (
+                        <>
+                          <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
+                            {
+                              incidentreportHome?.data?.data.incidents[0]
+                                .subject
+                            }
+                          </p>
+                          <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
+                            {
+                              incidentreportHome?.data?.data.incidents[0]
+                                .incidentMessage
+                            }
+                          </p>
+                        </>
+                      ) : (
+                        <div className="flex flex-col gap-2 justify-center items-center h-[50%] ">
+                          <Icon
+                            icon="line-md:document-delete"
+                            width="60"
+                            height="60"
+                            color="#93221D"
+                          />
+                          <p className=" font-[600] text-lg">No Incident</p>
+                        </div>
+                      )}
                       <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
                         {new Date(
-                          incidentreportHome?.data.data.incidents[0].createdAt
+                          incidentreportHome?.data?.data.incidents[0].createdAt
                         ).toLocaleString()}
                       </p>
                       <Link to="/incident-report/create">

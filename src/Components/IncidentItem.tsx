@@ -2,6 +2,7 @@ import { useEffect, useState, use } from "react";
 import { AuthApis } from "../api";
 import { UserDetailsContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import { Icon } from "@iconify/react";
 
 const authApi = new AuthApis();
 
@@ -74,10 +75,14 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
 
   if (filteredIncidents.length === 0) {
     return (
-      <div className="flex justify-center items-center h-full w-full">
-        <p className="text-[#767676] text-2xl text-center">
-          NO INCIDENTS FOUND
-        </p>
+      <div className="flex justify-center items-center h-full w-full ">
+        <Icon
+          icon="line-md:document-delete"
+          width="60"
+          height="60"
+          color="#93221D"
+        />
+        <p className=" font-[600] text-lg">No Incident found</p>
       </div>
     );
   }
