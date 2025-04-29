@@ -25,7 +25,7 @@ const IncidentView = () => {
             />
             Back
           </Link>
-          <div className="flex flex-col w-[full] gap-4 px-15 justify-center">
+          <div className="flex flex-col w-[full] gap-2 md:gap-4  px-5 md:px-15 justify-center">
             <div className="flex gap-4 items-center mb-10">
               <img
                 className=" w-[55px] md:w-[75px] h-[55px] md:h-[75px] rounded-full border-2 border-primary"
@@ -56,11 +56,13 @@ const IncidentView = () => {
                 {incidentDetails?.incidentMessage}
               </p>
               {incidentDetails?.incidentphoto ? (
-                <img
-                  className="h-[300px] w-[200px] object-cover place-self-center mb-4"
-                  src={incidentDetails?.incidentphoto}
-                  alt="Incident photo"
-                />
+                <div className="h-[25vh] w-[50vw] mt-6 md:mt-10 place-self-center">
+                  <img
+                    className="h-full w-full object-contain  mb-4"
+                    src={incidentDetails?.incidentphoto}
+                    alt="Incident photo"
+                  />
+                </div>
               ) : (
                 <div className=" flex items-center justify-center text-gray-500 bg-gray-100 p-15 mb-4 rounded">
                   No image available for this incident

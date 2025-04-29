@@ -92,7 +92,7 @@ const Login = () => {
             It doesn’t end here....
           </p>
         </div>
-        <div className="main-content relative w-full lg:w-[70%] items-center">
+        <div className="main-content relative w-full lg:w-[70%] ">
           <div className="flex flex-col items-center h-screen justify-center ">
             <img
               className="w-[170px] h-[170px] lg:hidden "
@@ -104,7 +104,10 @@ const Login = () => {
             <p className="font-main font-normal text-[14px]  ">
               Using your Biller ID
             </p>
-            <form className="" onSubmit={hnadleLogin}>
+            <form
+              className=" flex flex-col items-center"
+              onSubmit={hnadleLogin}
+            >
               <div className="mb-[32px] mt-[67px]">
                 <Inputfeild type="email" onEmailChange={setEmail}>
                   Biller ID / Email
@@ -118,7 +121,7 @@ const Login = () => {
               <div>
                 <button
                   type="submit"
-                  className="bg-primary text-white font-[400] text-[16px] py-3 rounded-[8px] w-[370px] hover:bg-red-900 cursor-pointer"
+                  className="bg-primary text-white font-[400] text-[16px] py-3 rounded-[8px] w-[340px] md:w-[370px] hover:bg-red-900 cursor-pointer"
                 >
                   {loginSpiner ? "loading..." : "Login"}
                 </button>

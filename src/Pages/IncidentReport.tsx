@@ -132,7 +132,7 @@ const IncidentReport = () => {
                 <p>{activeIncident?.incidentMessage}</p>
                 {activeIncident?.incidentphoto ? (
                   <img
-                    className="h-[350px] w-auto object-cover place-self-center"
+                    className="h-[40vh] w-[30vw] object-contain place-self-center"
                     src={activeIncident?.incidentphoto || ""}
                     alt="Incident photo"
                     loading="lazy"
