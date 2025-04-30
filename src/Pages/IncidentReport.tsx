@@ -120,13 +120,9 @@ const IncidentReport = () => {
             </button>
             {activeIncident ? (
               <>
-                {/* <p className=" text-[16px] text-primary font-[600]  ">
-                  {`${activeIncident?.User.firstName} ${activeIncident?.User.lastName}`}
-                </p> */}
-                <p className=" text-[16px] text-primary font-[600]  ">
+                <p className="text-primary font-semibold text-lg tracking-tight mb-1">
                   {activeIncident?.subject}
-                  <span className="text-[#D9D9D9] font-[600] text-[13px] ml-5 ">
-                    {/* {new Date(activeIncident?.updatedAt).toLocaleString()} */}
+                  <span className="ml-3 text-xs text-gray-400 font-medium px-2 py-1 bg-gray-100 rounded-full">
                     {new Date(activeIncident?.updatedAt).toLocaleString(
                       undefined,
                       {
@@ -138,17 +134,41 @@ const IncidentReport = () => {
                     )}
                   </span>
                 </p>
-                <p>{activeIncident?.incidentMessage}</p>
+
+                <p className="text-gray-700 mb-4">
+                  {"user checking " + activeIncident?.incidentMessage}
+                </p>
+
                 {activeIncident?.incidentphoto ? (
-                  <img
-                    className="h-[40vh] w-[30vw] object-contain place-self-center"
-                    src={activeIncident?.incidentphoto || ""}
-                    alt="Incident photo"
-                    loading="lazy"
-                  />
+                  <div className="relative overflow-hidden rounded-xl shadow-md bg-gradient-to-r from-gray-50 to-gray-100 p-1 max-w-2xl mx-auto">
+                    <div className="overflow-hidden rounded-lg">
+                      <img
+                        className="h-[40vh] w-full object-contain transform hover:scale-[1.02] transition-transform duration-300"
+                        src={activeIncident?.incidentphoto || ""}
+                        alt="Incident photo"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
                 ) : (
-                  <div className="h-[254px] w-[319px] flex items-center justify-center text-gray-500 bg-gray-100 rounded">
-                    No image available for this incident
+                  <div className="h-[254px] w-full max-w-md mx-auto flex flex-col items-center justify-center text-gray-500 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-sm">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-12 w-12 mb-2 text-gray-300"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <p className="font-medium">
+                      No image available for this incident
+                    </p>
                   </div>
                 )}
               </>
