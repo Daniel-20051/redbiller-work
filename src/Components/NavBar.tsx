@@ -14,8 +14,8 @@ const NavBar = () => {
   const { toggleCollapse, toggleRef } = useSidebar();
 
   return (
-    <div className="bg-[#C9C9C9] h-[55px] w-full flex justify-between ">
-      <div className="flex items-center ">
+    <div className="bg-[#C9C9C9] h-[55px] w-full flex justify-between">
+      <div className="flex items-center">
         <div className="group flex gap-2 items-center ">
           <img
             ref={toggleRef}
