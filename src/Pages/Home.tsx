@@ -82,7 +82,7 @@ const Home = () => {
               <div className=" md:flex gap-5 w-[80%] h-[37%] md:h-[40%] justify-between">
                 <div className=" w-full md:w-[47%] h-full  bg-[#F2F2F2] rounded-[15px] mb-8 relative ">
                   {spiner ? (
-                    <div className="relative w-full h-[320px] rounded-[15px] shadow-md overflow-hidden ">
+                    <div className="relative w-full h-full rounded-[15px] shadow-md overflow-hidden ">
                       {/* Background layer for the entire card */}
                       <div className="absolute inset-0 bg-[#F2F2F2]"></div>
 
@@ -99,7 +99,7 @@ const Home = () => {
                             alt="Incident"
                           />
                           {/* Gradient overlay that blends the top edge of the image */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/70 to-[#F2F2F2]"></div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/90 to-[#f2f2f2]"></div>
                         </div>
                       ) : null}
 
