@@ -80,59 +80,99 @@ const Home = () => {
                 </div>
               </div>
               <div className=" md:flex gap-5 w-[80%] h-[37%] md:h-[40%] justify-between">
-                <div className=" w-full md:w-[47%] h-full  bg-[#F2F2F2] rounded-[15px] mb-8 pt-5  relative ">
+                <div className=" w-full md:w-[47%] h-full  bg-[#F2F2F2] rounded-[15px] mb-8  relative ">
                   {spiner ? (
-                    <>
-                      <p className=" text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
-                        Incident Report
-                      </p>
-                      <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
-                      {incidentreportHome?.data?.data.incidents[0]
-                        .incidentMessage ? (
-                        <>
-                          <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
-                            {
-                              incidentreportHome?.data?.data.incidents[0]
-                                .subject
+                    <div className="relative w-full h-[350px] rounded-[15px] shadow-md overflow-hidden">
+                      {/* Background layer for the entire card */}
+                      <div className="absolute inset-0 bg-[#F2F2F2]"></div>
+
+                      {/* Image layer - positioned to take the bottom half with gradient */}
+                      {incidentreportHome?.data.data.incidents[0]
+                        .incidentphoto ? (
+                        <div className="absolute bottom-0 left-0 right-0 h-1/2">
+                          <img
+                            src={
+                              incidentreportHome?.data.data.incidents[0]
+                                .incidentphoto
                             }
-                          </p>
-                          <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
-                            {
-                              incidentreportHome?.data?.data.incidents[0]
-                                .incidentMessage
-                            }
-                          </p>
-                        </>
-                      ) : (
-                        <div className="flex flex-col gap-2 justify-center items-center h-[50%] ">
+                            className="h-full w-full object-cover"
+                            alt="Incident"
+                          />
+                          {/* Gradient overlay that blends the top edge of the image */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/70 to-[#F2F2F2]"></div>
+                        </div>
+                      ) : null}
+
+                      {/* Content layer - preserving original structure */}
+                      <div className="relative h-full z-10">
+                        <p className="text-[24px] md:text-[32px] font-[600] ml-[19px] pt-[19px]">
+                          Incident Report
+                        </p>
+                        <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] h-[1px] bg-[#C9C9C9]"></div>
+
+                        {incidentreportHome?.data?.data.incidents[0]
+                          .incidentMessage ? (
+                          <>
+                            <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px]">
+                              {
+                                incidentreportHome?.data?.data.incidents[0]
+                                  .subject
+                              }
+                            </p>
+                            <p className="text-[#4E4E4E] ml-[30px] mt-[8px] text-[14px] font-[400] clamp-responsive">
+                              {
+                                incidentreportHome?.data?.data.incidents[0]
+                                  .incidentMessage
+                              }
+                            </p>
+                          </>
+                        ) : (
+                          <div className="flex flex-col gap-2 justify-center items-center h-[50%]">
+                            <Icon
+                              icon="line-md:document-delete"
+                              width="60"
+                              height="60"
+                              color="#93221D"
+                            />
+                            <p className="font-[600] text-lg">No Incident</p>
+                          </div>
+                        )}
+
+                        <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#353535] text-[14px] font-[400] z-20">
+                          {new Date(
+                            incidentreportHome?.data?.data.incidents[0].createdAt
+                          ).toLocaleString(undefined, {
+                            day: "numeric",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+
+                        <Link to="/incident-report/create">
+                          <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer z-20">
+                            Create
+                          </button>
+                        </Link>
+                      </div>
+
+                      {/* Show "No Photo" placeholder in bottom half if there's no image */}
+                      {!incidentreportHome?.data.data.incidents[0]
+                        .incidentphoto && (
+                        <div className="absolute bottom-0 left-0 right-0 h-1/2 flex flex-col gap-2 justify-center items-center bg-[#F2F2F2]">
                           <Icon
-                            icon="line-md:document-delete"
-                            width="60"
-                            height="60"
+                            icon="line-md:image-twotone"
+                            width="50"
+                            height="50"
                             color="#93221D"
                           />
-                          <p className=" font-[600] text-lg">No Incident</p>
+                          <p className="font-[500] text-gray-600">
+                            No Photo Available
+                          </p>
+                          <div className="absolute inset-0 bg-gradient-to-t from-gray-50 to-white"></div>
                         </div>
                       )}
-                      <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
-                        {/* {new Date(
-                          incidentreportHome?.data?.data.incidents[0].createdAt
-                        ).toLocaleString()} */}
-                        {new Date(
-                          incidentreportHome?.data?.data.incidents[0].createdAt
-                        ).toLocaleString(undefined, {
-                          day: "numeric",
-                          month: "short",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                      <Link to="/incident-report/create">
-                        <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">
-                          Create
-                        </button>
-                      </Link>
-                    </>
+                    </div>
                   ) : (
                     <div className="flex justify-center items-center h-full">
                       <Icon
