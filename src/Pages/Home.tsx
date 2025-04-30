@@ -80,9 +80,9 @@ const Home = () => {
                 </div>
               </div>
               <div className=" md:flex gap-5 w-[80%] h-[37%] md:h-[40%] justify-between">
-                <div className=" w-full md:w-[47%] h-full  bg-[#F2F2F2] rounded-[15px] mb-14 relative ">
+                <div className=" w-full md:w-[47%] h-full  bg-[#F2F2F2] rounded-[15px] mb-8 relative ">
                   {spiner ? (
-                    <div className="relative w-full h-[350px] rounded-[15px] shadow-md overflow-hidden ">
+                    <div className="relative w-full h-[320px] rounded-[15px] shadow-md overflow-hidden ">
                       {/* Background layer for the entire card */}
                       <div className="absolute inset-0 bg-[#F2F2F2]"></div>
 
