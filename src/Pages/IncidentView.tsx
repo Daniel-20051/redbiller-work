@@ -88,10 +88,10 @@ const IncidentView = () => {
 
                   {isModalOpen && (
                     <div
-                      className="fixed inset-0 z-50 flex justify-center bg-black/40 backdrop-blur-sm transition-all duration-300"
+                      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-all duration-300"
                       onClick={() => setIsModalOpen(false)}
                     >
-                      <div className="relative max-w-[80vw] max-h-[80vh] transform transition-all duration-500 scale-95 animate-fadeIn">
+                      <div className="relative max-w-[35vw] max-h-[90vh] self-center transform transition-all duration-500 scale-95 animate-fadeIn">
                         <img
                           className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
                           src={incidentDetails?.incidentphoto}
