@@ -1,4 +1,4 @@
-import { use } from "react";
+import { use, useState } from "react";
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import { Link } from "react-router-dom";
@@ -6,6 +6,7 @@ import { UserDetailsContext } from "../context/AuthContext.js";
 
 const IncidentView = () => {
   const { incidentDetails } = use(UserDetailsContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="flex flex-col h-screen">
@@ -49,24 +50,76 @@ const IncidentView = () => {
               <p className="flex gap-5 items-center  text-[16px] md:text-[20px] text-primary font-[600]  ">
                 {` ${incidentDetails?.subject}`}
                 <span className="text-[#b9b9b9] font-[600] text-[12px]">
-                  {new Date(incidentDetails?.createdAt).toLocaleString()}
-                  {/* {incidentDetails?.createdAt.toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })} */}
+                  {new Date(incidentDetails?.createdAt).toLocaleDateString(
+                    "en-GB",
+                    {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    }
+                  )}
                 </span>
               </p>
               <p className="text-[13px] md:text-[16px]">
                 {incidentDetails?.incidentMessage}
               </p>
               {incidentDetails?.incidentphoto ? (
-                <div className="h-[25vh] w-[50vw] mt-6 md:mt-10 place-self-center">
+                <div className="relative group h-[40vh] w-full max-w-3xl mx-auto mt-8 overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                   <img
-                    className="h-full w-full object-contain  mb-4"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 cursor-pointer"
                     src={incidentDetails?.incidentphoto}
+                    loading="lazy"
                     alt="Incident photo"
+                    onClick={() => setIsModalOpen(true)}
+                    onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                      const target = e.currentTarget as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = "/fallback-image-path.jpg";
+                    }}
                   />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end cursor-pointer"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    <span className="text-white px-4 py-3 font-medium">
+                      View full image
+                    </span>
+                  </div>
+
+                  {isModalOpen && (
+                    <div
+                      className="fixed inset-0 z-50 flex justify-center bg-black/40 backdrop-blur-sm transition-all duration-300"
+                      onClick={() => setIsModalOpen(false)}
+                    >
+                      <div className="relative max-w-[80vw] max-h-[80vh] transform transition-all duration-500 scale-95 animate-fadeIn">
+                        <img
+                          className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
+                          src={incidentDetails?.incidentphoto}
+                          alt="Incident photo"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <button
+                          className="absolute -top-12 right-0 text-white/80 hover:text-white p-2 transition-colors"
+                          onClick={() => setIsModalOpen(false)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className=" flex items-center justify-center text-gray-500 bg-gray-100 p-15 mb-4 rounded">
