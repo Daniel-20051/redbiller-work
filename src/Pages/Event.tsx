@@ -130,6 +130,7 @@ const Event = () => {
                     onClick={() => {
                       setIsAddEventOpen(false);
                     }}
+                    type="button"
                     className="text-[#959595]  px-5 py-2 cursor-pointer"
                   >
                     Cancel
