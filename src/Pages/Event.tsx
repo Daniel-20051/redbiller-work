@@ -38,7 +38,10 @@ const Event = () => {
             </div>
             <div className="flex flex-col gap-6  w-[70%] md:w-[40%]">
               {isAdmin && (
-                <button className="bg-primary cursor-pointer text-white py-3 md:py-4 text-[17px] md:text-[22px] font-[400] rounded-[15px]">
+                <button
+                  onClick={() => setIsAddEventOpen(true)}
+                  className="bg-primary cursor-pointer text-white py-3 md:py-4 text-[17px] md:text-[22px] font-[400] rounded-[15px]"
+                >
                   ADD EVENT
                 </button>
               )}
@@ -85,7 +88,10 @@ const Event = () => {
           className="relative z-50"
         >
           <div className="fixed inset-0  flex w-screen items-center justify-center md:px-12 px-7 py-6 bg-black/40 ">
-            <DialogPanel className="w-[95%] md:w-[70%] lg:w-[44%] h-[90%] md:h-[85%] rounded-[20px] items-start bg-white  px-12 py-6  ">
+            <DialogPanel
+              className=" bg-white w-[95%] md:w-[70%] lg:w-[44%] h-[75%] md:h-[85%] items-center  rounded-[20px] 
+            overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  px-12 py-6  "
+            >
               <p className="font-[500] text-[24px] mb-12 place-self-center">
                 Add Event
               </p>
@@ -107,17 +113,31 @@ const Event = () => {
                   <div className="flex flex-col">
                     <label htmlFor="">Date</label>
                     <input
-                      className="bg-[#EEEEEE]/30 placeholder:text px-3 py-4 rounded-[6px] mt-3 mb-4"
+                      className="bg-[#EEEEEE]/30 w-25 md:w-auto px-1 md:px-3 py-4 rounded-[6px] mt-3 mb-4"
                       type="date"
                     />
                   </div>
                   <div className="flex flex-col">
                     <label htmlFor="">Event Time</label>
                     <input
-                      className="bg-[#EEEEEE]/30 placeholder:text px-3 py-4 rounded-[6px] mt-3 mb-4"
+                      className="bg-[#EEEEEE]/30 w-25 md:w-auto px-1 md:px-3 py-4 rounded-[6px] mt-3 mb-4"
                       type="time"
                     />
                   </div>
+                </div>
+                <div className="flex gap-2 place-self-end">
+                  <button
+                    onClick={() => {
+                      setIsAddEventOpen(false);
+                    }}
+                    type="button"
+                    className="text-[#959595]  px-5 py-2 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button className="bg-primary cursor-pointer text-white px-5 py-2 rounded-[10px]">
+                    Save
+                  </button>
                 </div>
               </form>
             </DialogPanel>
