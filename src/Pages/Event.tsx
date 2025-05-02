@@ -38,7 +38,10 @@ const Event = () => {
             </div>
             <div className="flex flex-col gap-6  w-[70%] md:w-[40%]">
               {isAdmin && (
-                <button className="bg-primary cursor-pointer text-white py-3 md:py-4 text-[17px] md:text-[22px] font-[400] rounded-[15px]">
+                <button
+                  onClick={() => setIsAddEventOpen(true)}
+                  className="bg-primary cursor-pointer text-white py-3 md:py-4 text-[17px] md:text-[22px] font-[400] rounded-[15px]"
+                >
                   ADD EVENT
                 </button>
               )}
@@ -118,6 +121,19 @@ const Event = () => {
                       type="time"
                     />
                   </div>
+                </div>
+                <div className="flex mt-2 gap-2 place-self-end">
+                  <button
+                    onClick={() => {
+                      setIsAddEventOpen(false);
+                    }}
+                    className="text-[#959595]  px-5 py-2 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button className="bg-primary cursor-pointer text-white px-5 py-2 rounded-[10px]">
+                    Save
+                  </button>
                 </div>
               </form>
             </DialogPanel>
