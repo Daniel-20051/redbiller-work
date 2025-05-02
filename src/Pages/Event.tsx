@@ -88,7 +88,7 @@ const Event = () => {
           className="relative z-50"
         >
           <div className="fixed inset-0  flex w-screen items-center justify-center md:px-12 px-7 py-6 bg-black/40 ">
-            <DialogPanel className="w-[95%] md:w-[70%] lg:w-[44%] h-[90%] md:h-[85%] rounded-[20px] items-start bg-white  px-12 py-6  ">
+            <DialogPanel className="w-[95%] md:w-[70%] lg:w-[44%] h-[90%] md:h-[85%] rounded-[20px] items-start bg-white overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  px-12 py-6  ">
               <p className="font-[500] text-[24px] mb-12 place-self-center">
                 Add Event
               </p>
@@ -122,7 +122,7 @@ const Event = () => {
                     />
                   </div>
                 </div>
-                <div className="flex mt-2 gap-2 place-self-end">
+                <div className="flex gap-2 place-self-end">
                   <button
                     onClick={() => {
                       setIsAddEventOpen(false);
