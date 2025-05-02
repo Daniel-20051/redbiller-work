@@ -88,7 +88,10 @@ const Event = () => {
           className="relative z-50"
         >
           <div className="fixed inset-0  flex w-screen items-center justify-center md:px-12 px-7 py-6 bg-black/40 ">
-            <DialogPanel className="w-[95%] md:w-[70%] lg:w-[44%] h-[90%] md:h-[85%] rounded-[20px] items-start bg-white overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  px-12 py-6  ">
+            <DialogPanel
+              className=" bg-white w-[95%] md:w-[70%] lg:w-[44%] h-[75%] md:h-[85%] items-center  rounded-[20px] 
+            overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  px-12 py-6  "
+            >
               <p className="font-[500] text-[24px] mb-12 place-self-center">
                 Add Event
               </p>
@@ -110,14 +113,14 @@ const Event = () => {
                   <div className="flex flex-col">
                     <label htmlFor="">Date</label>
                     <input
-                      className="bg-[#EEEEEE]/30 placeholder:text px-3 py-4 rounded-[6px] mt-3 mb-4"
+                      className="bg-[#EEEEEE]/30 w-25 md:w-auto px-1 md:px-3 py-4 rounded-[6px] mt-3 mb-4"
                       type="date"
                     />
                   </div>
                   <div className="flex flex-col">
                     <label htmlFor="">Event Time</label>
                     <input
-                      className="bg-[#EEEEEE]/30 placeholder:text px-3 py-4 rounded-[6px] mt-3 mb-4"
+                      className="bg-[#EEEEEE]/30 w-25 md:w-auto px-1 md:px-3 py-4 rounded-[6px] mt-3 mb-4"
                       type="time"
                     />
                   </div>
