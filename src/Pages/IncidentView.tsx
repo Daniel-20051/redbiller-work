@@ -13,7 +13,7 @@ const IncidentView = () => {
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
         <SideBar>incident-report</SideBar>
-        <div className="flex flex-1 relative overflow-y-auto max-h-full  hide-scrollbar scroll-smooth pt-40 ">
+        <div className="flex flex-1 relative overflow-y-auto max-h-full  hide-scrollbar scroll-smooth pt-10 md:pt-15 ">
           <Link
             to="/incident-report"
             className=" flex items-center gap-2 rounded-lg absolute md:top-10 top-4 right-5 md:right-10 w-[65px] md:w-[80px] border-1 border-[#b9b9b9]
@@ -26,7 +26,7 @@ const IncidentView = () => {
             />
             Back
           </Link>
-          <div className="flex flex-col w-[full] gap-2 md:gap-4  px-5 md:px-15 justify-center">
+          <div className="flex flex-col w-[full] gap-2 md:gap-4  px-5 md:px-15 ">
             <div className="flex gap-4 items-center mb-10">
               <img
                 className=" w-[55px] md:w-[75px] h-[55px] md:h-[75px] rounded-full border-2 border-primary"
