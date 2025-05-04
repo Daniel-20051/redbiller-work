@@ -32,6 +32,8 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
     null
   );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Number of items per page
   console.log(selectedIncident);
   const isAdmin = userDetails?.data.user.role == "admin";
 
@@ -62,6 +64,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
             .includes(searchTerm.toLowerCase())
       );
       setFilteredIncidents(filtered);
+      setCurrentPage(1);
     }
   }, [incidentValue, searchTerm]);
 
@@ -100,55 +103,110 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
     }
   };
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredIncidents.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const totalPages = Math.ceil(filteredIncidents.length / itemsPerPage);
+
   return (
-    <ul className="flex flex-col  w-[95%] gap-2 hover:cursor-pointer overflow-y-auto max-h-full  scroll-smooth ">
-      {filteredIncidents.map((incident, index) => (
-        <li
-          onClick={() => handleClick(incident)}
-          key={incident.id || index}
-          className="list-none bg-[#D6CBCB14] px-6 py-2 rounded-[4px] w-full hover:bg-[#D6CBCB]"
-        >
-          {isAdmin ? (
-            <Link
-              to={`/incident-report/${incident.id}`}
-              className="flex flex-col hover:bg-[#D6CBCB]"
-            >
-              <p className="text-primary font-semibold text-[16px]">
-                {incident.subject}
-                {isAdmin && (
-                  <span className="text-[#898A8D] font-[400] text-[12px] ml-2">
-                    ➔{" "}
-                    {incident.User.firstName.charAt(0).toUpperCase() +
-                      incident.User.firstName.slice(1).toLowerCase()}{" "}
-                    {incident.User.lastName.toLowerCase()}
-                  </span>
-                )}
-              </p>
-              <p className="text-[#4E4E4E] text-[14px] clamp-responsive ">
-                {incident.incidentMessage}
-              </p>
-            </Link>
-          ) : (
-            <div className="flex flex-col hover:bg-[#D6CBCB] ">
-              <p className="text-primary font-[600] text-[16px]">
-                {incident.subject}
-                {!isAdmin && (
-                  <span className="text-[#767676] text-[10px] ml-2">
-                    ➔{" "}
-                    {incident.User.firstName.charAt(0).toUpperCase() +
-                      incident.User.firstName.slice(1).toLowerCase()}{" "}
-                    {incident.User.lastName.toLowerCase()}
-                  </span>
-                )}
-              </p>
-              <p className="text-[#4E4E4E] text-[14px] clamp-responsive">
-                {incident.incidentMessage}
-              </p>
-            </div>
-          )}
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ul className="flex flex-col  w-[95%] gap-2 hover:cursor-pointer overflow-y-auto max-h-full  scroll-smooth ">
+        {filteredIncidents.map((incident, index) => (
+          <li
+            onClick={() => handleClick(incident)}
+            key={incident.id || index}
+            className="list-none bg-[#D6CBCB14] px-6 py-2 rounded-[4px] w-full hover:bg-[#D6CBCB]"
+          >
+            {isAdmin ? (
+              <Link
+                to={`/incident-report/${incident.id}`}
+                className="flex flex-col hover:bg-[#D6CBCB]"
+              >
+                <p className="text-primary font-semibold text-[16px]">
+                  {incident.subject}
+                  {isAdmin && (
+                    <span className="text-[#898A8D] font-[400] text-[12px] ml-2">
+                      ➔{" "}
+                      {incident.User.firstName.charAt(0).toUpperCase() +
+                        incident.User.firstName.slice(1).toLowerCase()}{" "}
+                      {incident.User.lastName.toLowerCase()}
+                    </span>
+                  )}
+                </p>
+                <p className="text-[#4E4E4E] text-[14px] clamp-responsive ">
+                  {incident.incidentMessage}
+                </p>
+              </Link>
+            ) : (
+              <div className="flex flex-col hover:bg-[#D6CBCB] ">
+                <p className="text-primary font-[600] text-[16px]">
+                  {incident.subject}
+                  {!isAdmin && (
+                    <span className="text-[#767676] text-[10px] ml-2">
+                      ➔{" "}
+                      {incident.User.firstName.charAt(0).toUpperCase() +
+                        incident.User.firstName.slice(1).toLowerCase()}{" "}
+                      {incident.User.lastName.toLowerCase()}
+                    </span>
+                  )}
+                </p>
+                <p className="text-[#4E4E4E] text-[14px] clamp-responsive">
+                  {incident.incidentMessage}
+                </p>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-4 gap-2">
+          <button
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded bg-[#93221D] text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            &lt;
+          </button>
+
+          <div className="flex gap-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (number) => (
+                <button
+                  key={number}
+                  onClick={() => paginate(number)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === number
+                      ? "bg-[#93221D] text-white"
+                      : "bg-gray-200"
+                  }`}
+                >
+                  {number}
+                </button>
+              )
+            )}
+          </div>
+
+          <button
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded bg-[#93221D] text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            &gt;
+          </button>
+        </div>
+      )}
+      <div className="text-sm text-gray-500 mt-2">
+        Showing {indexOfFirstItem + 1}-
+        {Math.min(indexOfLastItem, filteredIncidents.length)} of{" "}
+        {filteredIncidents.length} incidents
+      </div>
+    </div>
   );
 };
 
