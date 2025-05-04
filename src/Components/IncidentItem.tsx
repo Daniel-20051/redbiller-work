@@ -105,10 +105,10 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredIncidents.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  // const currentItems = filteredIncidents.slice(
+  //   indexOfFirstItem,
+  //   indexOfLastItem
+  // );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
