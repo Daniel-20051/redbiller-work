@@ -116,13 +116,14 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
               >
                 <p className="text-primary font-semibold text-[16px]">
                   {incident.subject}
-
-                  <span className="text-[#898A8D] font-[400] text-[12px] ml-2">
-                    ➔{" "}
-                    {incident.User.firstName.charAt(0).toUpperCase() +
-                      incident.User.firstName.slice(1).toLowerCase()}{" "}
-                    {incident.User.lastName.toLowerCase()}
-                  </span>
+                  {isAdmin && (
+                    <span className="text-[#898A8D] font-[400] text-[12px] ml-2">
+                      ➔{" "}
+                      {incident.User.firstName.charAt(0).toUpperCase() +
+                        incident.User.firstName.slice(1).toLowerCase()}{" "}
+                      {incident.User.lastName.toLowerCase()}
+                    </span>
+                  )}
                 </p>
                 <p className="text-[#4E4E4E] text-[14px] clamp-responsive ">
                   {incident.incidentMessage}
