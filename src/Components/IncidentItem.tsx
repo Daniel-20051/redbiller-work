@@ -32,8 +32,6 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
     null
   );
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Number of items per page
   console.log(selectedIncident);
   const isAdmin = userDetails?.data.user.role == "admin";
 
@@ -64,7 +62,6 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
             .includes(searchTerm.toLowerCase())
       );
       setFilteredIncidents(filtered);
-      setCurrentPage(1);
     }
   }, [incidentValue, searchTerm]);
 
@@ -102,17 +99,6 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
       onIncidentSelect(incident);
     }
   };
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // const currentItems = filteredIncidents.slice(
-  //   indexOfFirstItem,
-  //   indexOfLastItem
-  // );
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  const totalPages = Math.ceil(filteredIncidents.length / itemsPerPage);
 
   return (
     <div>
@@ -164,48 +150,6 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
           </li>
         ))}
       </ul>
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-4 gap-2">
-          <button
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-1 rounded bg-[#93221D] text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            &lt;
-          </button>
-
-          <div className="flex gap-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (number) => (
-                <button
-                  key={number}
-                  onClick={() => paginate(number)}
-                  className={`px-3 py-1 rounded ${
-                    currentPage === number
-                      ? "bg-[#93221D] text-white"
-                      : "bg-gray-200"
-                  }`}
-                >
-                  {number}
-                </button>
-              )
-            )}
-          </div>
-
-          <button
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 rounded bg-[#93221D] text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            &gt;
-          </button>
-        </div>
-      )}
-      <div className="text-sm text-gray-500 mt-2">
-        Showing {indexOfFirstItem + 1}-
-        {Math.min(indexOfLastItem, filteredIncidents.length)} of{" "}
-        {filteredIncidents.length} incidents
-      </div>
     </div>
   );
 };
