@@ -116,14 +116,13 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
               >
                 <p className="text-primary font-semibold text-[16px]">
                   {incident.subject}
-                  {isAdmin && (
-                    <span className="text-[#898A8D] font-[400] text-[12px] ml-2">
-                      ➔{" "}
-                      {incident.User.firstName.charAt(0).toUpperCase() +
-                        incident.User.firstName.slice(1).toLowerCase()}{" "}
-                      {incident.User.lastName.toLowerCase()}
-                    </span>
-                  )}
+
+                  <span className="text-[#898A8D] font-[400] text-[12px] ml-2">
+                    ➔{" "}
+                    {incident.User.firstName.charAt(0).toUpperCase() +
+                      incident.User.firstName.slice(1).toLowerCase()}{" "}
+                    {incident.User.lastName.toLowerCase()}
+                  </span>
                 </p>
                 <p className="text-[#4E4E4E] text-[14px] clamp-responsive ">
                   {incident.incidentMessage}
@@ -133,14 +132,6 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
               <div className="flex flex-col hover:bg-[#D6CBCB] ">
                 <p className="text-primary font-[600] text-[16px]">
                   {incident.subject}
-                  {!isAdmin && (
-                    <span className="text-[#767676] text-[10px] ml-2">
-                      ➔{" "}
-                      {incident.User.firstName.charAt(0).toUpperCase() +
-                        incident.User.firstName.slice(1).toLowerCase()}{" "}
-                      {incident.User.lastName.toLowerCase()}
-                    </span>
-                  )}
                 </p>
                 <p className="text-[#4E4E4E] text-[14px] clamp-responsive">
                   {incident.incidentMessage}
