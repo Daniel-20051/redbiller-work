@@ -136,7 +136,7 @@ const IncidentReport = () => {
                 </p>
 
                 <p className="text-gray-700 mb-4">
-                  {"user checking " + activeIncident?.incidentMessage}
+                  {activeIncident?.incidentMessage}
                 </p>
 
                 {activeIncident?.incidentphoto ? (
