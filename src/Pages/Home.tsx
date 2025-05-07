@@ -84,26 +84,8 @@ const Home = () => {
                   {spiner ? (
                     <div className="relative w-full h-full rounded-[15px] shadow-md overflow-hidden ">
                       {/* Background layer for the entire card */}
-                      <div className="absolute inset-0 bg-[#F2F2F2]"></div>
+                      {/* <div className="absolute inset-0 bg-[#F2F2F2]"></div> */}
 
-                      {/* Image layer - positioned to take the bottom half with gradient */}
-                      {incidentreportHome?.data.data.incidents[0]
-                        .incidentphoto ? (
-                        <div className="absolute bottom-0 left-0 right-0 h-1/2">
-                          <img
-                            src={
-                              incidentreportHome?.data.data.incidents[0]
-                                .incidentphoto
-                            }
-                            className="h-full w-full object-cover"
-                            alt="Incident"
-                          />
-                          {/* Gradient overlay that blends the top edge of the image */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/90 to-[#f2f2f2]"></div>
-                        </div>
-                      ) : null}
-
-                      {/* Content layer - preserving original structure */}
                       <div className="relative h-full z-10">
                         <p className="text-[24px] md:text-[32px] font-[600] ml-[19px] pt-[19px]">
                           Incident Report
@@ -156,22 +138,8 @@ const Home = () => {
                         </Link>
                       </div>
 
-                      {/* Show "No Photo" placeholder in bottom half if there's no image */}
                       {!incidentreportHome?.data.data.incidents[0]
-                        .incidentphoto && (
-                        <div className="absolute bottom-0 left-0 right-0 h-1/2 flex flex-col gap-2 justify-center items-center bg-[#F2F2F2]">
-                          <Icon
-                            icon="line-md:image-twotone"
-                            width="50"
-                            height="50"
-                            color="#93221D"
-                          />
-                          <p className="font-[500] text-gray-600">
-                            No Photo Available
-                          </p>
-                          <div className="absolute inset-0 bg-gradient-to-t from-gray-50 to-white"></div>
-                        </div>
-                      )}
+                        .incidentphoto && null}
                     </div>
                   ) : (
                     <div className="flex justify-center items-center h-full">
