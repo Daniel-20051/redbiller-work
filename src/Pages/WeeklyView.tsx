@@ -1,12 +1,8 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
-import { Link } from "react-router-dom";
-import { use, useState } from "react";
-import { UserDetailsContext } from "../context/AuthContext.js";
+import { useState } from "react";
 
 const WeeklyView = () => {
-  const { userDetails } = use(UserDetailsContext);
-
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const items = [
     "Item 1",
