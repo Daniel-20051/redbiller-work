@@ -31,7 +31,7 @@ const Login = () => {
 
   const authApi = new AuthApis();
 
-  const hnadleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginSpiner(true);
     setShowAlert(false);
@@ -106,7 +106,7 @@ const Login = () => {
             </p>
             <form
               className=" flex flex-col items-center"
-              onSubmit={hnadleLogin}
+              onSubmit={handleLogin}
             >
               <div className="mb-[32px] mt-[67px]">
                 <Inputfeild type="email" onEmailChange={setEmail}>
@@ -121,9 +121,17 @@ const Login = () => {
               <div>
                 <button
                   type="submit"
-                  className="bg-primary text-white font-[400] text-[16px] py-3 rounded-[8px] w-[340px] md:w-[370px] hover:bg-red-900 cursor-pointer"
+                  className={`${
+                    loginSpiner ? "bg-gray-400" : "bg-primary hover:bg-red-900"
+                  } text-white font-[400] text-[16px] py-3 rounded-[8px] w-[340px] md:w-[370px]  cursor-pointer`}
                 >
-                  {loginSpiner ? "loading..." : "Login"}
+                  {loginSpiner ? (
+                    <div className="flex cursor-not-allowed justify-center items-center h-full">
+                      Loading...
+                    </div>
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </div>
             </form>

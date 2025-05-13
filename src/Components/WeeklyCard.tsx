@@ -6,7 +6,7 @@ interface Props {
 
 const WeeklyCard = ({ user, subject, children }: Props) => {
   return (
-    <div className="flex flex-col bg-[#F2F2F2] py-4 gap-3 px-4 place-self-start w-[90%] h-[200px] rounded-[15px]">
+    <div className="flex flex-col bg-[#F2F2F2] py-4 gap-3 px-4 place-self-start w-[100%] h-[200px] rounded-[15px]">
       <div className="flex items-center gap-3">
         <img
           className="w-[42px] h-[42px] rounded-full border-primary border-2"

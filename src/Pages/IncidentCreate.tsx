@@ -12,14 +12,12 @@ const IncidentCreate = () => {
   const [textAreaValue, setTextAreaValue] = useState<string | null>(null);
   const [subject, setSubject] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [incidentResponse, setIncidentResponse] = useState<any>(null);
+
   const [alertMessage, setAlertMessage] = useState<string>("");
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertType, setAlertType] = useState<
     "success" | "error" | "info" | "warning"
   >("info");
-
-  console.log(incidentResponse);
 
   const handleCloseAlert = () => {
     setShowAlert(false);
@@ -62,7 +60,7 @@ const IncidentCreate = () => {
         subject: subject || "",
         photo: selectedFile as File,
       });
-      setIncidentResponse(response);
+
       setLoading(false);
       showAlertMessage("Incident report submitted successfully", "success");
       setTextAreaValue(null);
@@ -73,7 +71,6 @@ const IncidentCreate = () => {
       }
       return response;
     } catch (error) {
-      console.log(error);
       showAlertMessage("An error occurred while sending report", "error");
       return error;
     } finally {

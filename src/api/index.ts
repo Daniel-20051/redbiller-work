@@ -127,6 +127,31 @@ export class AuthApis {
     }
   }
 
+  async submitEvent(data: { title: string, description: string, date: string, time: string }){
+    try{
+      const token = localStorage.getItem("authToken")
+      const payload = {
+        eventTitle: data.title,
+        eventDescription: data.description,
+        eventDate: data.date,
+        eventTime: data.time
+      }
+
+      const response = await axios.post(`${BASE_URL}/api/v1/admin/create-event`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    return response
+  }
+    catch(err){
+      return err
+    }
+  }
+
   // async getSpecificUserIncident(id: number){
   //   try{
   //     const token = localStorage.getItem("authToken")

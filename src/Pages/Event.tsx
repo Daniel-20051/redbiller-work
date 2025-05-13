@@ -1,16 +1,91 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import { Dialog, DialogPanel } from "@headlessui/react";
+import { Icon } from "@iconify/react";
 import { useState } from "react";
 import EventItem from "../Components/EventItem";
 import { use } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
+import { AuthApis } from "../api";
+const authApis = new AuthApis();
 
 const Event = () => {
   const { userDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role === "admin";
   const [event, setEvent] = useState(0);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
+  //Input Feilds
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string | null>(null);
+  const [date, setDate] = useState<string>("");
+  const [time, setTime] = useState<string>("");
+  const [formattedDate, setFormattedDate] = useState<string>("");
+  const [formattedTime, setFormattedTime] = useState<string>("");
+  // Loader
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const sendReport = async (e: any) => {
+    e.preventDefault();
+
+    // if (!title || !description) {
+    //   return showAlertMessage("Empty message field", "error");
+    // }
+    try {
+      setLoading(true);
+      const response: any = await authApis.submitEvent({
+        title: title || "",
+        description: description || "",
+        date: formattedDate || "",
+        time: formattedTime || "",
+      });
+
+      // showAlertMessage("Event submitted successfully", "success");
+      if (
+        response.data.data.status === "successful" ||
+        response.status === 201
+      ) {
+        setTitle("");
+        setDescription(null);
+        setDate("");
+        setTime("");
+        setLoading(false);
+        setFormattedDate("");
+        setFormattedTime("");
+      }
+      console.log(response);
+      return response;
+    } catch (error) {
+      // showAlertMessage("An error occurred while sending report", "error");
+      return error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setTitle(newValue);
+  };
+  const handleDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value;
+    setDescription(newValue);
+  };
+  const handleDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    const formatDate = newValue.replace(/-/g, "");
+    setDate(newValue);
+    setFormattedDate(formatDate);
+  };
+  const handleTime = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    const [hours, minutes] = newValue.split(":");
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    const formatTime = `${formattedHour}:${minutes} ${ampm}`;
+    setTime(newValue);
+    setFormattedTime(formatTime);
+  };
 
   return (
     <div className="flex flex-col h-screen ">
@@ -90,24 +165,26 @@ const Event = () => {
           <div className="fixed inset-0  flex w-screen items-center justify-center md:px-12 px-7 py-6 bg-black/40 ">
             <DialogPanel
               className=" bg-white w-[95%] md:w-[70%] lg:w-[44%] h-[auto]  items-center  rounded-[20px] 
-            overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  px-12 py-6  "
+            overflow-y-auto max-h-full  hide-scrollbar scroll-smooth px-5  md:px-12 py-6  "
             >
               <p className="font-[500] text-[24px] mb-12 place-self-center">
                 Add Event
               </p>
-              <form className="flex flex-col" action="">
+              <form onSubmit={sendReport} className="flex flex-col" action="">
                 <label htmlFor="">Title</label>
                 <input
                   className="bg-[#EEEEEE]/30 placeholder:text px-3 py-4 rounded-[6px] mt-3 mb-4"
                   placeholder="Event title"
                   type="text"
+                  value={title}
+                  onChange={handleTitle}
                 />
                 <label htmlFor="">Title</label>
                 <textarea
                   className="bg-[#EEEEEE]/30 w-full h-40 placeholder:text px-3 py-3 rounded-[6px] mt-3 mb-4 resize-none"
                   placeholder="Event Details"
-                  name=""
-                  id=""
+                  value={description || ""}
+                  onChange={handleDescription}
                 ></textarea>
                 <div className="flex justify-between">
                   <div className="flex flex-col">
@@ -115,6 +192,8 @@ const Event = () => {
                     <input
                       className="bg-[#EEEEEE]/30 w-25 md:w-auto px-1 md:px-3 py-4 rounded-[6px] mt-3 mb-4"
                       type="date"
+                      value={date}
+                      onChange={handleDate}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -122,6 +201,8 @@ const Event = () => {
                     <input
                       className="bg-[#EEEEEE]/30 w-25 md:w-auto px-1 md:px-3 py-4 rounded-[6px] mt-3 mb-4"
                       type="time"
+                      value={time}
+                      onChange={handleTime}
                     />
                   </div>
                 </div>
@@ -135,8 +216,25 @@ const Event = () => {
                   >
                     Cancel
                   </button>
-                  <button className="bg-primary cursor-pointer text-white px-5 py-2 rounded-[10px]">
-                    Save
+                  <button
+                    disabled={loading}
+                    type="submit"
+                    className={`${
+                      loading ? "bg-gray-400" : "bg-primary"
+                    } cursor-pointer text-white px-5 py-2 rounded-[10px]`}
+                  >
+                    {loading ? (
+                      <div className="flex cursor-not-allowed justify-center items-center h-full">
+                        <Icon
+                          icon="svg-spinners:ring-resize"
+                          width="20"
+                          height="20"
+                          color="#ffffff"
+                        />
+                      </div>
+                    ) : (
+                      "Save"
+                    )}
                   </button>
                 </div>
               </form>

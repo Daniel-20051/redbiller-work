@@ -29,10 +29,7 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   const [filteredIncidents, setFilteredIncidents] = useState<Incident[]>([]);
   const [error, setError] = useState(false);
   const { userDetails } = use(UserDetailsContext);
-  const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
-    null
-  );
-  console.log(selectedIncident);
+
   const isAdmin = userDetails?.data.user.role == "admin";
 
   useEffect(() => {
@@ -93,8 +90,6 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   }
 
   const handleClick = (incident: Incident) => {
-    console.log("clicked");
-    setSelectedIncident(incident);
     if (onIncidentSelect) {
       onIncidentSelect(incident);
     }
