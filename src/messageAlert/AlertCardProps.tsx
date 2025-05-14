@@ -48,7 +48,7 @@ const AlertCard = ({
   };
 
   return (
-    <div className="fixed top-5 right-5 z-50 max-w-md">
+    <div className="fixed top-5  right-5 z-100 max-w-md">
       <div className={`border-l-4 p-5 rounded shadow-md ${bgColors[type]}`}>
         <div className="flex justify-between items-start">
           <div className="flex items-center">
@@ -108,7 +108,7 @@ const AlertCard = ({
           </div>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 focus:outline-none ml-4"
+            className="text-gray-500 cursor-pointer hover:text-gray-700 focus:outline-none ml-4"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path

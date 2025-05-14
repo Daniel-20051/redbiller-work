@@ -3,6 +3,7 @@ import SideBar from "../Components/SideBar";
 const currentDate = new Date();
 import { useRef, useState } from "react";
 import AlertCard from "../messageAlert/AlertCardProps";
+import { SuccessCard } from "../messageAlert/SuccessCard";
 import { AuthApis } from "../api";
 const authApis = new AuthApis();
 
@@ -18,9 +19,14 @@ const IncidentCreate = () => {
   const [alertType, setAlertType] = useState<
     "success" | "error" | "info" | "warning"
   >("info");
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
   const handleCloseAlert = () => {
     setShowAlert(false);
+  };
+  const handleCloseSuccess = () => {
+    setShowSuccess(false);
   };
   const showAlertMessage = (
     message: string,
@@ -29,6 +35,10 @@ const IncidentCreate = () => {
     setAlertMessage(message);
     setAlertType(type);
     setShowAlert(true);
+  };
+  const showSuccessMessage = (message: string) => {
+    setSuccessMessage(message);
+    setShowSuccess(true);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,19 +65,23 @@ const IncidentCreate = () => {
     }
     try {
       setLoading(true);
-      const response = await authApis.submitIncidentReport({
+      const response: any = await authApis.submitIncidentReport({
         message: textAreaValue || "",
         subject: subject || "",
         photo: selectedFile as File,
       });
-
-      setLoading(false);
-      showAlertMessage("Incident report submitted successfully", "success");
-      setTextAreaValue(null);
-      setSubject("");
-      setSelectedFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
+      if (
+        response.data.data.status === "successful" ||
+        response.status === 201
+      ) {
+        setLoading(false);
+        showSuccessMessage("Your report has been Recorded");
+        setTextAreaValue(null);
+        setSubject("");
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       }
       return response;
     } catch (error) {
@@ -85,6 +99,13 @@ const IncidentCreate = () => {
         type={alertType}
         isOpen={showAlert}
         onClose={handleCloseAlert}
+        autoClose={true}
+        autoCloseTime={3000}
+      />
+      <SuccessCard
+        message={successMessage}
+        isOpen={showSuccess}
+        onClose={handleCloseSuccess}
         autoClose={true}
         autoCloseTime={3000}
       />

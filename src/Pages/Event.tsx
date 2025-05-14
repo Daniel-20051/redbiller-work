@@ -6,6 +6,8 @@ import { useState } from "react";
 import EventItem from "../Components/EventItem";
 import { use } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
+import AlertCard from "../messageAlert/AlertCardProps";
+import { SuccessCard } from "../messageAlert/SuccessCard";
 import { AuthApis } from "../api";
 const authApis = new AuthApis();
 
@@ -23,13 +25,50 @@ const Event = () => {
   const [formattedTime, setFormattedTime] = useState<string>("");
   // Loader
   const [loading, setLoading] = useState<boolean>(false);
+  //Aletrs
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertType, setAlertType] = useState<
+    "success" | "error" | "info" | "warning"
+  >("info");
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
+  const handleCloseSuccess = () => {
+    setShowSuccess(false);
+  };
+
+  const showAlertMessage = (
+    message: string,
+    type: "success" | "error" | "info" | "warning"
+  ) => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setShowAlert(true);
+  };
+  const showSuccessMessage = (message: string) => {
+    setSuccessMessage(message);
+    setShowSuccess(true);
+  };
 
   const sendReport = async (e: any) => {
     e.preventDefault();
 
-    // if (!title || !description) {
-    //   return showAlertMessage("Empty message field", "error");
-    // }
+    if (!title) {
+      return showAlertMessage("Please enter Event Title", "error");
+    }
+    if (!description) {
+      return showAlertMessage("Please enter Event Details", "error");
+    }
+    if (!formattedDate) {
+      return showAlertMessage("Please enter Event Date", "error");
+    }
+    if (!formattedTime) {
+      return showAlertMessage("Please enter Event Time", "error");
+    }
     try {
       setLoading(true);
       const response: any = await authApis.submitEvent({
@@ -39,7 +78,6 @@ const Event = () => {
         time: formattedTime || "",
       });
 
-      // showAlertMessage("Event submitted successfully", "success");
       if (
         response.data.data.status === "successful" ||
         response.status === 201
@@ -51,11 +89,13 @@ const Event = () => {
         setLoading(false);
         setFormattedDate("");
         setFormattedTime("");
+        setIsAddEventOpen(false);
+        showSuccessMessage("Your event has been created successfully");
       }
       console.log(response);
       return response;
     } catch (error) {
-      // showAlertMessage("An error occurred while sending report", "error");
+      showAlertMessage("An error occurred while sending report", "error");
       return error;
     } finally {
       setLoading(false);
@@ -89,6 +129,21 @@ const Event = () => {
 
   return (
     <div className="flex flex-col h-screen ">
+      <AlertCard
+        message={alertMessage}
+        type={alertType}
+        isOpen={showAlert}
+        onClose={handleCloseAlert}
+        autoClose={true}
+        autoCloseTime={3000}
+      />
+      <SuccessCard
+        message={successMessage}
+        isOpen={showSuccess}
+        onClose={handleCloseSuccess}
+        autoClose={true}
+        autoCloseTime={3000}
+      />
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full overflow-y-auto max-h-[calc(100vh-55px)] ">
         <SideBar>event</SideBar>
