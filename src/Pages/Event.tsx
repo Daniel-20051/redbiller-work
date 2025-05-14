@@ -2,7 +2,7 @@ import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EventItem from "../Components/EventItem";
 import { use } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
@@ -16,6 +16,7 @@ const Event = () => {
   const isAdmin = userDetails?.data.user.role === "admin";
   const [event, setEvent] = useState(0);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
+  const [events, setEvents] = useState<any[]>([]);
   //Input Feilds
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string | null>(null);
@@ -25,6 +26,7 @@ const Event = () => {
   const [formattedTime, setFormattedTime] = useState<string>("");
   // Loader
   const [loading, setLoading] = useState<boolean>(false);
+  const [eventLoading, setEventLoading] = useState<boolean>(false);
   //Aletrs
   const [alertMessage, setAlertMessage] = useState<string>("");
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -33,7 +35,7 @@ const Event = () => {
   >("info");
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
-
+  //submit event
   const handleCloseAlert = () => {
     setShowAlert(false);
   };
@@ -126,6 +128,22 @@ const Event = () => {
     setTime(newValue);
     setFormattedTime(formatTime);
   };
+  //get all events
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setEventLoading(true);
+        const response: any = await authApis.getAllEvents();
+
+        setEvents(response.data.data);
+      } catch (error) {
+        showAlertMessage("An error occurred while sending report", "error");
+      } finally {
+        setEventLoading(false);
+      }
+    };
+    fetchData();
+  }, [event, isAddEventOpen]);
 
   return (
     <div className="flex flex-col h-screen ">
@@ -142,7 +160,7 @@ const Event = () => {
         isOpen={showSuccess}
         onClose={handleCloseSuccess}
         autoClose={true}
-        autoCloseTime={3000}
+        autoCloseTime={2000}
       />
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full overflow-y-auto max-h-[calc(100vh-55px)] ">
@@ -200,16 +218,28 @@ const Event = () => {
             </div>
           </div>
           <div className="flex-1 w-full overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  ">
-            <EventItem></EventItem>
-            <EventItem></EventItem>
-            <EventItem></EventItem>
-            <EventItem></EventItem>
-            <EventItem></EventItem>
-            <EventItem></EventItem>
-            <EventItem></EventItem>
-            <EventItem></EventItem>
-            <EventItem></EventItem>
-            <EventItem></EventItem>
+            {eventLoading ? (
+              <div className={`flex justify-center items-center h-[55vh] `}>
+                <Icon
+                  icon="svg-spinners:ring-resize"
+                  width="30"
+                  height="30"
+                  color="#93221D"
+                />
+              </div>
+            ) : (
+              events.map((event, index) => (
+                <div>
+                  <EventItem
+                    key={index}
+                    title={`${event.eventTitle}`}
+                    date={`${event.eventDate}`}
+                    time={`${event.eventTime}`}
+                    description={`${event.eventDescription}`}
+                  />
+                </div>
+              ))
+            )}
           </div>
         </div>
         <Dialog
@@ -232,6 +262,7 @@ const Event = () => {
                   placeholder="Event title"
                   type="text"
                   value={title}
+                  maxLength={18}
                   onChange={handleTitle}
                 />
                 <label htmlFor="">Title</label>
