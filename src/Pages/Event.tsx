@@ -38,6 +38,10 @@ const Event = () => {
   >("info");
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
+
+  //Event Details
+  const { setEventDetails } = use(UserDetailsContext);
+
   //submit event
   const handleCloseAlert = () => {
     setShowAlert(false);
@@ -45,7 +49,41 @@ const Event = () => {
   const handleCloseSuccess = () => {
     setShowSuccess(false);
   };
+  //Format Created At
+  const formatRelativeTime = (timestamp: string) => {
+    if (!timestamp) return "";
 
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+
+    if (diffInSeconds < 60) {
+      return "just now";
+    }
+
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes} ${diffInMinutes === 1 ? "min" : "mins"} ago`;
+    }
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return `${diffInHours} ${diffInHours === 1 ? "hour" : "hours"} ago`;
+    }
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 30) {
+      return `${diffInDays} ${diffInDays === 1 ? "day" : "days"} ago`;
+    }
+
+    const diffInMonths = Math.floor(diffInDays / 30);
+    if (diffInMonths < 12) {
+      return `${diffInMonths} ${diffInMonths === 1 ? "month" : "months"} ago`;
+    }
+
+    const diffInYears = Math.floor(diffInMonths / 12);
+    return `${diffInYears} ${diffInYears === 1 ? "year" : "years"} ago`;
+  };
   const showAlertMessage = (
     message: string,
     type: "success" | "error" | "info" | "warning"
@@ -283,9 +321,14 @@ const Event = () => {
             ) : filteredEvents.length > 0 ? (
               filteredEvents.map((event, index) => (
                 <Link to={`/events/${event.id}`} key={event.id}>
-                  <div>
+                  <div
+                    onClick={() => {
+                      setEventDetails(event);
+                    }}
+                  >
                     <EventItem
                       key={index}
+                      createdAt={formatRelativeTime(event.createdAt)}
                       weekday={formatDate(event.eventDate, true)}
                       title={event.eventTitle}
                       date={formatDate(event.eventDate)}

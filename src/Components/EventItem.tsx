@@ -4,6 +4,7 @@ interface EventItemProps {
   date: string;
   time: string;
   weekday: string;
+  createdAt: string;
 }
 
 const EventItem = ({
@@ -12,6 +13,7 @@ const EventItem = ({
   date,
   time,
   weekday,
+  createdAt,
 }: EventItemProps) => {
   return (
     <div className="flex  cursor-pointer justify-center items-center gap-12 mb-[20px] mt-1 ">
@@ -36,7 +38,7 @@ const EventItem = ({
       <div className="max-w-[70vw] md:max-w-[60vw] w-[70%] h-[170px] lg:h-[141px] border-1 rounded-[10px] p-4 border-[#EEEEEE]">
         <div className="flex mb-[10px] gap-5">
           <p className="text-primary  font-[700] text-[16px] ">{title}</p>
-          <p className="text-[#C9C9C9] font-[400] text-[14px]">15 mins ago</p>
+          <p className="text-[#C9C9C9] font-[400] text-[14px]">{createdAt}</p>
         </div>
         <p className="font-[400] text-[14px]  text-[#4E4E4E] line-clamp-3">
           {description}
