@@ -121,9 +121,9 @@ const EventInfo = () => {
                 Event Details
               </p>
 
-              <div className="flex mt-[81px] items-start ">
+              <div className="flex mt-7 items-start gap-3 md:gap-5 ">
                 <img
-                  className="w-[18px] h-[19.5px] mr-[35px] "
+                  className="w-[18px] h-[19.5px] "
                   src="/assets/Calendar.svg"
                   alt=""
                 />
