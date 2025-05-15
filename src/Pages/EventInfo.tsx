@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 const EventInfo = () => {
-  const { id } = useParams();
-  console.log(id);
+  const { id, eventDescription } = useParams();
+  console.log(id, eventDescription);
 
   // useEffect(() => {
   //   const fetchEvent = async () => {
