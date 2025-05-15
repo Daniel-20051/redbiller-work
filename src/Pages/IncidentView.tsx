@@ -6,6 +6,7 @@ import { UserDetailsContext } from "../context/AuthContext.js";
 
 const IncidentView = () => {
   const { incidentDetails } = use(UserDetailsContext);
+  console.log(incidentDetails);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (

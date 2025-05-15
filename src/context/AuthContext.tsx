@@ -11,6 +11,8 @@ type UserDetailsContextType = {
   fetchAllUser: () => void;
   incidentDetails: any;
   setIncidentDetails: any;
+  eventDetails: any;
+  setEventDetails: any;
 };
 
 const authApis = new AuthApis();
@@ -25,6 +27,8 @@ export const UserDetailsContext = createContext<UserDetailsContextType>({
   fetchAllUser: async () => {},
   incidentDetails: null,
   setIncidentDetails: null,
+  eventDetails: null,
+  setEventDetails: null,
 });
 
 function AuthContext({ children }: { children: React.ReactNode }) {
@@ -32,6 +36,7 @@ function AuthContext({ children }: { children: React.ReactNode }) {
   const [allUser, setAllUser] = useState<any>(null);
   const [spiner, setSpiner] = useState<any>(true);
   const [incidentDetails, setIncidentDetails] = useState<any>(null);
+  const [eventDetails, setEventDetails] = useState<any>(null);
 
   const fetchUserDetails = async () => {
     try {
@@ -73,6 +78,8 @@ function AuthContext({ children }: { children: React.ReactNode }) {
         fetchAllUser,
         incidentDetails,
         setIncidentDetails,
+        eventDetails,
+        setEventDetails,
       }}
     >
       {children}
