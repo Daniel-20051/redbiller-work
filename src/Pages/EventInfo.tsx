@@ -1,8 +1,20 @@
+// import { useEffect } from "react";
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const EventInfo = () => {
+  const { id } = useParams();
+  console.log(id);
+
+  // useEffect(() => {
+  //   const fetchEvent = async () => {
+  //     const response = await authApis.getEvent(id);
+  //     console.log(response);
+  //   };
+  //   fetchEvent();
+  // }, [id]);
   return (
     <div className="flex flex-col h-screen ">
       <NavBar></NavBar>

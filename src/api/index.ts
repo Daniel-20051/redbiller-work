@@ -167,6 +167,22 @@ export class AuthApis {
       return err
     }
   }
+  // async getEvent(id: string){
+  //   try{
+  //     const token = localStorage.getItem("authToken")
+  //     const response = await axios.get(`${BASE_URL}/api/v1/admin/get-all/event/`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`
+  //         }
+  //       }
+  //     )
+  //     return response.data.data.
+  //   }
+  //   catch(err){
+  //     return err
+  //   }
+  // }
 
   // async getSpecificUserIncident(id: number){
   //   try{

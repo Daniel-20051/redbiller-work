@@ -14,7 +14,7 @@ const EventItem = ({
   weekday,
 }: EventItemProps) => {
   return (
-    <div className="flex justify-center items-center gap-12 mb-[20px] mt-1 ">
+    <div className="flex  cursor-pointer justify-center items-center gap-12 mb-[20px] mt-1 ">
       <div className=" flex-col w-[15%] h-auto border-1 rounded-[10px] border-[#EEEEEE]  hidden lg:flex ">
         <div className=" flex ml-[10px] mt-[10px] ">
           <img
@@ -38,7 +38,7 @@ const EventItem = ({
           <p className="text-primary  font-[700] text-[16px] ">{title}</p>
           <p className="text-[#C9C9C9] font-[400] text-[14px]">15 mins ago</p>
         </div>
-        <p className="font-[400] text-[14px]  text-[#4E4E4E] line-clamp-3 md:line-clamp-2 ">
+        <p className="font-[400] text-[14px]  text-[#4E4E4E] line-clamp-3">
           {description}
         </p>
       </div>

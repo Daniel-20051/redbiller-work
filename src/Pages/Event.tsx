@@ -9,6 +9,7 @@ import { UserDetailsContext } from "../context/AuthContext";
 import AlertCard from "../messageAlert/AlertCardProps";
 import { SuccessCard } from "../messageAlert/SuccessCard";
 import { AuthApis } from "../api";
+import { Link } from "react-router-dom";
 const authApis = new AuthApis();
 
 const Event = () => {
@@ -17,6 +18,8 @@ const Event = () => {
   const [event, setEvent] = useState(0);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
   //Input Feilds
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string | null>(null);
@@ -161,14 +164,33 @@ const Event = () => {
     }
   };
 
-  //get all events
+  // Add search handler
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = events.filter((event) => {
+      const titleMatch = event.eventTitle?.toLowerCase().includes(query);
+      // const descriptionMatch = event.eventDescription
+      //   ?.toLowerCase()
+      //   .includes(query);
+      const dateMatch = formatDate(event.eventDate)
+        ?.toLowerCase()
+        .includes(query);
+      return titleMatch || dateMatch;
+    });
+
+    setFilteredEvents(filtered);
+  };
+
+  // Update useEffect to set filtered events when events change
   useEffect(() => {
     const fetchData = async () => {
       try {
         setEventLoading(true);
         const response: any = await authApis.getAllEvents();
-
         setEvents(response.data.data);
+        setFilteredEvents(response.data.data);
       } catch (error) {
         showAlertMessage("An error occurred while sending report", "error");
       } finally {
@@ -179,7 +201,7 @@ const Event = () => {
   }, [event, isAddEventOpen]);
 
   return (
-    <div className="flex flex-col h-screen ">
+    <div className="flex flex-col h-screen">
       <AlertCard
         message={alertMessage}
         type={alertType}
@@ -196,28 +218,26 @@ const Event = () => {
         autoCloseTime={2000}
       />
       <NavBar></NavBar>
-      <div className=" flex flex-1 w-full overflow-y-auto max-h-[calc(100vh-55px)] ">
+      <div className="flex flex-1 w-full overflow-y-auto max-h-[calc(100vh-55px)]">
         <SideBar>event</SideBar>
 
-        <div className="flex flex-1   flex-col  ">
-          <div className="flex h-[30%] justify-center w-full relative items-center ">
-            <div className=" bg-[#F2F2F2] w-[161px] px-[24px]  py-[17px] h-[50px] items-center font-[600] rounded-[8px] absolute right-[50px] hidden md:flex">
+        <div className="flex flex-1 flex-col">
+          <div className="flex h-[30%] justify-center w-full relative items-center">
+            <div className="bg-[#F2F2F2] w-[161px] px-[24px] py-[17px] h-[50px] items-center font-[600] rounded-[8px] absolute right-[50px] hidden md:flex">
               <img
-                className={event == 0 ? "w-[16px] h-[16px]" : "hidden"}
+                className="w-[16px] h-[16px]"
                 src="/assets/search.svg"
                 alt=""
               />
               <input
-                className={
-                  event == 0
-                    ? "w-[110px] pl-[17px] h-[50px] outline-0  "
-                    : "w-[120px]  h-[50px] outline-0  "
-                }
-                type={event == 0 ? "text" : "date"}
-                placeholder={event == 0 ? "Search..." : "Date"}
+                className="w-[110px] pl-[17px] h-[50px] outline-0"
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearch}
               />
             </div>
-            <div className="flex flex-col gap-6  w-[70%] md:w-[40%]">
+            <div className="flex flex-col gap-6 w-[70%] md:w-[40%]">
               {isAdmin && (
                 <button
                   onClick={() => setIsAddEventOpen(true)}
@@ -231,8 +251,8 @@ const Event = () => {
                   onClick={() => {
                     setEvent(0);
                   }}
-                  className={` py-2 w-[50%] cursor-pointer md:py-3 px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
-                    event == 0 ? "bg-white  text-primary" : "text-[#898A8D]"
+                  className={`py-2 w-[50%] cursor-pointer md:py-3 px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
+                    event == 0 ? "bg-white text-primary" : "text-[#898A8D]"
                   }`}
                 >
                   Upcoming
@@ -241,8 +261,8 @@ const Event = () => {
                   onClick={() => {
                     setEvent(1);
                   }}
-                  className={` py-2 w-[50%] md:py-3 cursor-pointer px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
-                    event == 1 ? "bg-white  text-primary" : "text-[#898A8D]"
+                  className={`py-2 w-[50%] md:py-3 cursor-pointer px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
+                    event == 1 ? "bg-white text-primary" : "text-[#898A8D]"
                   }`}
                 >
                   All Event
@@ -250,9 +270,9 @@ const Event = () => {
               </div>
             </div>
           </div>
-          <div className="flex-1 w-full overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  ">
+          <div className="flex-1 w-full overflow-y-auto max-h-full hide-scrollbar scroll-smooth">
             {eventLoading ? (
-              <div className={`flex justify-center items-center h-[55vh] `}>
+              <div className="flex justify-center items-center h-[55vh]">
                 <Icon
                   icon="svg-spinners:ring-resize"
                   width="30"
@@ -260,19 +280,28 @@ const Event = () => {
                   color="#93221D"
                 />
               </div>
-            ) : (
-              events.map((event, index) => (
-                <div key={index}>
-                  <EventItem
-                    key={index}
-                    weekday={formatDate(event.eventDate, true)}
-                    title={`${event.eventTitle}`}
-                    date={formatDate(event.eventDate)}
-                    time={`${event.eventTime}`}
-                    description={`${event.eventDescription}`}
-                  />
-                </div>
+            ) : filteredEvents.length > 0 ? (
+              filteredEvents.map((event, index) => (
+                <Link to={`/events/${event.id}`} key={event.id}>
+                  <div>
+                    <EventItem
+                      key={index}
+                      weekday={formatDate(event.eventDate, true)}
+                      title={event.eventTitle}
+                      date={formatDate(event.eventDate)}
+                      time={event.eventTime}
+                      description={event.eventDescription}
+                    />
+                  </div>
+                </Link>
               ))
+            ) : (
+              <div className="flex gap-4 flex-col justify-center items-center h-[50vh]">
+                <img src="/assets/event-image.svg" alt="" />
+                <p className="uppercase font-[600] text-[25px] md:text-[30px]">
+                  No upcoming Event
+                </p>
+              </div>
             )}
           </div>
         </div>
@@ -281,11 +310,8 @@ const Event = () => {
           onClose={() => setIsAddEventOpen(false)}
           className="relative z-50"
         >
-          <div className="fixed inset-0  flex w-screen items-center justify-center md:px-12 px-7 py-6 bg-black/40 ">
-            <DialogPanel
-              className=" bg-white w-[95%] md:w-[70%] lg:w-[44%] h-[auto]  items-center  rounded-[20px] 
-            overflow-y-auto max-h-full  hide-scrollbar scroll-smooth px-5  md:px-12 py-6  "
-            >
+          <div className="fixed inset-0 flex w-screen items-center justify-center md:px-12 px-7 py-6 bg-black/40">
+            <DialogPanel className="bg-white w-[95%] md:w-[70%] lg:w-[44%] h-[auto] items-center rounded-[20px] overflow-y-auto max-h-full hide-scrollbar scroll-smooth px-5 md:px-12 py-6">
               <p className="font-[500] text-[24px] mb-12 place-self-center">
                 Add Event
               </p>
@@ -332,7 +358,7 @@ const Event = () => {
                       setIsAddEventOpen(false);
                     }}
                     type="button"
-                    className="text-[#959595]  px-5 py-2 cursor-pointer"
+                    className="text-[#959595] px-5 py-2 cursor-pointer"
                   >
                     Cancel
                   </button>

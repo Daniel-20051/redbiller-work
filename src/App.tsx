@@ -81,7 +81,7 @@ const App = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path="/events" element={<Event />} />
-            <Route path="/events/:slug" element={<EventInfo />} />
+            <Route path="/events/:id" element={<EventInfo />} />
             <Route path="/weekly-report" element={<WeeklyReport />} />
             <Route path="/weekly-report/:id" element={<WeeklyView />} />
             <Route path="/weekly-report/create" element={<WeeklyCreate />} />
