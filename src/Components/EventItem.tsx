@@ -3,12 +3,19 @@ interface EventItemProps {
   description: string;
   date: string;
   time: string;
+  weekday: string;
 }
 
-const EventItem = ({ title, description, date, time }: EventItemProps) => {
+const EventItem = ({
+  title,
+  description,
+  date,
+  time,
+  weekday,
+}: EventItemProps) => {
   return (
     <div className="flex justify-center items-center gap-12 mb-[20px] mt-1 ">
-      <div className=" flex-col w-[13%] h-[65px] border-1 rounded-[10px] border-[#EEEEEE]  hidden lg:flex ">
+      <div className=" flex-col w-[15%] h-auto border-1 rounded-[10px] border-[#EEEEEE]  hidden lg:flex ">
         <div className=" flex ml-[10px] mt-[10px] ">
           <img
             className="w-[24px] h-[24px] "
@@ -20,14 +27,14 @@ const EventItem = ({ title, description, date, time }: EventItemProps) => {
           </p>
         </div>
         <div className="flex ml-[10px] mb-[8px] ">
-          <p className="font-[500] text-[14px]  text-[#959595] ">Sat</p>
+          <p className="font-[500] text-[14px]  text-[#959595] ">{weekday}</p>
           <p className="font-[500] lowercase text-[14px] ml-[8px] text-[#959595] ">
             {time}
           </p>
         </div>
       </div>
       <div className="max-w-[70vw] md:max-w-[60vw] w-[70%] h-[170px] lg:h-[141px] border-1 rounded-[10px] p-4 border-[#EEEEEE]">
-        <div className="flex mb-[10px] ml-[14px] gap-5">
+        <div className="flex mb-[10px] gap-5">
           <p className="text-primary  font-[700] text-[16px] ">{title}</p>
           <p className="text-[#C9C9C9] font-[400] text-[14px]">15 mins ago</p>
         </div>

@@ -128,6 +128,39 @@ const Event = () => {
     setTime(newValue);
     setFormattedTime(formatTime);
   };
+
+  // Helper function to format date
+  const formatDate = (dateStr: string, isWeekday: boolean = false) => {
+    if (!dateStr) return "";
+    const year = dateStr.substring(0, 4);
+    const month = dateStr.substring(4, 6);
+    const day = dateStr.substring(6, 8);
+
+    const date = new Date(`${year}-${month}-${day}`);
+    const dayWithSuffix = getDayWithSuffix(parseInt(day));
+    const monthName = date.toLocaleString("default", { month: "long" });
+    const dayOfWeek = date.toLocaleString("default", { weekday: "long" });
+
+    return isWeekday
+      ? dayOfWeek.substring(0, 3)
+      : `${dayWithSuffix} ${monthName}`;
+  };
+
+  // Helper function to add suffix to day
+  const getDayWithSuffix = (day: number) => {
+    if (day > 3 && day < 21) return `${day}th`;
+    switch (day % 10) {
+      case 1:
+        return `${day}st`;
+      case 2:
+        return `${day}nd`;
+      case 3:
+        return `${day}rd`;
+      default:
+        return `${day}th`;
+    }
+  };
+
   //get all events
   useEffect(() => {
     const fetchData = async () => {
@@ -229,11 +262,12 @@ const Event = () => {
               </div>
             ) : (
               events.map((event, index) => (
-                <div>
+                <div key={index}>
                   <EventItem
                     key={index}
+                    weekday={formatDate(event.eventDate, true)}
                     title={`${event.eventTitle}`}
-                    date={`${event.eventDate}`}
+                    date={formatDate(event.eventDate)}
                     time={`${event.eventTime}`}
                     description={`${event.eventDescription}`}
                   />
