@@ -1,28 +1,21 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import WeeklyTable from "../Components/WeeklyTable";
-import { useState } from "react";
+import { useState, use, useEffect } from "react";
+import { UserDetailsContext } from "../context/AuthContext";
 
 const WeeklyView = () => {
+  const { allUser, fetchAllUser } = use(UserDetailsContext);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const items = [
-    "Item 1",
-    "Item 2",
-    "Item 3",
-    "Item 1",
-    "Item 2",
-    "Item 2",
-    "Item 1",
-    "Item 2",
-    "Item 2",
-    "Item 1",
-    "Item 2",
-    "Item 2",
-    "Item 2",
-    "Item 1",
-    "Item 2",
-    "Item 2",
-  ];
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    fetchAllUser();
+  }, []);
+
+  useEffect(() => {
+    setItems(allUser?.data?.data?.users || []);
+  }, [allUser]);
 
   return (
     <div className="flex flex-col h-screen ">
@@ -48,7 +41,7 @@ const WeeklyView = () => {
               </div>
               <div className="overflow-x-auto max-w-[95vw] lg:max-w-[76vw] z-0 hide-scrollbar scroll-smooth">
                 <ul className="flex flex-nowrap min-w-max">
-                  {items.map((item, index) => (
+                  {(items || []).map((item: any, index: any) => (
                     <li
                       key={index}
                       className={` px-8 py-2 cursor-pointer border-r-1 border-[#D9D9D9] ${
@@ -58,7 +51,9 @@ const WeeklyView = () => {
                       } `}
                       onClick={() => setSelectedIndex(index)}
                     >
-                      {item}
+                      {item.firstName &&
+                        item.firstName.charAt(0).toUpperCase() +
+                          item.firstName.slice(1).toLowerCase()}
                     </li>
                   ))}
                 </ul>
