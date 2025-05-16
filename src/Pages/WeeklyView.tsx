@@ -1,5 +1,6 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
+import WeeklyTable from "../Components/WeeklyTable";
 import { useState } from "react";
 
 const WeeklyView = () => {
@@ -61,6 +62,9 @@ const WeeklyView = () => {
                     </li>
                   ))}
                 </ul>
+              </div>
+              <div className="-mt-2">
+                <WeeklyTable></WeeklyTable>
               </div>
             </div>
           </div>
