@@ -132,7 +132,7 @@ const WeeklyCreate = () => {
             onClick={handleSubmit}
             className={` ${
               loading ? "bg-gray-400" : "bg-primary"
-            } text-[16px]  text-white py-[7px] px-[16px] font-[500] rounded-[8px] mr-[11%] place-self-end`}
+            } text-[16px] cursor-pointer text-white py-[7px] px-[16px] font-[500] rounded-[8px] mr-[11%] place-self-end`}
           >
             {loading ? (
               <div className="flex cursor-not-allowed justify-center items-center h-full">
