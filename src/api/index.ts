@@ -167,6 +167,29 @@ export class AuthApis {
       return err
     }
   }
+  async submitWeeklyReport(data: { actionItems: string, ongoingItems: string, completedItems: string }){
+    try{
+      const token = localStorage.getItem("authToken")
+      const payload = {
+        ActionItem: data.actionItems,
+        OngoingTask: data.ongoingItems,
+        CompletedTask: data.completedItems
+      }
+
+      const response = await axios.post(`${BASE_URL}/api/v1/user/create-report`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    return response
+  }
+    catch(err){
+      return err
+    }
+  }
   // async getEvent(id: string){
   //   try{
   //     const token = localStorage.getItem("authToken")
