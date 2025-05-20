@@ -99,6 +99,7 @@ const User = () => {
                     <UserInfo
                       name={`${user?.firstName} ${user?.lastName}`}
                       email={user?.email}
+                      dob={user?.dob}
                       PhoneNum={800000000}
                       gender={user?.gender}
                       department={user?.occupation}

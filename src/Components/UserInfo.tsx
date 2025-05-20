@@ -7,6 +7,7 @@ interface Props {
   gender: string;
   email: string;
   imgUrl: string;
+  dob: string;
   department: string;
   onDelete: () => void;
 }
@@ -18,6 +19,7 @@ const UserInfo = ({
   imgUrl,
   gender,
   department,
+  dob,
   onDelete,
 }: Props) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -160,7 +162,7 @@ const UserInfo = ({
                     <p className="text-[#898A8D] font-[500] text-[12px] ">
                       Date of Birth
                     </p>
-                    <p className=" font-[500] text-[14px] ">2002-12-12</p>
+                    <p className=" font-[500] text-[14px] ">{dob}</p>
                   </div>
                   <div className="flex flex-col gap-9">
                     <p className="text-[#898A8D] font-[500] text-[12px] ">
