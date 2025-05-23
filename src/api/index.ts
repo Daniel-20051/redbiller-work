@@ -190,6 +190,22 @@ export class AuthApis {
       return err
     }
   }
+  async getAllReports(){
+    try{
+      const token = localStorage.getItem("authToken")
+      const response = await axios.get(`${BASE_URL}/api/v1/user/getAll-weeklyReport`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      return response
+    }
+    catch(err){
+      return err
+    }
+  }
   // async getEvent(id: string){
   //   try{
   //     const token = localStorage.getItem("authToken")

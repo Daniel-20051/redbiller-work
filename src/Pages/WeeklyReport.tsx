@@ -49,52 +49,6 @@ const WeeklyReport = () => {
                     laudantium molestias amet nam eius sed eum vitae in sapiente
                     magnam quod. Debitis modi sit maiores.
                   </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi,
-                  </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi
-                  </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi, asperiores consequatur ipsam hic,
-                    laudantium molestias amet nam eius sed eum vitae in sapiente
-                    magnam quod. Debitis modi sit maiores.
-                  </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi,
-                  </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi
-                  </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi, asperiores consequatur ipsam hic,
-                    laudantium molestias amet nam eius sed eum vitae in sapiente
-                    magnam quod. Debitis modi sit maiores.
-                  </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi,
-                  </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi
-                  </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi, asperiores consequatur ipsam hic,
-                    laudantium molestias amet nam eius sed eum vitae in sapiente
-                    magnam quod. Debitis modi sit maiores.
-                  </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi,
-                  </WeeklyCard>
                 </div>
               </div>
             </>

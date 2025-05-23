@@ -38,8 +38,6 @@ const Login = () => {
     try {
       const response: any = await authApi.loginUser({ email, password });
       const responseData = await response;
-      console.log(responseData);
-      console.log(responseData?.response);
       if (responseData?.status === 200 || responseData?.status === 201) {
         localStorage.setItem("authToken", responseData?.data.data.authToken);
         showAlertMessage("Login successful!", "success");
@@ -60,7 +58,6 @@ const Login = () => {
     } catch (err: any) {
       showAlertMessage("An error occurred during login", "error");
       setLoginSpiner(false);
-      console.log(err);
       return err;
     }
   };

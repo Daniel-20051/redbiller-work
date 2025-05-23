@@ -1,52 +1,29 @@
-import React from "react";
-
-interface TableRow {
-  sn: number;
-  actionItem: string;
-  ongoing: string;
-  completed: string;
+import React, { useEffect, useState } from "react";
+import { AuthApis } from "../api";
+const authApis = new AuthApis();
+interface Props {
+  selectedUser: number;
 }
 
-const data: TableRow[] = [
-  {
-    sn: 1,
-    actionItem: "Enable branch protection rules.",
-    ongoing: "Perform cost optimisim.",
-    completed: "Scale down waverlite.",
-  },
-  {
-    sn: 2,
-    actionItem: "Enable branch protection rules.",
-    ongoing: "Perform cost optimisim.",
-    completed: "Scale down waverlite.",
-  },
-  {
-    sn: 3,
-    actionItem: "Enable branch protection rules.",
-    ongoing: "Perform cost optimisim.",
-    completed: "Scale down waverlite.",
-  },
-  {
-    sn: 4,
-    actionItem: "Enable branch protection rules.",
-    ongoing: "Perform cost optimisim.",
-    completed: "Scale down waverlite.",
-  },
-  {
-    sn: 5,
-    actionItem: "Enable branch protection rules.",
-    ongoing: "Perform cost optimisim.",
-    completed: "Scale down waverlite.",
-  },
-  {
-    sn: 6,
-    actionItem: "Enable branch protection rules.",
-    ongoing: "Perform cost optimisim.",
-    completed: "Scale down waverlite.",
-  },
-];
+const WeeklyTable: React.FC<Props> = ({ selectedUser }) => {
+  const [reports, setReports] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // setEventLoading(true);
+        const response: any = await authApis.getAllReports();
+        setReports(response.data.data);
+        // setEvents(response.data.data);
+        // setFilteredEvents(response.data.data);
+      } catch (error) {
+        // showAlertMessage("An error occurred while sending report", "error");
+      } finally {
+        // setEventLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
-const WeeklyTable: React.FC = () => {
   return (
     <div className="overflow-x-auto bg-white">
       <table className="min-w-full table-auto ">
@@ -67,22 +44,59 @@ const WeeklyTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((row) => (
-            <tr key={row.sn} className="hover:bg-gray-100">
-              <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
-                {row.sn}
-              </td>
-              <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
-                {row.actionItem}
-              </td>
-              <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
-                {row.ongoing}
-              </td>
-              <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
-                {row.completed}
+          {reports.filter((row) => row.userId === selectedUser).length === 0 ? (
+            <tr>
+              <td colSpan={4} className="text-center py-6 text-gray-500">
+                No reports found
               </td>
             </tr>
-          ))}
+          ) : (
+            reports
+              .filter((row) => row.userId === selectedUser)
+              .map((row, index) => (
+                <tr key={index} className="hover:bg-gray-100">
+                  <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
+                    {index + 1}
+                  </td>
+                  <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
+                    <ul className="list-disc pl-5">
+                      {row.ActionItems &&
+                        Array.isArray(row.ActionItems) &&
+                        row.ActionItems.length > 0 &&
+                        row.ActionItems[0].description
+                          .split("//")
+                          .map((desc: string, i: number) =>
+                            desc.trim() ? <li key={i}>{desc.trim()}</li> : null
+                          )}
+                    </ul>
+                  </td>
+                  <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
+                    <ul className="list-disc pl-5">
+                      {row.OngoingTasks &&
+                        Array.isArray(row.OngoingTasks) &&
+                        row.OngoingTasks.length > 0 &&
+                        row.OngoingTasks[0].description
+                          .split("//")
+                          .map((desc: string, i: number) =>
+                            desc.trim() ? <li key={i}>{desc.trim()}</li> : null
+                          )}
+                    </ul>
+                  </td>
+                  <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
+                    <ul className="list-disc pl-5">
+                      {row.CompletedTasks &&
+                        Array.isArray(row.CompletedTasks) &&
+                        row.CompletedTasks.length > 0 &&
+                        row.CompletedTasks[0].description
+                          .split("//")
+                          .map((desc: string, i: number) =>
+                            desc.trim() ? <li key={i}>{desc.trim()}</li> : null
+                          )}
+                    </ul>
+                  </td>
+                </tr>
+              ))
+          )}
         </tbody>
       </table>
     </div>

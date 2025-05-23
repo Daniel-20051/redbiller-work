@@ -47,13 +47,17 @@ const WeeklyCreate = () => {
     if (loading) {
       return;
     }
-    if (!actionItems) {
+    if (!actionItems || actionItems === "//" || actionItems === "////") {
       return showAlertMessage("No Action Item Added", "error");
     }
-    if (!ongoingItems) {
+    if (!ongoingItems || ongoingItems === "//" || ongoingItems === "////") {
       return showAlertMessage("No Ongoing Task Added", "error");
     }
-    if (!completedItems) {
+    if (
+      !completedItems ||
+      completedItems === "//" ||
+      completedItems === "////"
+    ) {
       return showAlertMessage("No Completed Task Added", "error");
     }
     try {

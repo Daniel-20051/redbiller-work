@@ -8,6 +8,7 @@ const WeeklyView = () => {
   const { allUser, fetchAllUser } = use(UserDetailsContext);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [items, setItems] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(0);
 
   useEffect(() => {
     fetchAllUser();
@@ -49,7 +50,10 @@ const WeeklyView = () => {
                           ? "bg-primary text-white"
                           : "bg-[#F2F2F2]"
                       } `}
-                      onClick={() => setSelectedIndex(index)}
+                      onClick={() => {
+                        setSelectedIndex(index);
+                        setSelectedUser(item.id);
+                      }}
                     >
                       {item.firstName &&
                         item.firstName.charAt(0).toUpperCase() +
@@ -59,7 +63,7 @@ const WeeklyView = () => {
                 </ul>
               </div>
               <div className="-mt-2">
-                <WeeklyTable></WeeklyTable>
+                <WeeklyTable selectedUser={selectedUser}></WeeklyTable>
               </div>
             </div>
           </div>
