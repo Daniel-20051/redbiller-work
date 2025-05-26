@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Login from "./Pages/Login";
 import Home from "./Pages/Home";
 import EventInfo from "./Pages/EventInfo";
@@ -12,11 +12,13 @@ import WeeklyCreate from "./Pages/WeeklyCreate";
 import Profile from "./Pages/Profile";
 import User from "./Pages/Users";
 import ProtectedRoute from "./routs/protectedRoute";
+import { UserDetailsContext } from "./context/AuthContext.js";
 
 import IncidentView from "./Pages/IncidentView";
 
 const App = () => {
-  const [isAdmin] = useState(true);
+  const { userDetails } = use(UserDetailsContext);
+  const isAdmin = userDetails?.data.user.role == "admin";
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const INACTIVE_TIMEOUT = 5 * 60 * 1000;
 
@@ -83,10 +85,14 @@ const App = () => {
             <Route path="/events" element={<Event />} />
             <Route path="/events/:id" element={<EventInfo />} />
             <Route path="/weekly-report" element={<WeeklyReport />} />
-            <Route path="/weekly-report/:id" element={<WeeklyView />} />
+            {isAdmin && (
+              <Route path="/weekly-report/:id" element={<WeeklyView />} />
+            )}
             <Route path="/weekly-report/create" element={<WeeklyCreate />} />
             <Route path="/incident-report" element={<IncidentReport />} />
-            <Route path="/incident-report/:id" element={<IncidentView />} />
+            {isAdmin && (
+              <Route path="/incident-report/:id" element={<IncidentView />} />
+            )}
             <Route
               path="/incident-report/create"
               element={<IncidentCreate />}

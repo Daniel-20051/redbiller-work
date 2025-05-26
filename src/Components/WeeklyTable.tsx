@@ -29,16 +29,16 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser }) => {
       <table className="min-w-full table-auto ">
         <thead>
           <tr className="bg-[#D6CBCB]">
-            <th className="px-4 py-6 text-left border-r-1 text-[17px] border-[#F2F2F2] font-normal">
+            <th className="px-4 py-4 text-left border-r-1 text-[17px] border-[#F2F2F2] font-normal">
               S/N
             </th>
-            <th className="px-4 py-6 text-left border-1 text-[17px] border-[#F2F2F2] font-normal">
+            <th className="px-4 py-4 text-left border-1 text-[17px] border-[#F2F2F2] font-normal">
               Action Item
             </th>
-            <th className="px-4 py-6 text-left border-1 text-[17px] border-[#F2F2F2] font-normal">
+            <th className="px-4 py-4 text-left border-1 text-[17px] border-[#F2F2F2] font-normal">
               Ongoing
             </th>
-            <th className="px-4 py-6 text-left border-1 text-[17px] border-[#F2F2F2] font-normal">
+            <th className="px-4 py-4 text-left border-1 text-[17px] border-[#F2F2F2] font-normal">
               Completed
             </th>
           </tr>

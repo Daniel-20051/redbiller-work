@@ -70,7 +70,7 @@ const ReportCard = ({ name, color, onValueChange, reset }: Props) => {
 
           <button
             onClick={handleAddTextbox}
-            className="absolute bottom-[10px] right-[20px] flex gap-2 border-1 w-auto h-auto border-[#D9D9D9] rounded-[5px] px-[15px] py-[8px]"
+            className="absolute cursor-pointer bottom-[10px] right-[20px] flex gap-2 border-1 w-auto h-auto border-[#D9D9D9] rounded-[5px] px-[15px] py-[8px]"
           >
             <img src="/assets/add-icon.svg" alt="" />
             Add

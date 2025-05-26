@@ -4,12 +4,58 @@ import DropDown from "../Components/DropDown";
 import WeekItem from "../Components/WeekItem";
 import WeeklyCard from "../Components/WeeklyCard";
 import { Link } from "react-router-dom";
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 import { UserDetailsContext } from "../context/AuthContext.js";
+import { AuthApis } from "../api";
+import { Icon } from "@iconify/react";
+const authApis = new AuthApis();
+
+function getWeekRange(dateString: string) {
+  const date = new Date(dateString);
+  // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+  const day = date.getDay();
+  // Calculate how many days to subtract to get Monday
+  const diffToMonday = (day === 0 ? -6 : 1) - day;
+  const monday = new Date(date);
+  monday.setDate(date.getDate() + diffToMonday);
+
+  // Friday is 4 days after Monday
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+
+  // Format as needed, e.g., "26th May"
+  const format = (d: Date) =>
+    `${d.getDate()}${
+      ["th", "st", "nd", "rd"][d.getDate() % 10 > 3 ? 0 : d.getDate() % 10]
+    } ${d.toLocaleString("default", { month: "short" })}`;
+
+  return {
+    startDate: format(monday),
+    endDate: format(friday),
+  };
+}
 
 const WeeklyReport = () => {
   const { userDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "admin";
+  const [reports, setReports] = useState<any[]>([]);
+  //loader
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response: any = await authApis.getAllReports();
+        setReports(response.data.data.reports);
+      } catch (error) {
+        // showAlertMessage("An error occurred while sending report", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="flex flex-col h-screen">
@@ -75,12 +121,38 @@ const WeeklyReport = () => {
                   </div>
                 </div>
               </div>
-              <div className="mt-[48px] w-[90%]  items-center overflow-y-auto max-h-full hide-scrollbar scroll-smooth ">
-                <WeekItem></WeekItem>
-                <WeekItem></WeekItem>
-                <WeekItem></WeekItem>
-                <WeekItem></WeekItem>
-                <WeekItem></WeekItem>
+              <div className="mt-[48px] w-[90%] h-[90%] items-center overflow-y-auto max-h-full hide-scrollbar scroll-smooth ">
+                {isLoading ? (
+                  <div className={`flex justify-center items-center h-[55vh] `}>
+                    <Icon
+                      icon="svg-spinners:ring-resize"
+                      width="30"
+                      height="30"
+                      color="#93221D"
+                    />
+                  </div>
+                ) : (
+                  reports.map((report, index) => {
+                    const { startDate, endDate } = getWeekRange(
+                      report.createdAt
+                    );
+                    return (
+                      <WeekItem
+                        startDate={startDate}
+                        endDate={endDate}
+                        key={report.id}
+                        actionItem={report.ActionItems?.[0]?.description || ""}
+                        ongoingTask={
+                          report.OngoingTasks?.[0]?.description || ""
+                        }
+                        completedTask={
+                          report.CompletedTasks?.[0]?.description || ""
+                        }
+                        weekNum={index + 1}
+                      />
+                    );
+                  })
+                )}
               </div>
             </>
           )}
