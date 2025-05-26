@@ -30,8 +30,8 @@ const WeekItem = ({
         <p className="font-[700] ml-8 md:ml-[47.22px] text-[13px] md:text-[15px] ">
           Action Item
         </p>
-        <div className="h-[50%] ml-[50px] md:ml-[188px] mr-[30px] md:mr-[78px] border-[#E9E9E9] border-1 "></div>
-        <p className="font-[400] max-w-[49%] md:max-w-[45%] xl:max-w-[57%] text text-[14px] ">
+        <div className="h-[50%] ml-[50px] xl:ml-[188px] mr-[30px] xl:mr-[78px] border-[#E9E9E9] border-1 "></div>
+        <p className="font-[400] max-w-[45vw] md:max-w-[55vw] lg:max-w-[43vw] xl:max-w-[37vw] text-[14px] ">
           {" "}
           {actionItem}
         </p>
@@ -41,8 +41,8 @@ const WeekItem = ({
         <p className="font-[700] ml-8 md:ml-[47.22px] text-[13px] md:text-[15px]">
           Ongoing
         </p>
-        <div className="h-[50%] ml-[67px] md:ml-[209px] mr-[30px] md:mr-[78px] border-[#E9E9E9] border-1"></div>
-        <p className="font-[400] max-w-[49%] md:max-w-[45%] xl:max-w-[57%] text-[14px] ">
+        <div className="h-[50%] ml-[67px] xl:ml-[209px] mr-[30px] xl:mr-[78px] border-[#E9E9E9] border-1"></div>
+        <p className="font-[400] max-w-[45vw] md:max-w-[55vw] lg:max-w-[43vw] xl:max-w-[37vw] text-[14px] ">
           {ongoingTask}
         </p>
       </div>
@@ -51,8 +51,8 @@ const WeekItem = ({
         <p className="font-[700] ml-8 md:ml-[47.22px] text-[13px] md:text-[15px] ">
           Completed
         </p>
-        <div className="h-[50%] ml-[53px] md:ml-[192px] mr-[30px] md:mr-[78px] border-[#E9E9E9] border-1"></div>
-        <p className="font-[400] max-w-[49%] md:max-w-[45%] xl:max-w-[57%] text text-[14px] ">
+        <div className="h-[50%] ml-[53px] xl:ml-[192px] mr-[30px] xl:mr-[78px] border-[#E9E9E9] border-1"></div>
+        <p className="font-[400] max-w-[45vw] md:max-w-[55vw] lg:max-w-[43vw] xl:max-w-[37vw] text-[14px] ">
           {completedTask}
         </p>
       </div>

@@ -131,6 +131,10 @@ const WeeklyReport = () => {
                       color="#93221D"
                     />
                   </div>
+                ) : reports.length === 0 ? (
+                  <div className="flex justify-center items-center h-[55vh] text-gray-500 text-lg">
+                    No reports found.
+                  </div>
                 ) : (
                   reports.map((report, index) => {
                     const { startDate, endDate } = getWeekRange(
