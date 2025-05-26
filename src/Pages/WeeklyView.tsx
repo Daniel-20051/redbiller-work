@@ -49,7 +49,7 @@ const WeeklyView = () => {
                     .map((item: any, index: any) => (
                       <li
                         key={index}
-                        className={` px-8 py-2 cursor-pointer border-r-1 border-[#D9D9D9] ${
+                        className={` text-[14px] md:text-[17px] px-8 py-2 cursor-pointer border-r-1 border-[#D9D9D9] ${
                           selectedIndex === index
                             ? "bg-primary text-white"
                             : "bg-[#F2F2F2]"

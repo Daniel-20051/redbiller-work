@@ -29,16 +29,16 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser }) => {
       <table className="min-w-full table-auto ">
         <thead>
           <tr className="bg-[#D6CBCB]">
-            <th className="px-4 py-4 text-left border-r-1 text-[17px] border-[#F2F2F2] font-normal">
+            <th className="px-4 py-4 text-left border-r-1 text-[14px] md:text-[17px] border-[#F2F2F2] font-normal">
               S/N
             </th>
-            <th className="px-4 py-4 text-left border-1 text-[17px] border-[#F2F2F2] font-normal">
+            <th className="px-4 py-4 text-left border-1 text-[14px] md:text-[17px] border-[#F2F2F2] font-normal">
               Action Item
             </th>
-            <th className="px-4 py-4 text-left border-1 text-[17px] border-[#F2F2F2] font-normal">
+            <th className="px-4 py-4 text-left border-1 text-[14px] md:text-[17px] border-[#F2F2F2] font-normal">
               Ongoing
             </th>
-            <th className="px-4 py-4 text-left border-1 text-[17px] border-[#F2F2F2] font-normal">
+            <th className="px-4 py-4 text-left border-1 text-[14px] md:text-[17px] border-[#F2F2F2] font-normal">
               Completed
             </th>
           </tr>
@@ -55,10 +55,10 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser }) => {
               .filter((row) => row.userId === selectedUser)
               .map((row, index) => (
                 <tr key={index} className="hover:bg-gray-100">
-                  <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
+                  <td className="md:px-4 md:py-4 text-center text-[14px] md:text-[17px] border-1 border-[#F2F2F2]">
                     {index + 1}
                   </td>
-                  <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
+                  <td className="md:px-4 md:py-4 text-[14px] md:text-[17px] border-1 border-[#F2F2F2]">
                     <ul className="list-disc pl-5">
                       {row.ActionItems &&
                         Array.isArray(row.ActionItems) &&
@@ -70,7 +70,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser }) => {
                           )}
                     </ul>
                   </td>
-                  <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
+                  <td className="md:px-4 md:py-4 text-[14px] md:text-[17px] border-1 border-[#F2F2F2]">
                     <ul className="list-disc pl-5">
                       {row.OngoingTasks &&
                         Array.isArray(row.OngoingTasks) &&
@@ -82,7 +82,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser }) => {
                           )}
                     </ul>
                   </td>
-                  <td className="px-4 py-4 text-[17px] border-1 border-[#F2F2F2]">
+                  <td className="md:px-4 md:py-4 text-[14px] md:text-[17px] border-1 border-[#F2F2F2]">
                     <ul className="list-disc pl-5">
                       {row.CompletedTasks &&
                         Array.isArray(row.CompletedTasks) &&
