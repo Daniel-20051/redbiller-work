@@ -9,6 +9,7 @@ const WeeklyView = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [items, setItems] = useState([]);
   const [selectedUser, setSelectedUser] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
   const { userDetails } = use(UserDetailsContext);
 
   useEffect(() => {
@@ -40,6 +41,8 @@ const WeeklyView = () => {
                   className="h-[35px] pl-8 px-4  rounded-[8px] outline-1 bg-white w-[115px] md:w-[260px]  outline-[#E7E3E3] "
                   placeholder="Search"
                   type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <div className="overflow-x-auto max-w-[95vw] lg:max-w-[76vw] z-0 hide-scrollbar scroll-smooth">
@@ -67,7 +70,10 @@ const WeeklyView = () => {
                 </ul>
               </div>
               <div className="-mt-2">
-                <WeeklyTable selectedUser={selectedUser}></WeeklyTable>
+                <WeeklyTable
+                  selectedUser={selectedUser}
+                  searchTerm={searchTerm}
+                ></WeeklyTable>
               </div>
             </div>
           </div>
