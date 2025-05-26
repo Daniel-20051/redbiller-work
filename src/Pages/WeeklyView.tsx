@@ -9,6 +9,7 @@ const WeeklyView = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [items, setItems] = useState([]);
   const [selectedUser, setSelectedUser] = useState(0);
+  const { userDetails } = use(UserDetailsContext);
 
   useEffect(() => {
     fetchAllUser();
@@ -17,6 +18,7 @@ const WeeklyView = () => {
   useEffect(() => {
     setItems(allUser?.data?.data?.users || []);
   }, [allUser]);
+  const department = userDetails?.data.user.occupation;
 
   return (
     <div className="flex flex-col h-screen ">
@@ -42,24 +44,26 @@ const WeeklyView = () => {
               </div>
               <div className="overflow-x-auto max-w-[95vw] lg:max-w-[76vw] z-0 hide-scrollbar scroll-smooth">
                 <ul className="flex flex-nowrap min-w-max">
-                  {(items || []).map((item: any, index: any) => (
-                    <li
-                      key={index}
-                      className={` px-8 py-2 cursor-pointer border-r-1 border-[#D9D9D9] ${
-                        selectedIndex === index
-                          ? "bg-primary text-white"
-                          : "bg-[#F2F2F2]"
-                      } `}
-                      onClick={() => {
-                        setSelectedIndex(index);
-                        setSelectedUser(item.id);
-                      }}
-                    >
-                      {item.firstName &&
-                        item.firstName.charAt(0).toUpperCase() +
-                          item.firstName.slice(1).toLowerCase()}
-                    </li>
-                  ))}
+                  {(items || [])
+                    .filter((item: any) => item.occupation == department)
+                    .map((item: any, index: any) => (
+                      <li
+                        key={index}
+                        className={` px-8 py-2 cursor-pointer border-r-1 border-[#D9D9D9] ${
+                          selectedIndex === index
+                            ? "bg-primary text-white"
+                            : "bg-[#F2F2F2]"
+                        } `}
+                        onClick={() => {
+                          setSelectedIndex(index);
+                          setSelectedUser(item.id);
+                        }}
+                      >
+                        {item.firstName &&
+                          item.firstName.charAt(0).toUpperCase() +
+                            item.firstName.slice(1).toLowerCase()}
+                      </li>
+                    ))}
                 </ul>
               </div>
               <div className="-mt-2">

@@ -85,16 +85,18 @@ const WeeklyReport = () => {
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 overflow-y-auto max-h-full hide-scrollbar scroll-smooth   justify-center py-10">
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi
-                  </WeeklyCard>
-                  <WeeklyCard user="John Doe" subject="Product Meeting">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Officiis eligendi, asperiores consequatur ipsam hic,
-                    laudantium molestias amet nam eius sed eum vitae in sapiente
-                    magnam quod. Debitis modi sit maiores.
-                  </WeeklyCard>
+                  <Link to="/weekly-report/jhjhj">
+                    <WeeklyCard user="John Doe" subject="Product Meeting">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Officiis eligendi
+                    </WeeklyCard>
+                  </Link>
+                  <Link to="/weekly-report/jhjhj">
+                    <WeeklyCard user="John Doe" subject="Product Meeting">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Officiis eligendi
+                    </WeeklyCard>
+                  </Link>
                 </div>
               </div>
             </>

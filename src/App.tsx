@@ -16,11 +16,12 @@ import { UserDetailsContext } from "./context/AuthContext.js";
 
 import IncidentView from "./Pages/IncidentView";
 
+const INACTIVE_TIMEOUT = 10 * 60 * 1000;
+
 const App = () => {
   const { userDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "admin";
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const INACTIVE_TIMEOUT = 5 * 60 * 1000;
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -85,14 +86,16 @@ const App = () => {
             <Route path="/events" element={<Event />} />
             <Route path="/events/:id" element={<EventInfo />} />
             <Route path="/weekly-report" element={<WeeklyReport />} />
-            {isAdmin && (
-              <Route path="/weekly-report/:id" element={<WeeklyView />} />
-            )}
+
+            <Route path="/weekly-report/:id" element={<WeeklyView />} />
+
             <Route path="/weekly-report/create" element={<WeeklyCreate />} />
             <Route path="/incident-report" element={<IncidentReport />} />
+
             {isAdmin && (
               <Route path="/incident-report/:id" element={<IncidentView />} />
             )}
+
             <Route
               path="/incident-report/create"
               element={<IncidentCreate />}
