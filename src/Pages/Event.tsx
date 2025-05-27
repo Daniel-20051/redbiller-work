@@ -44,7 +44,7 @@ const Event = () => {
   const { setEventDetails } = use(UserDetailsContext);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 25;
+  const pageSize = 10;
 
   // Calculate paginated events
   const totalPages = Math.ceil(filteredEvents.length / pageSize);
@@ -271,7 +271,11 @@ const Event = () => {
         <SideBar>event</SideBar>
 
         <div className="flex flex-1 flex-col">
-          <div className=" pb-10 flex h-[15%] md:h-[20%] justify-center w-full relative items-end">
+          <div
+            className={`pb-10 flex  justify-center w-full relative items-end ${
+              isAdmin ? "h-[27%]" : "h-[15%] md:h-[20%]"
+            }`}
+          >
             <div className="bg-[#F2F2F2] w-[161px] px-[24px] py-[17px] h-[50px] items-center font-[600] rounded-[8px] absolute right-[50px] hidden md:flex">
               <img
                 className="w-[16px] h-[16px]"

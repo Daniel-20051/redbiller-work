@@ -6,10 +6,18 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const getPages = (total: number) => {
+const getPages = (current: number, total: number) => {
   const pages = [];
 
-  for (let i = 1; i <= total; i++) pages.push(i);
+  if (current === total) {
+    pages.push(current - 2, current - 1, current);
+  } else if (current > 1 && total > 2) {
+    pages.push(current - 1, current, current + 1);
+  } else if (current === 1) {
+    pages.push(current, current + 1, current + 2);
+  }
+  console.log(total);
+  console.log(current);
 
   return pages;
 };
@@ -19,7 +27,7 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }) => {
-  const pages = getPages(totalPages);
+  const pages = getPages(currentPage, totalPages);
 
   return (
     <div className="flex items-center justify-center gap-2 py-4 select-none">
