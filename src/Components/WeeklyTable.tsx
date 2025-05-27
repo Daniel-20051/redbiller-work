@@ -56,7 +56,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
       <table className="min-w-full table-auto ">
         <thead>
           <tr className="bg-[#D6CBCB]">
-            <th className="px-4 py-4 text-left border-r-1 text-[14px] md:text-[17px] border-[#F2F2F2] font-normal">
+            <th className="px-4 py-4 text-center border-r-1 text-[14px] md:text-[17px] border-[#F2F2F2] font-normal">
               S/N
             </th>
             <th className="px-4 py-4 text-left border-1 text-[14px] md:text-[17px] border-[#F2F2F2] font-normal">
@@ -91,7 +91,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
                       row.ActionItems[0].description
                         .split("//")
                         .map((desc: string, i: number) =>
-                          desc.trim() ? <li key={i}>{desc.trim()}</li> : null
+                          desc.trim() ? <p key={i}>{desc.trim()}</p> : null
                         )}
                   </ul>
                 </td>
@@ -103,7 +103,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
                       row.OngoingTasks[0].description
                         .split("//")
                         .map((desc: string, i: number) =>
-                          desc.trim() ? <li key={i}>{desc.trim()}</li> : null
+                          desc.trim() ? <p key={i}>{desc.trim()}</p> : null
                         )}
                   </ul>
                 </td>
@@ -115,7 +115,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
                       row.CompletedTasks[0].description
                         .split("//")
                         .map((desc: string, i: number) =>
-                          desc.trim() ? <li key={i}>{desc.trim()}</li> : null
+                          desc.trim() ? <p key={i}>{desc.trim()}</p> : null
                         )}
                   </ul>
                 </td>
