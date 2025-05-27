@@ -147,12 +147,26 @@ const WeeklyReport = () => {
                         startDate={startDate}
                         endDate={endDate}
                         key={report.id}
-                        actionItem={report.ActionItems?.[0]?.description || ""}
+                        actionItem={
+                          report.ActionItems?.[0]?.description
+                            .split("//")
+                            .map((desc: string, i: number) =>
+                              desc.trim() ? <p key={i}>{desc.trim()} </p> : null
+                            ) || []
+                        }
                         ongoingTask={
-                          report.OngoingTasks?.[0]?.description || ""
+                          report.OngoingTasks?.[0]?.description
+                            .split("//")
+                            .map((desc: string, i: number) =>
+                              desc.trim() ? <p key={i}>{desc.trim()} </p> : null
+                            ) || []
                         }
                         completedTask={
-                          report.CompletedTasks?.[0]?.description || ""
+                          report.CompletedTasks?.[0]?.description
+                            .split("//")
+                            .map((desc: string, i: number) =>
+                              desc.trim() ? <p key={i}>{desc.trim()} </p> : null
+                            ) || []
                         }
                         weekNum={index + 1}
                       />

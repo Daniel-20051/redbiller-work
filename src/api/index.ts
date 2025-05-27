@@ -154,7 +154,7 @@ export class AuthApis {
   async getAllEvents(){
     try{
       const token = localStorage.getItem("authToken")
-      const response = await axios.get(`${BASE_URL}/api/v1/admin/get-all/event`,
+      const response = await axios.get(`${BASE_URL}/api/v1/admin/get-all/event?limit=100&page=1`,
         {
           headers: {
             Authorization: `Bearer ${token}`
