@@ -42,6 +42,8 @@ const WeeklyReport = () => {
   const department = userDetails?.data.user.occupation;
   //loader
   const [isLoading, setIsLoading] = useState(false);
+  // Add search state
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,6 +83,19 @@ const WeeklyReport = () => {
   });
   const mostRecentReports = Array.from(mostRecentReportsMap.values());
 
+  // Add search handler
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value.toLowerCase());
+  };
+
+  // Filter reports based on search query
+  const filteredReports = mostRecentReports.filter((report) => {
+    const userName = report.User.firstName.toLowerCase();
+    const actionItems =
+      report.ActionItems?.[0]?.description.toLowerCase() || "";
+    return userName.includes(searchQuery) || actionItems.includes(searchQuery);
+  });
+
   return (
     <div className="flex flex-col h-screen">
       <NavBar></NavBar>
@@ -103,6 +118,8 @@ const WeeklyReport = () => {
                         className="h-[35px] pl-8 px-4  rounded-[8px] outline-1 bg-white w-[115px] md:w-[260px]  outline-[#E7E3E3] "
                         placeholder="Search"
                         type="text"
+                        value={searchQuery}
+                        onChange={handleSearch}
                       />
                     </div>
                     <Link
@@ -137,7 +154,7 @@ const WeeklyReport = () => {
                       />
                     </div>
                   ) : (
-                    mostRecentReports.map((report) => (
+                    filteredReports.map((report) => (
                       <Link
                         className=""
                         to={`/weekly-report/${report.User.id}`}
