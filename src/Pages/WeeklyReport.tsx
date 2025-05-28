@@ -39,6 +39,7 @@ const WeeklyReport = () => {
   const { userDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "admin";
   const [reports, setReports] = useState<any[]>([]);
+  const department = userDetails?.data.user.occupation;
   //loader
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,7 +48,11 @@ const WeeklyReport = () => {
       try {
         setIsLoading(true);
         const response: any = await authApis.getAllReports();
-        setReports(response.data.data);
+        if (isAdmin) {
+          setReports(response.data.data);
+        } else {
+          setReports(response.data.data.reports);
+        }
       } catch (error) {
         // showAlertMessage("An error occurred while sending report", "error");
       } finally {
@@ -63,9 +68,15 @@ const WeeklyReport = () => {
   );
   const mostRecentReportsMap = new Map();
   sortedReports.forEach((report) => {
-    const userId = report.User.id;
-    if (!mostRecentReportsMap.has(userId)) {
-      mostRecentReportsMap.set(userId, report);
+    if (
+      report.User &&
+      report.User.id &&
+      report.User.occupation === department
+    ) {
+      const userId = report.User.id;
+      if (!mostRecentReportsMap.has(userId)) {
+        mostRecentReportsMap.set(userId, report);
+      }
     }
   });
   const mostRecentReports = Array.from(mostRecentReportsMap.values());
@@ -189,7 +200,7 @@ const WeeklyReport = () => {
                     No reports found.
                   </div>
                 ) : (
-                  mostRecentReports.map((report, index) => {
+                  reports.map((report, index) => {
                     const { startDate, endDate } = getWeekRange(
                       report.createdAt
                     );
