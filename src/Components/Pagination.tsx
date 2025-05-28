@@ -16,8 +16,6 @@ const getPages = (current: number, total: number) => {
   } else if (current === 1) {
     pages.push(current, current + 1, current + 2);
   }
-  console.log(total);
-  console.log(current);
 
   return pages;
 };
@@ -33,7 +31,7 @@ const Pagination: React.FC<PaginationProps> = ({
     <div className="flex items-center justify-center gap-2 py-4 select-none">
       {/* Previous Arrow */}
       <button
-        className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 hover:bg-gray-100 disabled:opacity-50"
+        className="w-8 h-8 cursor-pointer flex items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 hover:bg-gray-100 disabled:opacity-50"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Previous"
@@ -44,7 +42,7 @@ const Pagination: React.FC<PaginationProps> = ({
       {pages.map((page) => (
         <button
           key={page as number}
-          className={`w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 ${
+          className={`w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border border-gray-200 ${
             currentPage === page
               ? "bg-primary text-white"
               : "bg-white text-gray-700 hover:bg-gray-100"
@@ -57,7 +55,7 @@ const Pagination: React.FC<PaginationProps> = ({
       ))}
       {/* Next Arrow */}
       <button
-        className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 hover:bg-gray-100 disabled:opacity-50"
+        className="w-8 h-8 cursor-pointer flex items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 hover:bg-gray-100 disabled:opacity-50"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Next"

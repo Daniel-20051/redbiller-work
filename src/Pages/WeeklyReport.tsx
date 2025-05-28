@@ -47,7 +47,7 @@ const WeeklyReport = () => {
       try {
         setIsLoading(true);
         const response: any = await authApis.getAllReports();
-        setReports(response.data.data.reports);
+        setReports(response.data.data);
       } catch (error) {
         // showAlertMessage("An error occurred while sending report", "error");
       } finally {
@@ -56,6 +56,19 @@ const WeeklyReport = () => {
     };
     fetchData();
   }, []);
+
+  // Sort and filter to get only the most recent report per user
+  const sortedReports = [...reports].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+  const mostRecentReportsMap = new Map();
+  sortedReports.forEach((report) => {
+    const userId = report.User.id;
+    if (!mostRecentReportsMap.has(userId)) {
+      mostRecentReportsMap.set(userId, report);
+    }
+  });
+  const mostRecentReports = Array.from(mostRecentReportsMap.values());
 
   return (
     <div className="flex flex-col h-screen">
@@ -81,22 +94,60 @@ const WeeklyReport = () => {
                         type="text"
                       />
                     </div>
-                    <DropDown></DropDown>
+                    <Link
+                      to="/weekly-report/create"
+                      className=" flex w-auto h-auto gap-2 items-center rounded-[8px] bg-primary pl-[10px] pr-[16px] py-[12px]"
+                    >
+                      <img
+                        className="w-[16px] h-[16px]  "
+                        src="/assets/plus-icon.svg"
+                        alt=""
+                      />
+                      <button className=" text-white font-[400] text-[12px]  ">
+                        New Report
+                      </button>
+                    </Link>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 overflow-y-auto max-h-full hide-scrollbar scroll-smooth   justify-center py-10">
-                  <Link to="/weekly-report/jhjhj">
-                    <WeeklyCard user="John Doe" subject="Product Meeting">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Officiis eligendi
-                    </WeeklyCard>
-                  </Link>
-                  <Link to="/weekly-report/jhjhj">
-                    <WeeklyCard user="John Doe" subject="Product Meeting">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Officiis eligendi
-                    </WeeklyCard>
-                  </Link>
+                <div
+                  className={` ${
+                    isLoading
+                      ? "flex justify-center items-center h-[55vh]"
+                      : "grid grid-cols-1 md:grid-cols-3 justify-center"
+                  } gap-8 overflow-y-auto max-h-full hide-scrollbar scroll-smooth    py-10`}
+                >
+                  {isLoading ? (
+                    <div className={``}>
+                      <Icon
+                        icon="svg-spinners:ring-resize"
+                        width="30"
+                        height="30"
+                        color="#93221D"
+                      />
+                    </div>
+                  ) : (
+                    mostRecentReports.map((report) => (
+                      <Link
+                        className=""
+                        to={`/weekly-report/${report.User.id}`}
+                        key={report.id}
+                      >
+                        <WeeklyCard
+                          user={
+                            report.User.firstName.charAt(0).toUpperCase() +
+                            report.User.firstName.slice(1).toLowerCase()
+                          }
+                          subject="Action Item"
+                        >
+                          {report.ActionItems?.[0]?.description
+                            .split("//")
+                            .map((desc: string, i: number) =>
+                              desc.trim() ? <p key={i}>{desc.trim()} </p> : null
+                            ) || []}
+                        </WeeklyCard>
+                      </Link>
+                    ))
+                  )}
                 </div>
               </div>
             </>
@@ -138,7 +189,7 @@ const WeeklyReport = () => {
                     No reports found.
                   </div>
                 ) : (
-                  reports.map((report, index) => {
+                  mostRecentReports.map((report, index) => {
                     const { startDate, endDate } = getWeekRange(
                       report.createdAt
                     );

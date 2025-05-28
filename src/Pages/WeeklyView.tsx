@@ -3,6 +3,7 @@ import SideBar from "../Components/SideBar";
 import WeeklyTable from "../Components/WeeklyTable";
 import { useState, use, useEffect } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
+import { useParams } from "react-router-dom";
 
 const WeeklyView = () => {
   const { allUser, fetchAllUser } = use(UserDetailsContext);
@@ -11,9 +12,12 @@ const WeeklyView = () => {
   const [selectedUser, setSelectedUser] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const { userDetails } = use(UserDetailsContext);
+  const { id } = useParams();
 
   useEffect(() => {
     fetchAllUser();
+    setSelectedUser(Number(id));
+    setSelectedIndex(Number(id));
   }, []);
 
   useEffect(() => {
@@ -53,12 +57,12 @@ const WeeklyView = () => {
                       <li
                         key={index}
                         className={` text-[14px] md:text-[17px] px-8 py-2 cursor-pointer border-r-1 border-[#D9D9D9] ${
-                          selectedIndex === index
+                          selectedIndex === item.id
                             ? "bg-primary text-white"
                             : "bg-[#F2F2F2]"
                         } `}
                         onClick={() => {
-                          setSelectedIndex(index);
+                          setSelectedIndex(item.id);
                           setSelectedUser(item.id);
                         }}
                       >
