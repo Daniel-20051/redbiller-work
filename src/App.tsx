@@ -20,7 +20,7 @@ const App = () => {
   const { userDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "admin";
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const INACTIVE_TIMEOUT = 5 * 60 * 1000;
+  const INACTIVE_TIMEOUT = 5 * 60 * 500;
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
