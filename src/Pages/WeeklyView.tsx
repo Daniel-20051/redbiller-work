@@ -3,20 +3,27 @@ import SideBar from "../Components/SideBar";
 import WeeklyTable from "../Components/WeeklyTable";
 import { useState, use, useEffect } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
+import { useParams } from "react-router-dom";
 
 const WeeklyView = () => {
   const { allUser, fetchAllUser } = use(UserDetailsContext);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [items, setItems] = useState([]);
   const [selectedUser, setSelectedUser] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const { userDetails } = use(UserDetailsContext);
+  const { id } = useParams();
 
   useEffect(() => {
     fetchAllUser();
+    setSelectedUser(Number(id));
+    setSelectedIndex(Number(id));
   }, []);
 
   useEffect(() => {
     setItems(allUser?.data?.data?.users || []);
   }, [allUser]);
+  const department = userDetails?.data.user.occupation;
 
   return (
     <div className="flex flex-col h-screen ">
@@ -38,32 +45,39 @@ const WeeklyView = () => {
                   className="h-[35px] pl-8 px-4  rounded-[8px] outline-1 bg-white w-[115px] md:w-[260px]  outline-[#E7E3E3] "
                   placeholder="Search"
                   type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <div className="overflow-x-auto max-w-[95vw] lg:max-w-[76vw] z-0 hide-scrollbar scroll-smooth">
                 <ul className="flex flex-nowrap min-w-max">
-                  {(items || []).map((item: any, index: any) => (
-                    <li
-                      key={index}
-                      className={` px-8 py-2 cursor-pointer border-r-1 border-[#D9D9D9] ${
-                        selectedIndex === index
-                          ? "bg-primary text-white"
-                          : "bg-[#F2F2F2]"
-                      } `}
-                      onClick={() => {
-                        setSelectedIndex(index);
-                        setSelectedUser(item.id);
-                      }}
-                    >
-                      {item.firstName &&
-                        item.firstName.charAt(0).toUpperCase() +
-                          item.firstName.slice(1).toLowerCase()}
-                    </li>
-                  ))}
+                  {(items || [])
+                    .filter((item: any) => item.occupation == department)
+                    .map((item: any, index: any) => (
+                      <li
+                        key={index}
+                        className={` text-[14px] md:text-[17px] px-8 py-2 cursor-pointer border-r-1 border-[#D9D9D9] ${
+                          selectedIndex === item.id
+                            ? "bg-primary text-white"
+                            : "bg-[#F2F2F2]"
+                        } `}
+                        onClick={() => {
+                          setSelectedIndex(item.id);
+                          setSelectedUser(item.id);
+                        }}
+                      >
+                        {item.firstName &&
+                          item.firstName.charAt(0).toUpperCase() +
+                            item.firstName.slice(1).toLowerCase()}
+                      </li>
+                    ))}
                 </ul>
               </div>
               <div className="-mt-2">
-                <WeeklyTable selectedUser={selectedUser}></WeeklyTable>
+                <WeeklyTable
+                  selectedUser={selectedUser}
+                  searchTerm={searchTerm}
+                ></WeeklyTable>
               </div>
             </div>
           </div>

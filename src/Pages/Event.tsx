@@ -10,6 +10,7 @@ import AlertCard from "../messageAlert/AlertCardProps";
 import { SuccessCard } from "../messageAlert/SuccessCard";
 import { AuthApis } from "../api";
 import { Link } from "react-router-dom";
+import Pagination from "../Components/Pagination";
 const authApis = new AuthApis();
 
 const Event = () => {
@@ -41,6 +42,16 @@ const Event = () => {
 
   //Event Details
   const { setEventDetails } = use(UserDetailsContext);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
+  // Calculate paginated events
+  const totalPages = Math.ceil(filteredEvents.length / pageSize);
+  const paginatedEvents = filteredEvents.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   //submit event
   const handleCloseAlert = () => {
@@ -260,7 +271,11 @@ const Event = () => {
         <SideBar>event</SideBar>
 
         <div className="flex flex-1 flex-col">
-          <div className="flex h-[30%] justify-center w-full relative items-center">
+          <div
+            className={`pb-10 flex  justify-center w-full relative items-end ${
+              isAdmin ? "h-[27%]" : "h-[15%] md:h-[20%]"
+            }`}
+          >
             <div className="bg-[#F2F2F2] w-[161px] px-[24px] py-[17px] h-[50px] items-center font-[600] rounded-[8px] absolute right-[50px] hidden md:flex">
               <img
                 className="w-[16px] h-[16px]"
@@ -275,7 +290,7 @@ const Event = () => {
                 onChange={handleSearch}
               />
             </div>
-            <div className="flex flex-col gap-6 w-[70%] md:w-[40%]">
+            <div className=" flex flex-col gap-6 w-[70%] md:w-[40%]">
               {isAdmin && (
                 <button
                   onClick={() => setIsAddEventOpen(true)}
@@ -318,8 +333,8 @@ const Event = () => {
                   color="#93221D"
                 />
               </div>
-            ) : filteredEvents.length > 0 ? (
-              filteredEvents.map((event, index) => (
+            ) : paginatedEvents.length > 0 ? (
+              paginatedEvents.map((event, index) => (
                 <Link to={`/events/${event.id}`} key={event.id}>
                   <div
                     onClick={() => {
@@ -347,6 +362,13 @@ const Event = () => {
               </div>
             )}
           </div>
+          {totalPages > 1 && event == 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </div>
         <Dialog
           open={isAddEventOpen}
