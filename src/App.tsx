@@ -16,8 +16,6 @@ import { UserDetailsContext } from "./context/AuthContext.js";
 
 import IncidentView from "./Pages/IncidentView";
 
-const INACTIVE_TIMEOUT = 10 * 60 * 1000;
-
 const App = () => {
   const { userDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "admin";
