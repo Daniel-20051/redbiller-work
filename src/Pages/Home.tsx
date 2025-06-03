@@ -23,53 +23,95 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setEventLoading(true);
-        const [incidentResponse, weeklyResponse, eventResponseRaw] =
-          await Promise.all([
-            authApi.getAllIncidentReport(),
-            authApi.getAllReports(),
-            authApi.getAllEvents(),
-          ]);
-        const eventResponse: any = eventResponseRaw;
+        const [incidentResponse, weeklyResponse] = await Promise.all([
+          authApi.getAllIncidentReport(),
+          authApi.getAllReports(),
+        ]);
         setSpiner(true);
         setIncidentreportHome(incidentResponse);
         setWeeklyReportHome((weeklyResponse as any).data.data[0]);
         setWeeklyReportHomeUser((weeklyResponse as any).data.data.reports[0]);
-        // Find the next upcoming event
-        const events = eventResponse?.data?.data || [];
+      } catch (error) {
+        // handle error
+      } finally {
+      }
+    };
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        setEventLoading(true);
+        const response: any = await authApi.getAllEvents();
+        // Filter for upcoming events if event == 0, else show all
+        const allEvents = response.data.data;
         const now = new Date();
-        const nextEvent = events
-          .filter((event: any) => {
-            if (!event.eventDate) return false;
-            const year = event.eventDate.substring(0, 4);
-            const month = event.eventDate.substring(4, 6);
-            const day = event.eventDate.substring(6, 8);
-            const eventDate = new Date(`${year}-${month}-${day}`);
+        const upcoming = allEvents
+          .filter((ev: any) => {
+            if (!ev.eventDate) return false;
+            const year = ev.eventDate.substring(0, 4);
+            const month = ev.eventDate.substring(4, 6);
+            const day = ev.eventDate.substring(6, 8);
+
+            // Default to midnight if no time
+            let hours = 0,
+              minutes = 0;
+            if (ev.eventTime) {
+              // Example format: "10:30 PM"
+              const match = ev.eventTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
+              if (match) {
+                hours = parseInt(match[1], 10);
+                minutes = parseInt(match[2], 10);
+                const ampm = match[3].toUpperCase();
+                if (ampm === "PM" && hours !== 12) hours += 12;
+                if (ampm === "AM" && hours === 12) hours = 0;
+              }
+            }
+            const eventDate = new Date(
+              Number(year),
+              Number(month) - 1,
+              Number(day),
+              hours,
+              minutes
+            );
             return eventDate >= now;
           })
           .sort((a: any, b: any) => {
-            const aDate = new Date(
-              `${a.eventDate.substring(0, 4)}-${a.eventDate.substring(
-                4,
-                6
-              )}-${a.eventDate.substring(6, 8)}`
-            );
-            const bDate = new Date(
-              `${b.eventDate.substring(0, 4)}-${b.eventDate.substring(
-                4,
-                6
-              )}-${b.eventDate.substring(6, 8)}`
-            );
-            return aDate.getTime() - bDate.getTime();
-          })[0];
-        setUpcomingEvent(nextEvent || null);
+            const getDateTime = (ev: any) => {
+              const year = ev.eventDate.substring(0, 4);
+              const month = ev.eventDate.substring(4, 6);
+              const day = ev.eventDate.substring(6, 8);
+              let hours = 0,
+                minutes = 0;
+              if (ev.eventTime) {
+                const match = ev.eventTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
+                if (match) {
+                  hours = parseInt(match[1], 10);
+                  minutes = parseInt(match[2], 10);
+                  const ampm = match[3].toUpperCase();
+                  if (ampm === "PM" && hours !== 12) hours += 12;
+                  if (ampm === "AM" && hours === 12) hours = 0;
+                }
+              }
+              return new Date(
+                Number(year),
+                Number(month) - 1,
+                Number(day),
+                hours,
+                minutes
+              ).getTime();
+            };
+            return getDateTime(a) - getDateTime(b);
+          });
+        console.log(upcoming);
+        setUpcomingEvent(upcoming[0]);
       } catch (error) {
-        // handle error
+        //handle error
       } finally {
         setEventLoading(false);
       }
     };
-    fetchData();
+    fetchEvent();
   }, []);
 
   return (
@@ -135,11 +177,11 @@ const Home = () => {
                       </p>
                     </>
                   ) : (
-                    <div className="flex bg-amber-700 flex-col justify-center items-center h-[100px]">
+                    <div className="flex flex-col justify-center items-center h-full">
                       <Icon
                         icon="line-md:document-delete"
-                        width="40"
-                        height="40"
+                        width="70"
+                        height="70"
                         color="#93221D"
                       />
                       <p className="font-[600] text-lg mt-2">
