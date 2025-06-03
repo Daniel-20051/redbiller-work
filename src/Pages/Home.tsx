@@ -173,14 +173,12 @@ const Home = () => {
                       </p>
                       <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
                       <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
+                        Action Items
+                      </p>
+                      <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
                         {weeklyReportHome.ActionItems?.[0]?.description?.split(
                           "//"
                         )[0] || "No Action Items"}
-                      </p>
-                      <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
-                        {weeklyReportHome.OngoingTasks?.[0]?.description?.split(
-                          "//"
-                        )[0] || "No Ongoing Tasks"}
                       </p>
                       <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
                         {new Date(weeklyReportHome.createdAt).toLocaleString(
@@ -199,7 +197,7 @@ const Home = () => {
                       </Link>
                     </>
                   ) : (
-                    <div className="flex flex-col gap-2 justify-center items-center h-[50%]">
+                    <div className="flex flex-col gap-2 justify-center items-center h-full">
                       <Icon
                         icon="line-md:document-delete"
                         width="60"
