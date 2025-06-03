@@ -13,14 +13,19 @@ const authApi = new AuthApis();
 const Home = () => {
   const { userDetails } = use(UserDetailsContext);
   const [incidentreportHome, setIncidentreportHome] = useState<any>(null);
+  const [weeklyReportHome, setWeeklyReportHome] = useState<any>(null);
   const [spiner, setSpiner] = useState<any>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await authApi.getAllIncidentReport();
+        const [incidentResponse, weeklyResponse] = await Promise.all([
+          authApi.getAllIncidentReport(),
+          authApi.getAllReports(),
+        ]);
         setSpiner(true);
-        setIncidentreportHome(response);
+        setIncidentreportHome(incidentResponse);
+        setWeeklyReportHome((weeklyResponse as any).data.data[0]);
       } catch (error) {
         return error;
       }
@@ -120,12 +125,11 @@ const Home = () => {
                           </div>
                         )}
 
-                        <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#353535] text-[14px] font-[400] z-20">
+                        <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
                           {new Date(
                             incidentreportHome?.data?.data.incidents[0].createdAt
                           ).toLocaleString(undefined, {
-                            day: "numeric",
-                            month: "short",
+                            weekday: "long",
                             hour: "2-digit",
                             minute: "2-digit",
                           })}
@@ -153,24 +157,58 @@ const Home = () => {
                   )}
                 </div>
                 <div className="w-full md:w-[47%]  h-full  bg-[#F2F2F2] rounded-[15px] pt-5  relative ">
-                  <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
-                    Weekly Report
-                  </p>
-                  <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
-                  <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
-                    Compliance
-                  </p>
-                  <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
-                    Iruoma wearing rubber slippers during work....
-                  </p>
-                  <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
-                    Friday 07:30
-                  </p>
-                  <Link to="/weekly-report/create">
-                    <button className="absolute  bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">
-                      Create
-                    </button>
-                  </Link>
+                  {!spiner ? (
+                    <div className="flex justify-center items-center h-full">
+                      <Icon
+                        icon="svg-spinners:ring-resize"
+                        width="30"
+                        height="30"
+                        color="#93221D"
+                      />
+                    </div>
+                  ) : weeklyReportHome ? (
+                    <>
+                      <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
+                        Weekly Report
+                      </p>
+                      <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
+                      <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
+                        {weeklyReportHome.ActionItems?.[0]?.description?.split(
+                          "//"
+                        )[0] || "No Action Items"}
+                      </p>
+                      <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
+                        {weeklyReportHome.OngoingTasks?.[0]?.description?.split(
+                          "//"
+                        )[0] || "No Ongoing Tasks"}
+                      </p>
+                      <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
+                        {new Date(weeklyReportHome.createdAt).toLocaleString(
+                          undefined,
+                          {
+                            weekday: "long",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </p>
+                      <Link to="/weekly-report/create">
+                        <button className="absolute  bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">
+                          Create
+                        </button>
+                      </Link>
+                    </>
+                  ) : (
+                    <div className="flex flex-col gap-2 justify-center items-center h-[50%]">
+                      <Icon
+                        icon="line-md:document-delete"
+                        width="60"
+                        height="60"
+                        color="#93221D"
+                      />
+                      <p className="font-[600] text-lg">No Weekly Report</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
