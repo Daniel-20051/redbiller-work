@@ -239,7 +239,38 @@ const Event = () => {
         setEventLoading(true);
         const response: any = await authApis.getAllEvents();
         setEvents(response.data.data);
-        setFilteredEvents(response.data.data);
+        // Filter for upcoming events if event == 0, else show all
+        const allEvents = response.data.data;
+        if (event == 0) {
+          const now = new Date();
+          const upcoming = allEvents
+            .filter((ev: any) => {
+              if (!ev.eventDate) return false;
+              const year = ev.eventDate.substring(0, 4);
+              const month = ev.eventDate.substring(4, 6);
+              const day = ev.eventDate.substring(6, 8);
+              const eventDate = new Date(`${year}-${month}-${day}`);
+              return eventDate >= now;
+            })
+            .sort((a: any, b: any) => {
+              const aDate = new Date(
+                `${a.eventDate.substring(0, 4)}-${a.eventDate.substring(
+                  4,
+                  6
+                )}-${a.eventDate.substring(6, 8)}`
+              );
+              const bDate = new Date(
+                `${b.eventDate.substring(0, 4)}-${b.eventDate.substring(
+                  4,
+                  6
+                )}-${b.eventDate.substring(6, 8)}`
+              );
+              return aDate.getTime() - bDate.getTime();
+            });
+          setFilteredEvents(upcoming);
+        } else {
+          setFilteredEvents(allEvents);
+        }
       } catch (error) {
         showAlertMessage("An error occurred while sending report", "error");
       } finally {

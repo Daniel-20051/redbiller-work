@@ -14,20 +14,59 @@ const Home = () => {
   const { userDetails } = use(UserDetailsContext);
   const [incidentreportHome, setIncidentreportHome] = useState<any>(null);
   const [weeklyReportHome, setWeeklyReportHome] = useState<any>(null);
+  const [weeklyReportHomeUser, setWeeklyReportHomeUser] = useState<any>(null);
   const [spiner, setSpiner] = useState<any>(false);
+  const [eventLoading, setEventLoading] = useState<boolean>(false);
+  const [upcomingEvent, setUpcomingEvent] = useState<any>(null);
+  const isAdmin = userDetails?.data.user.role === "admin";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [incidentResponse, weeklyResponse] = await Promise.all([
-          authApi.getAllIncidentReport(),
-          authApi.getAllReports(),
-        ]);
+        setEventLoading(true);
+        const [incidentResponse, weeklyResponse, eventResponseRaw] =
+          await Promise.all([
+            authApi.getAllIncidentReport(),
+            authApi.getAllReports(),
+            authApi.getAllEvents(),
+          ]);
+        const eventResponse: any = eventResponseRaw;
         setSpiner(true);
         setIncidentreportHome(incidentResponse);
         setWeeklyReportHome((weeklyResponse as any).data.data[0]);
+        setWeeklyReportHomeUser((weeklyResponse as any).data.data.reports[0]);
+        // Find the next upcoming event
+        const events = eventResponse?.data?.data || [];
+        const now = new Date();
+        const nextEvent = events
+          .filter((event: any) => {
+            if (!event.eventDate) return false;
+            const year = event.eventDate.substring(0, 4);
+            const month = event.eventDate.substring(4, 6);
+            const day = event.eventDate.substring(6, 8);
+            const eventDate = new Date(`${year}-${month}-${day}`);
+            return eventDate >= now;
+          })
+          .sort((a: any, b: any) => {
+            const aDate = new Date(
+              `${a.eventDate.substring(0, 4)}-${a.eventDate.substring(
+                4,
+                6
+              )}-${a.eventDate.substring(6, 8)}`
+            );
+            const bDate = new Date(
+              `${b.eventDate.substring(0, 4)}-${b.eventDate.substring(
+                4,
+                6
+              )}-${b.eventDate.substring(6, 8)}`
+            );
+            return aDate.getTime() - bDate.getTime();
+          })[0];
+        setUpcomingEvent(nextEvent || null);
       } catch (error) {
-        return error;
+        // handle error
+      } finally {
+        setEventLoading(false);
       }
     };
     fetchData();
@@ -56,25 +95,58 @@ const Home = () => {
               </p>
               <div className=" flex w-[80%] h-[38%] bg-[#F2F2F2] mb-7  rounded-[15px] pt-5 relative ">
                 <div className=" relative flex-1">
-                  <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
-                    Upcoming event
-                  </p>
-                  <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
-                  <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
-                    Product Meeting
-                  </p>
-                  <p className="text-[#4E4E4E] ml-[30px] mr-4  mt-[8px] text-[14px] font-[400] clamp-responsive ">
-                    Lorem ipsum dolor sit amet consectetur ipsum dolor sit amet
-                    ipsum dolor sit amet consectetur ipsum dolor sit ame ipsum
-                    dolor sit amet consectetur.
-                  </p>
-                  <div className="flex gap-1 absolute bottom-[10px] md:bottom-[25px] left-[40px] text-[14px] font-[400] text-[#4E4E4E] ">
-                    <img src="/assets/MapPin.svg" alt="" />
-                    <p>Conference Room</p>
-                  </div>
-                  <p className="absolute right-[21px] bottom-[10px] md:bottom-[25px] text-[14px] font-[400] text-[#4E4E4E]">
-                    Wednesday
-                  </p>
+                  {eventLoading ? (
+                    <div className="flex justify-center items-center h-full">
+                      <Icon
+                        icon="svg-spinners:ring-resize"
+                        width="30"
+                        height="30"
+                        color="#93221D"
+                      />
+                    </div>
+                  ) : upcomingEvent ? (
+                    <>
+                      <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
+                        Upcoming event
+                      </p>
+                      <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
+
+                      <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
+                        {upcomingEvent.eventTitle}
+                      </p>
+                      <p className="text-[#4E4E4E] ml-[30px] mr-4  mt-[8px] text-[14px] font-[400] clamp-responsive ">
+                        {upcomingEvent.eventDescription}
+                      </p>
+                      <div className="flex gap-1 absolute bottom-[10px] md:bottom-[25px] left-[40px] text-[14px] font-[400] text-[#4E4E4E] ">
+                        <img src="/assets/MapPin.svg" alt="" />
+                        <p>Conference Room</p>
+                      </div>
+                      <p className="absolute right-[21px] bottom-[10px] md:bottom-[25px] text-[14px] font-[400] text-[#4E4E4E]">
+                        {(() => {
+                          if (!upcomingEvent.eventDate) return "";
+                          const year = upcomingEvent.eventDate.substring(0, 4);
+                          const month = upcomingEvent.eventDate.substring(4, 6);
+                          const day = upcomingEvent.eventDate.substring(6, 8);
+                          const date = new Date(`${year}-${month}-${day}`);
+                          return date.toLocaleString("default", {
+                            weekday: "long",
+                          });
+                        })()}
+                      </p>
+                    </>
+                  ) : (
+                    <div className="flex bg-amber-700 flex-col justify-center items-center h-[100px]">
+                      <Icon
+                        icon="line-md:document-delete"
+                        width="40"
+                        height="40"
+                        color="#93221D"
+                      />
+                      <p className="font-[600] text-lg mt-2">
+                        No upcoming event
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <div className="hidden lg:inline">
                   <img
@@ -87,7 +159,7 @@ const Home = () => {
               <div className=" md:flex gap-5 w-[80%] h-[37%] md:h-[40%] justify-between">
                 <div className=" w-full md:w-[47%] h-full  bg-[#F2F2F2] rounded-[15px] mb-8 relative ">
                   {spiner ? (
-                    <div className="relative w-full h-full rounded-[15px] shadow-md overflow-hidden ">
+                    <div className="relative w-full h-full rounded-[15px] overflow-hidden ">
                       {/* Background layer for the entire card */}
                       {/* <div className="absolute inset-0 bg-[#F2F2F2]"></div> */}
 
@@ -166,7 +238,7 @@ const Home = () => {
                         color="#93221D"
                       />
                     </div>
-                  ) : weeklyReportHome ? (
+                  ) : weeklyReportHome || weeklyReportHomeUser ? (
                     <>
                       <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
                         Weekly Report
@@ -176,19 +248,31 @@ const Home = () => {
                         Action Items
                       </p>
                       <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
-                        {weeklyReportHome.ActionItems?.[0]?.description?.split(
-                          "//"
-                        )[0] || "No Action Items"}
+                        {isAdmin
+                          ? weeklyReportHome.ActionItems?.[0]?.description?.split(
+                              "//"
+                            )[0] || "No Action Items"
+                          : weeklyReportHomeUser.ActionItems?.[0]?.description?.split(
+                              "//"
+                            )[0] || "No Action Items"}
                       </p>
                       <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
-                        {new Date(weeklyReportHome.createdAt).toLocaleString(
-                          undefined,
-                          {
-                            weekday: "long",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
+                        {isAdmin
+                          ? new Date(weeklyReportHome.createdAt).toLocaleString(
+                              undefined,
+                              {
+                                weekday: "long",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            )
+                          : new Date(
+                              weeklyReportHomeUser.createdAt
+                            ).toLocaleString(undefined, {
+                              weekday: "long",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
                       </p>
                       <Link to="/weekly-report/create">
                         <button className="absolute  bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">
