@@ -135,19 +135,19 @@ const Home = () => {
                 </span>
                 !
               </p>
-              <div className=" flex w-[80%] h-[38%] bg-[#F2F2F2] mb-7  rounded-[15px] pt-5 relative ">
-                <div className=" relative flex-1">
-                  {eventLoading ? (
-                    <div className="flex justify-center items-center h-full">
-                      <Icon
-                        icon="svg-spinners:ring-resize"
-                        width="30"
-                        height="30"
-                        color="#93221D"
-                      />
-                    </div>
-                  ) : upcomingEvent ? (
-                    <>
+              <div className=" flex w-[80%]  h-[38%] bg-[#F2F2F2] mb-7  rounded-[15px] pt-5 relative ">
+                {eventLoading ? (
+                  <div className="flex w-full justify-center items-center h-full">
+                    <Icon
+                      icon="svg-spinners:ring-resize"
+                      width="30"
+                      height="30"
+                      color="#93221D"
+                    />
+                  </div>
+                ) : upcomingEvent ? (
+                  <>
+                    <div className=" relative flex-1">
                       <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
                         Upcoming event
                       </p>
@@ -175,28 +175,26 @@ const Home = () => {
                           });
                         })()}
                       </p>
-                    </>
-                  ) : (
-                    <div className="flex flex-col justify-center items-center h-full">
-                      <Icon
-                        icon="line-md:document-delete"
-                        width="70"
-                        height="70"
-                        color="#93221D"
-                      />
-                      <p className="font-[600] text-lg mt-2">
-                        No upcoming event
-                      </p>
                     </div>
-                  )}
-                </div>
-                <div className="hidden lg:inline">
-                  <img
-                    className="h-full"
-                    src="/assets/home-design.svg"
-                    alt=""
-                  />
-                </div>
+                    <div className="hidden lg:inline">
+                      <img
+                        className="h-full"
+                        src="/assets/home-design.svg"
+                        alt=""
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-col w-full justify-center items-center h-full">
+                    <Icon
+                      icon="line-md:document-delete"
+                      width="70"
+                      height="70"
+                      color="#93221D"
+                    />
+                    <p className="font-[600] text-lg mt-2">No upcoming event</p>
+                  </div>
+                )}
               </div>
               <div className=" md:flex gap-5 w-[80%] h-[37%] md:h-[40%] justify-between">
                 <div className=" w-full md:w-[47%] h-full  bg-[#F2F2F2] rounded-[15px] mb-8 relative ">
