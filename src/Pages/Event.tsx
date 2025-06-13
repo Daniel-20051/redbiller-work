@@ -15,7 +15,9 @@ const authApis = new AuthApis();
 
 const Event = () => {
   const { userDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role === "admin";
+  const isAdmin =
+    userDetails?.data.user.role == "admin" ||
+    userDetails?.data.user.role == "superadmin";
   const [event, setEvent] = useState(0);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
   const [events, setEvents] = useState<any[]>([]);

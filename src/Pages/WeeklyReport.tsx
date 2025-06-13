@@ -1,6 +1,5 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
-import DropDown from "../Components/DropDown";
 import WeekItem from "../Components/WeekItem";
 import WeeklyCard from "../Components/WeeklyCard";
 import { Link } from "react-router-dom";
@@ -37,7 +36,9 @@ function getWeekRange(dateString: string) {
 
 const WeeklyReport = () => {
   const { userDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role == "admin";
+  const isAdmin =
+    userDetails?.data.user.role == "admin" ||
+    userDetails?.data.user.role == "superadmin";
   const [reports, setReports] = useState<any[]>([]);
   const department = userDetails?.data.user.occupation;
   //loader
@@ -153,6 +154,10 @@ const WeeklyReport = () => {
                         color="#93221D"
                       />
                     </div>
+                  ) : filteredReports.length === 0 ? (
+                    <div className="flex col-span-3 justify-center items-center h-[55vh] text-gray-500 text-lg">
+                      No reports found.
+                    </div>
                   ) : (
                     filteredReports.map((report) => (
                       <Link
@@ -185,7 +190,6 @@ const WeeklyReport = () => {
                 <div className="flex justify-between items-center">
                   <p className="font-[600] text-[20px] ">Weekly Reports</p>
                   <div className="flex gap-6">
-                    <DropDown></DropDown>
                     <Link
                       to="/weekly-report/create"
                       className=" flex w-auto h-auto gap-2 items-center rounded-[8px] bg-primary pl-[10px] pr-[16px] py-[12px]"

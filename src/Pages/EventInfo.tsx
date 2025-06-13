@@ -3,7 +3,7 @@ import SideBar from "../Components/SideBar";
 import { Link } from "react-router-dom";
 import { use } from "react";
 import { UserDetailsContext } from "../context/AuthContext.js";
-import { google, outlook, yahoo, ics, CalendarEvent } from "calendar-link";
+import { google, outlook, yahoo, CalendarEvent } from "calendar-link";
 import { useState, useRef, useEffect } from "react";
 
 const formatDate = (dateStr: string) => {
@@ -157,7 +157,7 @@ const EventInfo = () => {
   const googleUrl = google(event);
   const outlookUrl = outlook(event);
   const yahooUrl = yahoo(event);
-  const icsUrl = ics(event);
+
   return (
     <div className="flex flex-col h-screen ">
       <NavBar></NavBar>
@@ -188,7 +188,7 @@ const EventInfo = () => {
                   alt=""
                 />
                 <div className="flex flex-col -mt-[5px]  ">
-                  <div className="flex justify-between">
+                  <div className="block md:flex justify-between">
                     <div className="flex gap-8 items-center">
                       <p className="font-[700] text-[#959595] text-[20px] ">
                         {eventDetails?.eventTitle}
@@ -208,9 +208,9 @@ const EventInfo = () => {
                         ref={dropdownRef}
                         className={`${
                           isOpen ? "opacity-100" : "opacity-0 invisible"
-                        } transition-all absolute top-13 bg-white shadow rounded-[10px] py-1 px-2 md:px-4 border-1 border-[#EEEEEE] z-100`}
+                        } transition-all absolute top-13 bg-white shadow rounded-[8px] border-1 border-[#EEEEEE] z-100`}
                       >
-                        <li className="cursor-pointer">
+                        {/* <li className="cursor-pointer">
                           <a
                             target="_blank"
                             className=" flex items-center gap-3   px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"
@@ -227,8 +227,8 @@ const EventInfo = () => {
                             </svg>
                             Apple
                           </a>
-                        </li>
-                        <li className="cursor-pointer">
+                        </li> */}
+                        <li className="cursor-pointer border-b py-1 px-2 md:px-4  border-[#EEEEEE]">
                           <a
                             target="_blank"
                             className="flex items-center gap-3  px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"
@@ -267,7 +267,7 @@ const EventInfo = () => {
                             Google
                           </a>
                         </li>
-                        <li className="cursor-pointer">
+                        <li className="cursor-pointer border-b py-1 px-2 md:px-4  border-[#EEEEEE]">
                           <a
                             target="_blank"
                             className=" flex items-center gap-3  px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"
@@ -440,7 +440,7 @@ const EventInfo = () => {
                             Outlook
                           </a>
                         </li>
-                        <li className="cursor-pointer">
+                        <li className="cursor-pointer border-b py-1 px-2 md:px-4  border-[#EEEEEE]">
                           <a
                             target="_blank"
                             className=" flex items-center gap-3  px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"

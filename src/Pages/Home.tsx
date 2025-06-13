@@ -18,7 +18,9 @@ const Home = () => {
   const [spiner, setSpiner] = useState<any>(false);
   const [eventLoading, setEventLoading] = useState<boolean>(false);
   const [upcomingEvent, setUpcomingEvent] = useState<any>(null);
-  const isAdmin = userDetails?.data.user.role === "admin";
+  const isAdmin =
+    userDetails?.data.user.role == "admin" ||
+    userDetails?.data.user.role == "superadmin";
 
   useEffect(() => {
     const fetchData = async () => {

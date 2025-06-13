@@ -13,7 +13,9 @@ const IncidentReport = () => {
     setSearchTerm(e.target.value);
   };
   const { userDetails, setIncidentDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role == "admin";
+  const isAdmin =
+    userDetails?.data.user.role == "admin" ||
+    userDetails?.data.user.role == "superadmin";
 
   const handleIncidentSelect = (incident: any) => {
     setActiveIncident(incident);
