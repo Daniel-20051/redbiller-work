@@ -9,7 +9,7 @@ import { UserDetailsContext } from "../context/AuthContext";
 import AlertCard from "../messageAlert/AlertCardProps";
 import { SuccessCard } from "../messageAlert/SuccessCard";
 import { AuthApis } from "../api";
-import { Link } from "react-router-dom";
+
 import Pagination from "../Components/Pagination";
 const authApis = new AuthApis();
 
@@ -218,11 +218,25 @@ const Event = () => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = events.filter((event) => {
+    // Get the base list to search from - either upcoming or all events
+    const baseList =
+      event === 0
+        ? events.filter((ev: any) => {
+            if (!ev.eventDate) return false;
+            const year = ev.eventDate.substring(0, 4);
+            const month = ev.eventDate.substring(4, 6);
+            const day = ev.eventDate.substring(6, 8);
+            const eventDate = new Date(
+              Number(year),
+              Number(month) - 1,
+              Number(day)
+            );
+            return eventDate >= new Date();
+          })
+        : events;
+
+    const filtered = baseList.filter((event) => {
       const titleMatch = event.eventTitle?.toLowerCase().includes(query);
-      // const descriptionMatch = event.eventDescription
-      //   ?.toLowerCase()
-      //   .includes(query);
       const dateMatch = formatDate(event.eventDate)
         ?.toLowerCase()
         .includes(query);
@@ -301,10 +315,8 @@ const Event = () => {
               return getDateTime(a) - getDateTime(b);
             });
           setFilteredEvents(upcoming);
-          console.log(upcoming);
         } else {
           setFilteredEvents(allEvents);
-          console.log(allEvents);
         }
       } catch (error) {
         showAlertMessage("An error occurred while sending report", "error");
@@ -401,23 +413,21 @@ const Event = () => {
               </div>
             ) : paginatedEvents.length > 0 ? (
               paginatedEvents.map((event, index) => (
-                <Link to={`/events/${event.id}`} key={event.id}>
-                  <div
-                    onClick={() => {
-                      setEventDetails(event);
-                    }}
-                  >
-                    <EventItem
-                      key={index}
-                      createdAt={formatRelativeTime(event.createdAt)}
-                      weekday={formatDate(event.eventDate, true)}
-                      title={event.eventTitle}
-                      date={formatDate(event.eventDate)}
-                      time={event.eventTime}
-                      description={event.eventDescription}
-                    />
-                  </div>
-                </Link>
+                <div
+                  onClick={() => {
+                    setEventDetails(event);
+                  }}
+                >
+                  <EventItem
+                    key={index}
+                    createdAt={formatRelativeTime(event.createdAt)}
+                    weekday={formatDate(event.eventDate, true)}
+                    title={event.eventTitle}
+                    date={formatDate(event.eventDate)}
+                    time={event.eventTime}
+                    description={event.eventDescription}
+                  />
+                </div>
               ))
             ) : (
               <div className="flex gap-4 flex-col justify-center items-center h-[50vh]">

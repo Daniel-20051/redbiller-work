@@ -103,7 +103,7 @@ const Home = () => {
             };
             return getDateTime(a) - getDateTime(b);
           });
-        console.log(upcoming);
+
         setUpcomingEvent(upcoming[0]);
       } catch (error) {
         //handle error
