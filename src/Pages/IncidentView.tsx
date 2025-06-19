@@ -7,6 +7,7 @@ import { UserDetailsContext } from "../context/AuthContext.js";
 const IncidentView = () => {
   const { incidentDetails } = use(UserDetailsContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(incidentDetails?.voiceNote);
 
   return (
     <div className="flex flex-col h-screen ">
@@ -47,19 +48,28 @@ const IncidentView = () => {
               </div>
             </div>
             <div className=" justify-center items-center">
-              <p className="flex gap-5 items-center  text-[16px] md:text-[20px] text-primary font-[600]  ">
-                {` ${incidentDetails?.subject}`}
-                <span className="text-[#b9b9b9] font-[600] text-[12px]">
-                  {new Date(incidentDetails?.createdAt).toLocaleDateString(
-                    "en-GB",
-                    {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    }
-                  )}
-                </span>
-              </p>
+              <div className="md:flex gap-3 md:gap-7 items-center">
+                <p className="flex gap-5 items-center  text-[16px] md:text-[20px] text-primary font-[600]  ">
+                  {` ${incidentDetails?.subject}`}
+                  <span className="text-[#b9b9b9] font-[600] text-[12px]">
+                    {new Date(incidentDetails?.createdAt).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      }
+                    )}
+                  </span>
+                </p>
+                {incidentDetails?.voiceNote && (
+                  <audio
+                    className="mt-3 mb-3 md:mt-0 md:mb-0"
+                    controls
+                    src={incidentDetails?.voiceNote}
+                  />
+                )}
+              </div>
               <p className="text-[13px] md:text-[16px]">
                 {incidentDetails?.incidentMessage}
               </p>

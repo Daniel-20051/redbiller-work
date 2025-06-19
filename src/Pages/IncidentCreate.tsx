@@ -66,9 +66,6 @@ const IncidentCreate = () => {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
-  console.log(audioFile);
-  console.log(selectedFile);
-
   // Clean up audio URL on unmount
   useEffect(() => {
     return () => {
