@@ -66,15 +66,28 @@ const WeeklyReport = () => {
   }, []);
 
   // Sort and filter to get only the most recent report per user
-  const sortedReports = [...reports].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+  const sortedReports = Array.isArray(reports)
+    ? [...reports].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+    : [];
   const mostRecentReportsMap = new Map();
   sortedReports.forEach((report) => {
     if (
       report.User &&
       report.User.id &&
-      report.User.occupation === department
+      report.User.occupation === department &&
+      userDetails?.data.user.role == "admin"
+    ) {
+      const userId = report.User.id;
+      if (!mostRecentReportsMap.has(userId)) {
+        mostRecentReportsMap.set(userId, report);
+      }
+    } else if (
+      report.User &&
+      report.User.id &&
+      userDetails?.data.user.role == "superadmin"
     ) {
       const userId = report.User.id;
       if (!mostRecentReportsMap.has(userId)) {
