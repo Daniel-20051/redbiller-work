@@ -136,19 +136,21 @@ const WeeklyReport = () => {
                         onChange={handleSearch}
                       />
                     </div>
-                    <Link
-                      to="/weekly-report/create"
-                      className=" flex w-auto h-auto gap-2 items-center rounded-[8px] bg-primary pl-[10px] pr-[16px] py-[12px]"
-                    >
-                      <img
-                        className="w-[16px] h-[16px]  "
-                        src="/assets/plus-icon.svg"
-                        alt=""
-                      />
-                      <button className=" text-white font-[400] text-[12px]  ">
-                        New Report
-                      </button>
-                    </Link>
+                    {userDetails?.data.user.role == "admin" && (
+                      <Link
+                        to="/weekly-report/create"
+                        className=" flex w-auto h-auto gap-2 items-center rounded-[8px] bg-primary pl-[10px] pr-[16px] py-[12px]"
+                      >
+                        <img
+                          className="w-[16px] h-[16px]  "
+                          src="/assets/plus-icon.svg"
+                          alt=""
+                        />
+                        <button className=" text-white font-[400] text-[12px]  ">
+                          New Report
+                        </button>
+                      </Link>
+                    )}
                   </div>
                 </div>
                 <div
