@@ -11,7 +11,9 @@ interface Props {
 
 const SideBar = ({ children }: Props) => {
   const { userDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role === "admin";
+  const isAdmin =
+    userDetails?.data.user.role == "admin" ||
+    userDetails?.data.user.role == "superadmin";
   const { isCollapsed, toggleCollapse, toggleRef } = useSidebar();
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const { isMobile } = useMobile();

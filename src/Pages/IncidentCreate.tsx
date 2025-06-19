@@ -1,7 +1,8 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
+import { Icon } from "@iconify/react";
 const currentDate = new Date();
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import AlertCard from "../messageAlert/AlertCardProps";
 import { SuccessCard } from "../messageAlert/SuccessCard";
 import { AuthApis } from "../api";
@@ -21,6 +22,8 @@ const IncidentCreate = () => {
   >("info");
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
+
+  //VoiceNote Recorder
 
   const handleCloseAlert = () => {
     setShowAlert(false);
@@ -55,6 +58,66 @@ const IncidentCreate = () => {
     setSubject(newValue);
   };
 
+  // Add state for audio recording
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
+    null
+  );
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+
+  console.log(audioFile);
+  console.log(selectedFile);
+
+  // Clean up audio URL on unmount
+  useEffect(() => {
+    return () => {
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl);
+      }
+    };
+  }, [audioUrl]);
+
+  // Handle microphone recording
+  const handleRecordClick = async () => {
+    if (isRecording) {
+      // Stop recording
+      mediaRecorder?.stop();
+      setIsRecording(false);
+
+      return;
+    }
+    // Start recording
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+
+      let chunks: BlobPart[] = [];
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+        }
+      };
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/ogg" });
+        const file = new File([blob], "incident-voice.ogg", {
+          type: "audio/ogg",
+        });
+        setAudioFile(file); // override previous audio file
+        setAudioUrl(URL.createObjectURL(blob));
+        chunks = [];
+        // Stop all tracks
+        stream.getTracks().forEach((track) => track.stop());
+      };
+      recorder.start();
+    } catch (err) {
+      showAlertMessage("Microphone access denied or unavailable", "error");
+      setIsRecording(false);
+    }
+  };
+
   const sendReport = async (e: any) => {
     e.preventDefault();
     if (loading) {
@@ -65,10 +128,12 @@ const IncidentCreate = () => {
     }
     try {
       setLoading(true);
+      // Use audioFile if present, else selectedFile
       const response: any = await authApis.submitIncidentReport({
         message: textAreaValue || "",
         subject: subject || "",
         photo: selectedFile as File,
+        voiceNote: audioFile as File,
       });
       if (
         response.data.data.status === "successful" ||
@@ -79,6 +144,8 @@ const IncidentCreate = () => {
         setTextAreaValue(null);
         setSubject("");
         setSelectedFile(null);
+        setAudioFile(null);
+        setAudioUrl(null);
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -161,7 +228,7 @@ const IncidentCreate = () => {
                     id=""
                   ></textarea>
                 </div>
-                <div className="md:flex justify-between mt-[15px]">
+                <div className="md:flex justify-between items-center mt-[15px]">
                   <input
                     className="hidden"
                     ref={fileInputRef}
@@ -169,20 +236,49 @@ const IncidentCreate = () => {
                     accept=".jpg,.jpeg,.png,.gif,.webp,.svg"
                     type="file"
                   />
-                  <button
-                    type="button"
-                    className=" flex cursor-pointer justify-between items-center border-1 border-[#E7E3E3] rounded-[8px] w-full md:w-auto px-[14px] h-auto py-[10px] "
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <p className="text-[#817979] font-[400] text-[14px] mx-[17px] max-w-[200px] overflow-x-auto whitespace-nowrap hide-scrollbar scroll-smooth ">
-                      {selectedFile ? selectedFile.name : "Upload"}
-                    </p>
-                    <img
-                      className="ml-[30px] mr-[11px] "
-                      src="/assets/upload.svg"
-                      alt=""
-                    />
-                  </button>
+
+                  <div className="md:flex-col  ">
+                    <div className="md:flex items-center gap-2 ">
+                      <button
+                        type="button"
+                        className=" flex gap-5 cursor-pointer justify-between items-center border-1 border-[#E7E3E3] pr-3 rounded-[8px] w-full md:w-auto px-[14px] h-auto py-[10px] "
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <p className="text-[#817979] font-[400] text-[14px]  max-w-[200px] overflow-x-auto whitespace-nowrap hide-scrollbar scroll-smooth ">
+                          {selectedFile ? selectedFile.name : "Upload"}
+                        </p>
+                        <img className=" " src="/assets/upload.svg" alt="" />
+                      </button>
+                      <button
+                        type="button"
+                        className={
+                          `flex items-center mt-2 md:mt-0 justify-between gap-5 pr-3 border-1 border-[#E7E3E3] rounded-[8px] w-full md:w-auto px-[14px] h-auto py-[10px] cursor-pointer ` +
+                          (isRecording
+                            ? "animate-pulse border-primary bg-[#f8f8f8]"
+                            : "")
+                        }
+                        onClick={handleRecordClick}
+                      >
+                        <p className="text-[14px] text-[#817979]">
+                          {isRecording
+                            ? "Tap to stop"
+                            : audioFile
+                            ? "Recorded Voice Note"
+                            : "Tap to record"}
+                        </p>
+                        <Icon
+                          icon="tabler:microphone-filled"
+                          width="20"
+                          height="20"
+                          color={isRecording ? "#d32f2f" : "#817979"}
+                          className={isRecording ? "animate-pulse" : ""}
+                        />
+                      </button>
+                    </div>
+                    {audioFile && audioUrl && (
+                      <audio controls src={audioUrl} className="mt-2 w-full " />
+                    )}
+                  </div>
 
                   <button
                     disabled={loading}
@@ -208,5 +304,4 @@ const IncidentCreate = () => {
     </div>
   );
 };
-
 export default IncidentCreate;

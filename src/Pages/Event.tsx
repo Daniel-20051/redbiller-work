@@ -9,13 +9,15 @@ import { UserDetailsContext } from "../context/AuthContext";
 import AlertCard from "../messageAlert/AlertCardProps";
 import { SuccessCard } from "../messageAlert/SuccessCard";
 import { AuthApis } from "../api";
-import { Link } from "react-router-dom";
+
 import Pagination from "../Components/Pagination";
 const authApis = new AuthApis();
 
 const Event = () => {
   const { userDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role === "admin";
+  const isAdmin =
+    userDetails?.data.user.role == "admin" ||
+    userDetails?.data.user.role == "superadmin";
   const [event, setEvent] = useState(0);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
@@ -218,11 +220,25 @@ const Event = () => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = events.filter((event) => {
+    // Get the base list to search from - either upcoming or all events
+    const baseList =
+      event === 0
+        ? events.filter((ev: any) => {
+            if (!ev.eventDate) return false;
+            const year = ev.eventDate.substring(0, 4);
+            const month = ev.eventDate.substring(4, 6);
+            const day = ev.eventDate.substring(6, 8);
+            const eventDate = new Date(
+              Number(year),
+              Number(month) - 1,
+              Number(day)
+            );
+            return eventDate >= new Date();
+          })
+        : events;
+
+    const filtered = baseList.filter((event) => {
       const titleMatch = event.eventTitle?.toLowerCase().includes(query);
-      // const descriptionMatch = event.eventDescription
-      //   ?.toLowerCase()
-      //   .includes(query);
       const dateMatch = formatDate(event.eventDate)
         ?.toLowerCase()
         .includes(query);
@@ -239,7 +255,71 @@ const Event = () => {
         setEventLoading(true);
         const response: any = await authApis.getAllEvents();
         setEvents(response.data.data);
-        setFilteredEvents(response.data.data);
+        // Filter for upcoming events if event == 0, else show all
+        const allEvents = response.data.data;
+        if (event == 0) {
+          const now = new Date();
+          const upcoming = allEvents
+            .filter((ev: any) => {
+              if (!ev.eventDate) return false;
+              const year = ev.eventDate.substring(0, 4);
+              const month = ev.eventDate.substring(4, 6);
+              const day = ev.eventDate.substring(6, 8);
+
+              // Default to midnight if no time
+              let hours = 0,
+                minutes = 0;
+              if (ev.eventTime) {
+                // Example format: "10:30 PM"
+                const match = ev.eventTime.match(/(\\d+):(\\d+)\\s*(AM|PM)/i);
+                if (match) {
+                  hours = parseInt(match[1], 10);
+                  minutes = parseInt(match[2], 10);
+                  const ampm = match[3].toUpperCase();
+                  if (ampm === "PM" && hours !== 12) hours += 12;
+                  if (ampm === "AM" && hours === 12) hours = 0;
+                }
+              }
+              const eventDate = new Date(
+                Number(year),
+                Number(month) - 1,
+                Number(day),
+                hours,
+                minutes
+              );
+              return eventDate >= now;
+            })
+            .sort((a: any, b: any) => {
+              const getDateTime = (ev: any) => {
+                const year = ev.eventDate.substring(0, 4);
+                const month = ev.eventDate.substring(4, 6);
+                const day = ev.eventDate.substring(6, 8);
+                let hours = 0,
+                  minutes = 0;
+                if (ev.eventTime) {
+                  const match = ev.eventTime.match(/(\\d+):(\\d+)\\s*(AM|PM)/i);
+                  if (match) {
+                    hours = parseInt(match[1], 10);
+                    minutes = parseInt(match[2], 10);
+                    const ampm = match[3].toUpperCase();
+                    if (ampm === "PM" && hours !== 12) hours += 12;
+                    if (ampm === "AM" && hours === 12) hours = 0;
+                  }
+                }
+                return new Date(
+                  Number(year),
+                  Number(month) - 1,
+                  Number(day),
+                  hours,
+                  minutes
+                ).getTime();
+              };
+              return getDateTime(a) - getDateTime(b);
+            });
+          setFilteredEvents(upcoming);
+        } else {
+          setFilteredEvents(allEvents);
+        }
       } catch (error) {
         showAlertMessage("An error occurred while sending report", "error");
       } finally {
@@ -335,23 +415,21 @@ const Event = () => {
               </div>
             ) : paginatedEvents.length > 0 ? (
               paginatedEvents.map((event, index) => (
-                <Link to={`/events/${event.id}`} key={event.id}>
-                  <div
-                    onClick={() => {
-                      setEventDetails(event);
-                    }}
-                  >
-                    <EventItem
-                      key={index}
-                      createdAt={formatRelativeTime(event.createdAt)}
-                      weekday={formatDate(event.eventDate, true)}
-                      title={event.eventTitle}
-                      date={formatDate(event.eventDate)}
-                      time={event.eventTime}
-                      description={event.eventDescription}
-                    />
-                  </div>
-                </Link>
+                <div
+                  onClick={() => {
+                    setEventDetails(event);
+                  }}
+                >
+                  <EventItem
+                    key={index}
+                    createdAt={formatRelativeTime(event.createdAt)}
+                    weekday={formatDate(event.eventDate, true)}
+                    title={event.eventTitle}
+                    date={formatDate(event.eventDate)}
+                    time={event.eventTime}
+                    description={event.eventDescription}
+                  />
+                </div>
               ))
             ) : (
               <div className="flex gap-4 flex-col justify-center items-center h-[50vh]">

@@ -87,13 +87,14 @@ export class AuthApis {
     }
   }
   
-  async submitIncidentReport(data: { message: string, subject: string, photo: File }){
+  async submitIncidentReport(data: { message: string, subject: string, photo: File , voiceNote: File}){
     try{
       const token = localStorage.getItem("authToken")
       const formData = new FormData();
       formData.append('message', data.message);
       formData.append('subject', data.subject);
       formData.append('photo', data.photo);
+      formData.append('voiceNote', data.voiceNote);
 
       const response = await axios.post(`${BASE_URL}/api/v1/incident/user/report`,
       formData,

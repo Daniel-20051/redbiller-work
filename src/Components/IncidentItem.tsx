@@ -30,7 +30,9 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   const [error, setError] = useState(false);
   const { userDetails } = use(UserDetailsContext);
 
-  const isAdmin = userDetails?.data.user.role == "admin";
+  const isAdmin =
+    userDetails?.data.user.role == "admin" ||
+    userDetails?.data.user.role == "superadmin";
 
   useEffect(() => {
     const fetchData = async () => {

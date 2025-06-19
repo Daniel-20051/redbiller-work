@@ -1,6 +1,5 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
-import DropDown from "../Components/DropDown";
 import WeekItem from "../Components/WeekItem";
 import WeeklyCard from "../Components/WeeklyCard";
 import { Link } from "react-router-dom";
@@ -37,7 +36,9 @@ function getWeekRange(dateString: string) {
 
 const WeeklyReport = () => {
   const { userDetails } = use(UserDetailsContext);
-  const isAdmin = userDetails?.data.user.role == "admin";
+  const isAdmin =
+    userDetails?.data.user.role == "admin" ||
+    userDetails?.data.user.role == "superadmin";
   const [reports, setReports] = useState<any[]>([]);
   const department = userDetails?.data.user.occupation;
   //loader
@@ -65,15 +66,28 @@ const WeeklyReport = () => {
   }, []);
 
   // Sort and filter to get only the most recent report per user
-  const sortedReports = [...reports].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+  const sortedReports = Array.isArray(reports)
+    ? [...reports].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+    : [];
   const mostRecentReportsMap = new Map();
   sortedReports.forEach((report) => {
     if (
       report.User &&
       report.User.id &&
-      report.User.occupation === department
+      report.User.occupation === department &&
+      userDetails?.data.user.role == "admin"
+    ) {
+      const userId = report.User.id;
+      if (!mostRecentReportsMap.has(userId)) {
+        mostRecentReportsMap.set(userId, report);
+      }
+    } else if (
+      report.User &&
+      report.User.id &&
+      userDetails?.data.user.role == "superadmin"
     ) {
       const userId = report.User.id;
       if (!mostRecentReportsMap.has(userId)) {
@@ -122,19 +136,21 @@ const WeeklyReport = () => {
                         onChange={handleSearch}
                       />
                     </div>
-                    <Link
-                      to="/weekly-report/create"
-                      className=" flex w-auto h-auto gap-2 items-center rounded-[8px] bg-primary pl-[10px] pr-[16px] py-[12px]"
-                    >
-                      <img
-                        className="w-[16px] h-[16px]  "
-                        src="/assets/plus-icon.svg"
-                        alt=""
-                      />
-                      <button className=" text-white font-[400] text-[12px]  ">
-                        New Report
-                      </button>
-                    </Link>
+                    {userDetails?.data.user.role == "admin" && (
+                      <Link
+                        to="/weekly-report/create"
+                        className=" flex w-auto h-auto gap-2 items-center rounded-[8px] bg-primary pl-[10px] pr-[16px] py-[12px]"
+                      >
+                        <img
+                          className="w-[16px] h-[16px]  "
+                          src="/assets/plus-icon.svg"
+                          alt=""
+                        />
+                        <button className=" text-white font-[400] text-[12px]  ">
+                          New Report
+                        </button>
+                      </Link>
+                    )}
                   </div>
                 </div>
                 <div
@@ -152,6 +168,10 @@ const WeeklyReport = () => {
                         height="30"
                         color="#93221D"
                       />
+                    </div>
+                  ) : filteredReports.length === 0 ? (
+                    <div className="flex col-span-3 justify-center items-center h-[55vh] text-gray-500 text-lg">
+                      No reports found.
                     </div>
                   ) : (
                     filteredReports.map((report) => (
@@ -185,7 +205,6 @@ const WeeklyReport = () => {
                 <div className="flex justify-between items-center">
                   <p className="font-[600] text-[20px] ">Weekly Reports</p>
                   <div className="flex gap-6">
-                    <DropDown></DropDown>
                     <Link
                       to="/weekly-report/create"
                       className=" flex w-auto h-auto gap-2 items-center rounded-[8px] bg-primary pl-[10px] pr-[16px] py-[12px]"
