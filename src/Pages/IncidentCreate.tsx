@@ -276,7 +276,27 @@ const IncidentCreate = () => {
                       </button>
                     </div>
                     {audioFile && audioUrl && (
-                      <audio controls src={audioUrl} className="mt-2 w-full " />
+                      <div className="flex items-center  gap-1">
+                        <audio
+                          controls
+                          src={audioUrl}
+                          className="mt-2 w-full "
+                        />
+                        <button
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setAudioFile(null);
+                            setAudioUrl(null);
+                          }}
+                        >
+                          <Icon
+                            icon="material-symbols:cancel-rounded"
+                            width="22"
+                            height="22"
+                            color="#93221d"
+                          />
+                        </button>
+                      </div>
                     )}
                   </div>
 
