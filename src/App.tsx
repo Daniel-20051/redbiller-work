@@ -20,7 +20,7 @@ const App = () => {
   const { userDetails } = use(UserDetailsContext);
   const isAdmin = userDetails?.data.user.role == "admin";
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const INACTIVE_TIMEOUT = 2 * 60 * 1000; // 5 minutes in milliseconds
+  const INACTIVE_TIMEOUT = 2 * 60 * 1000;
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -52,7 +52,6 @@ const App = () => {
       inactivityTimer = setTimeout(logoutDueToInactivity, INACTIVE_TIMEOUT);
     };
 
-    // Check if user has been inactive (handles all scenarios including minimize, switch tabs, etc.)
     const checkInactivity = () => {
       const lastActiveTime = localStorage.getItem("lastActiveTime");
       if (lastActiveTime) {
@@ -63,22 +62,17 @@ const App = () => {
         }
       }
     };
-
-    // Handle when browser/tab becomes visible again
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        // Page is now visible - check if timeout exceeded
         checkInactivity();
         if (isAuthenticated) {
           resetTimer();
         }
       } else {
-        // Page is hidden - update last active time
         updateLastActiveTime();
       }
     };
 
-    // Handle window focus events
     const handleFocus = () => {
       checkInactivity();
       if (isAuthenticated) {
@@ -90,7 +84,6 @@ const App = () => {
       updateLastActiveTime();
     };
 
-    // Activity events that reset the timer
     const events = [
       "mousedown",
       "mousemove",
@@ -105,24 +98,19 @@ const App = () => {
       "wheel",
     ];
 
-    // Add all event listeners
     events.forEach((event) => {
       document.addEventListener(event, resetTimer, true);
     });
 
-    // Browser/tab visibility and focus events
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("focus", handleFocus);
     window.addEventListener("blur", handleBlur);
 
-    // Periodic check for inactivity (backup mechanism)
-    checkTimer = setInterval(checkInactivity, 30000); // Check every 30 seconds
+    checkTimer = setInterval(checkInactivity, 30000);
 
-    // Initialize
     resetTimer();
 
     return () => {
-      // Cleanup
       if (inactivityTimer) clearTimeout(inactivityTimer);
       if (checkTimer) clearInterval(checkTimer);
 
