@@ -53,7 +53,12 @@ const WeeklyView = () => {
                 <ul className="flex flex-nowrap min-w-max">
                   {userDetails?.data.user.role == "admin"
                     ? (items || [])
-                        .filter((item: any) => item.occupation == department)
+                        .filter(
+                          (item: any) =>
+                            item.occupation == department &&
+                            (item.role != "admin" ||
+                              item.id === userDetails?.data.user.id)
+                        )
                         .map((item: any, index: any) => (
                           <li
                             key={index}

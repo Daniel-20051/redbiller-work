@@ -205,7 +205,10 @@ const Home = () => {
                       {/* Background layer for the entire card */}
                       {/* <div className="absolute inset-0 bg-[#F2F2F2]"></div> */}
 
-                      <div className="relative h-full z-10">
+                      <Link
+                        to="/incident-report"
+                        className="relative flex flex-col h-full z-10"
+                      >
                         <p className="text-[24px] md:text-[32px] font-[600] ml-[19px] pt-[19px]">
                           Incident Report
                         </p>
@@ -249,12 +252,12 @@ const Home = () => {
                           })}
                         </p>
 
-                        <Link to="/incident-report/create">
+                        <Link to="/incident-report/create" className="z-50">
                           <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer z-20">
                             Create
                           </button>
                         </Link>
-                      </div>
+                      </Link>
 
                       {!incidentreportHome?.data.data.incidents[0]
                         .incidentphoto && null}
@@ -281,7 +284,7 @@ const Home = () => {
                       />
                     </div>
                   ) : weeklyReportHome || weeklyReportHomeUser ? (
-                    <>
+                    <Link to="/weekly-report" className="flex flex-col">
                       <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
                         Weekly Report
                       </p>
@@ -316,12 +319,12 @@ const Home = () => {
                               minute: "2-digit",
                             })}
                       </p>
-                      <Link to="/weekly-report/create">
+                      <Link to="/weekly-report/create" className="z-50">
                         <button className="absolute  bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">
                           Create
                         </button>
                       </Link>
-                    </>
+                    </Link>
                   ) : (
                     <div className="flex flex-col gap-2 justify-center items-center h-full">
                       <Icon

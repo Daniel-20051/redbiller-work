@@ -34,13 +34,25 @@ const IncidentView = () => {
                 src="/assets/blank-profile.png"
                 alt=""
               />
-              <div className="flex flex-col text-[11px] md:text-[18px] gap-2">
+              <div className="flex flex-col text-[11px] md:text-[15px] gap-2">
                 <p>
                   Name:{" "}
-                  <span>{`${incidentDetails?.User?.firstName} ${incidentDetails?.User?.lastName}`}</span>
+                  <span>{`${
+                    incidentDetails?.User?.firstName?.charAt(0).toUpperCase() +
+                    incidentDetails?.User?.firstName?.slice(1).toLowerCase()
+                  } ${
+                    incidentDetails?.User?.lastName?.charAt(0).toUpperCase() +
+                    incidentDetails?.User?.lastName?.slice(1).toLowerCase()
+                  }`}</span>
                 </p>
                 <p>
-                  Department: <span>{incidentDetails?.User?.occupation}</span>
+                  Department:{" "}
+                  <span>
+                    {incidentDetails?.User?.occupation
+                      ?.charAt(0)
+                      .toUpperCase() +
+                      incidentDetails?.User?.occupation?.slice(1).toLowerCase()}
+                  </span>
                 </p>
                 <p>
                   Biller ID: <span>{incidentDetails?.User?.email}</span>

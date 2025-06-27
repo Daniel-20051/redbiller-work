@@ -52,7 +52,7 @@ const ReportCard = ({ name, color, onValueChange, reset }: Props) => {
 
   return (
     <div className="w-[85%] md:w-[26.5%] justify-self-center mb-8 md:mb-0 ">
-      <div className=" flex flex-col  h-[430px] rounded-[17px] bg-[#F2F2F2] items-center relative ">
+      <div className=" flex flex-col  h-[400px] rounded-[17px] bg-[#F2F2F2] items-center relative ">
         <div
           className={` rounded-t-[17px] w-full h-[59px] pt-[16px] pl-[38px] ${color} `}
         >
