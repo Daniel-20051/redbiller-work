@@ -156,7 +156,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
               </tr>
             ) : (
               filteredReports.map((row, index) => (
-                <tr key={index} className="hover:bg-gray-100">
+                <tr key={index} className="hover:bg-gray-100 ">
                   <td className="md:px-4 md:py-4 text-center text-[12px] md:text-[15px] border-1 border-[#F2F2F2]">
                     {getWeekRange(row.createdAt).startDate} -{" "}
                     {getWeekRange(row.createdAt).endDate}
