@@ -161,7 +161,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
                     {getWeekRange(row.createdAt).startDate} -{" "}
                     {getWeekRange(row.createdAt).endDate}
                   </td>
-                  <td className="md:px-4 md:py-4 text-[14px] md:text-[17px] border-1 border-[#F2F2F2]">
+                  <td className="md:px-4 md:py-4 text-[12px] md:text-[15px] border-1 border-[#F2F2F2]">
                     <ul className="list-disc pl-5">
                       {row.ActionItems &&
                         Array.isArray(row.ActionItems) &&
@@ -173,7 +173,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
                           )}
                     </ul>
                   </td>
-                  <td className="md:px-4 md:py-4 text-[14px] md:text-[17px] border-1 border-[#F2F2F2]">
+                  <td className="md:px-4 md:py-4 text-[12px] md:text-[15px] border-1 border-[#F2F2F2]">
                     <ul className="list-disc pl-5">
                       {row.OngoingTasks &&
                         Array.isArray(row.OngoingTasks) &&
@@ -185,7 +185,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
                           )}
                     </ul>
                   </td>
-                  <td className="md:px-4 md:py-4 text-[14px] md:text-[17px] border-1 border-[#F2F2F2] relative">
+                  <td className="md:px-4 md:py-4 text-[12px] md:text-[15px] border-1 border-[#F2F2F2] relative">
                     <ul className=" flex gap-2 list-disc pl-5">
                       <p>
                         {row.CompletedTasks &&
