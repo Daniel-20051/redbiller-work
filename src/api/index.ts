@@ -18,7 +18,7 @@ export class AuthApis {
         ,
         { withCredentials: true }
       );
-      console.log(response)
+      
       return response;
     } catch (error: any) {
       console.log(error);
@@ -207,6 +207,41 @@ export class AuthApis {
       return err
     }
   }
+
+  async updateWeeklyReport(userId: string, data: { actionItemsId: string, actionItemsdescription:string, ongoingTaskId: string, ongoingTaskdescription:string, completedTaskId: string, completedTaskdescription:string }){
+    try{
+      const token = localStorage.getItem("authToken")
+      const payload = {
+        ActionItem: [{
+          id: data.actionItemsId,
+          description: data.actionItemsdescription
+        }],
+        OngoingTask: [{
+          id: data.ongoingTaskId,
+          description: data.ongoingTaskdescription
+        }],        
+        CompletedTask: [{
+          id: data.completedTaskId,
+          description: data.completedTaskdescription
+        }]
+      }
+
+      const response = await axios.patch(`${BASE_URL}/api/v1/user/editTarget-weeklyReport/${userId}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    return response
+  }
+    catch(err){
+      return err
+    }
+  }
+
+  
   // async getEvent(id: string){
   //   try{
   //     const token = localStorage.getItem("authToken")

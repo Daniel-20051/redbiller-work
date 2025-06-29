@@ -148,7 +148,6 @@ const Event = () => {
         setIsAddEventOpen(false);
         showSuccessMessage("Your event has been created successfully");
       }
-      console.log(response);
       return response;
     } catch (error) {
       showAlertMessage("An error occurred while sending report", "error");

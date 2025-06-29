@@ -83,7 +83,7 @@ const Login = () => {
             alt=""
           />
           <p className="font-bold font-main text-[24px] absolute bottom-[74px] left-[36px] text-white">
-            Seamlessly manage and <br /> make payments.
+            Seamlessly manage and <br /> handle reports.
           </p>
           <p className="font-extrabold font-main text-[13px] absolute bottom-[44px] left-[36px] text-white">
             It doesn’t end here....

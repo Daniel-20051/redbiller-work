@@ -44,7 +44,7 @@ const ReportCard = ({ name, color, onValueChange, reset }: Props) => {
   };
 
   useEffect(() => {
-    const combined = textboxes.map((textbox) => textbox.value).join("//");
+    const combined = textboxes.map((textbox) => textbox.value).join("\n");
     if (onValueChange) {
       onValueChange(combined);
     }
