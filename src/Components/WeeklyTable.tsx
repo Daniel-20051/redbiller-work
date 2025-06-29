@@ -32,7 +32,7 @@ function getWeekRange(dateString: string) {
 }
 
 interface Props {
-  selectedUser: string;
+  selectedUser: number;
   searchTerm: string;
 }
 

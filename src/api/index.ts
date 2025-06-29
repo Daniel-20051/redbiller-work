@@ -208,7 +208,7 @@ export class AuthApis {
     }
   }
 
-  async updateWeeklyReport(userId: string, data: { actionItemsId: string, actionItemsdescription:string, ongoingTaskId: string, ongoingTaskdescription:string, completedTaskId: string, completedTaskdescription:string }){
+  async updateWeeklyReport(userId: number, data: { actionItemsId: string, actionItemsdescription:string, ongoingTaskId: string, ongoingTaskdescription:string, completedTaskId: string, completedTaskdescription:string }){
     try{
       const token = localStorage.getItem("authToken")
       const payload = {
