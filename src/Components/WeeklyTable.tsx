@@ -17,8 +17,8 @@ function getWeekRange(dateString: string) {
   const saturday = new Date(monday);
   saturday.setDate(monday.getDate() + 5);
   // Set Saturday 8pm
-  const saturday8pm = new Date(monday);
-  saturday8pm.setHours(8, 0, 0, 0);
+  const saturday8pm = new Date(saturday);
+  saturday8pm.setHours(18, 0, 0, 0);
 
   const friday = new Date(monday);
   friday.setDate(monday.getDate() + 4);
