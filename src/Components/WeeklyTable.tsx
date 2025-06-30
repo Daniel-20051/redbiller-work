@@ -8,18 +8,21 @@ const authApis = new AuthApis();
 
 function getWeekRange(dateString: string) {
   const date = new Date(dateString);
-  // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
   const day = date.getDay();
-  // Calculate how many days to subtract to get Monday
   const diffToMonday = (day === 0 ? -6 : 1) - day;
   const monday = new Date(date);
   monday.setDate(date.getDate() + diffToMonday);
 
-  // Friday is 4 days after Monday
+  // Saturday is 6 days after Monday
+  const saturday = new Date(monday);
+  saturday.setDate(monday.getDate() + 5);
+  // Set Saturday 8pm
+  const saturday8pm = new Date(monday);
+  saturday8pm.setHours(8, 0, 0, 0);
+
   const friday = new Date(monday);
   friday.setDate(monday.getDate() + 4);
 
-  // Format as needed, e.g., "26th May"
   const format = (d: Date) =>
     `${d.getDate()}${
       ["th", "st", "nd", "rd"][d.getDate() % 10 > 3 ? 0 : d.getDate() % 10]
@@ -28,6 +31,7 @@ function getWeekRange(dateString: string) {
   return {
     startDate: format(monday),
     endDate: format(friday),
+    saturday8pm,
   };
 }
 
@@ -157,11 +161,34 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
             ) : (
               filteredReports.map((row, index) => (
                 <tr key={index} className="hover:bg-gray-100 ">
-                  <td className="md:px-4 md:py-4 text-center text-[12px] md:text-[15px] border-1 border-[#F2F2F2]">
+                  <td className="md:px-4 md:py-4 text-center text-[12px]  md:text-[15px] border-1 border-[#F2F2F2]">
                     {getWeekRange(row.createdAt).startDate} -{" "}
                     {getWeekRange(row.createdAt).endDate}
+                    {(() => {
+                      const { saturday8pm } = getWeekRange(row.createdAt);
+                      const createdAtDate = new Date(row.createdAt);
+                      if (createdAtDate > saturday8pm) {
+                        return (
+                          <div>
+                            <span
+                              className="md:hidden ml-2 px-2  py-[1px] md:py-1 bg-primary text-white text-[8px] md:text-xs rounded font-semibold align-middle"
+                              title="Submitted late"
+                            >
+                              Late
+                            </span>
+                            <div
+                              className=" hidden md:block ml-2 px-2  py-[1px] md:py-1 bg-primary text-white text-[8px] md:text-xs rounded font-semibold align-middle"
+                              title="Submitted late"
+                            >
+                              Late
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
                   </td>
-                  <td className="md:px-4 md:py-4 text-[12px] md:text-[15px] border-1 border-[#F2F2F2]">
+                  <td className="md:px-4 md:py-4 text-[12px] md:text-[15px]  border-1 border-[#F2F2F2]">
                     <ul className="list-disc pl-5">
                       {row.ActionItems &&
                         Array.isArray(row.ActionItems) &&
