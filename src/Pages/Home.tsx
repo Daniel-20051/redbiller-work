@@ -209,14 +209,13 @@ const Home = () => {
                         to="/incident-report"
                         className="relative flex flex-col h-full z-10"
                       >
-                        <p className="text-[24px] md:text-[32px] font-[600] ml-[19px] pt-[19px]">
-                          Incident Report
-                        </p>
-                        <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] h-[1px] bg-[#C9C9C9]"></div>
-
                         {incidentreportHome?.data?.data.incidents[0]
                           .incidentMessage ? (
                           <>
+                            <p className="text-[24px] md:text-[32px] font-[600] ml-[19px] pt-[19px]">
+                              Incident Report
+                            </p>
+                            <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] h-[1px] bg-[#C9C9C9]"></div>
                             <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px]">
                               {
                                 incidentreportHome?.data?.data.incidents[0]
@@ -229,34 +228,35 @@ const Home = () => {
                                   .incidentMessage
                               }
                             </p>
+                            <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
+                              {new Date(
+                                incidentreportHome?.data?.data.incidents[0].createdAt
+                              ).toLocaleString(undefined, {
+                                weekday: "long",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </p>
+
+                            <Link to="/incident-report/create" className="z-50">
+                              <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer z-20">
+                                Create
+                              </button>
+                            </Link>
                           </>
                         ) : (
-                          <div className="flex flex-col gap-2 justify-center items-center h-[50%]">
+                          <div className="flex flex-col gap-2 justify-center items-center h-[100%]">
                             <Icon
                               icon="line-md:document-delete"
                               width="60"
                               height="60"
                               color="#93221D"
                             />
-                            <p className="font-[600] text-lg">No Incident</p>
+                            <p className="font-[600] text-lg">
+                              No Incident Report
+                            </p>
                           </div>
                         )}
-
-                        <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
-                          {new Date(
-                            incidentreportHome?.data?.data.incidents[0].createdAt
-                          ).toLocaleString(undefined, {
-                            weekday: "long",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </p>
-
-                        <Link to="/incident-report/create" className="z-50">
-                          <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer z-20">
-                            Create
-                          </button>
-                        </Link>
                       </Link>
 
                       {!incidentreportHome?.data?.data?.incidents[0]
