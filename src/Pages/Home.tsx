@@ -259,7 +259,7 @@ const Home = () => {
                         </Link>
                       </Link>
 
-                      {!incidentreportHome?.data.data.incidents[0]
+                      {!incidentreportHome?.data?.data?.incidents[0]
                         .incidentphoto && null}
                     </div>
                   ) : (
