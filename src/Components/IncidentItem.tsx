@@ -10,6 +10,8 @@ interface Incident {
   id: string;
   subject: string;
   incidentMessage: string;
+  createdAt?: string;
+  updatedAt?: string;
   User: {
     firstName: string;
     lastName: string;
@@ -18,11 +20,13 @@ interface Incident {
 
 interface IncidentItemProps {
   searchTerm?: string;
+  dateFilter?: string;
   onIncidentSelect?: (incident: Incident) => void;
 }
 
 const IncidentItem: React.FC<IncidentItemProps> = ({
   searchTerm = "",
+  dateFilter = "",
   onIncidentSelect,
 }) => {
   const [incidentValue, setIncidentValue] = useState<any>(null);
@@ -51,18 +55,37 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   useEffect(() => {
     if (incidentValue?.data?.data?.incidents) {
       const filtered = incidentValue.data.data.incidents.filter(
-        (incident: Incident) =>
-          incident.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          incident.incidentMessage
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          `${incident.User.firstName} ${incident.User.lastName}`
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
+        (incident: Incident) => {
+          // Text search filtering
+          const textMatch =
+            incident.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            incident.incidentMessage
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase()) ||
+            `${incident.User.firstName} ${incident.User.lastName}`
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+
+          // Date filtering
+          let dateMatch = true;
+          if (dateFilter) {
+            const incidentDate = incident.createdAt || incident.updatedAt;
+            if (incidentDate) {
+              const incidentDateOnly = new Date(incidentDate)
+                .toISOString()
+                .split("T")[0];
+              dateMatch = incidentDateOnly === dateFilter;
+            } else {
+              dateMatch = false;
+            }
+          }
+
+          return textMatch && dateMatch;
+        }
       );
       setFilteredIncidents(filtered);
     }
-  }, [incidentValue, searchTerm]);
+  }, [incidentValue, searchTerm, dateFilter]);
 
   if (error) {
     return (

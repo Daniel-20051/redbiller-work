@@ -9,6 +9,16 @@ import { AuthApis } from "../api";
 import { Icon } from "@iconify/react";
 const authApis = new AuthApis();
 
+function getWeekOfYear(dateString: string): number {
+  const date = new Date(dateString);
+  const startOfYear = new Date(date.getFullYear(), 0, 1);
+  const days = Math.floor(
+    (date.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000)
+  );
+  const weekNumber = Math.ceil((days + startOfYear.getDay() + 1) / 7);
+  return weekNumber;
+}
+
 function getWeekRange(dateString: string) {
   const date = new Date(dateString);
   // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
@@ -45,7 +55,6 @@ const WeeklyReport = () => {
   const [isLoading, setIsLoading] = useState(false);
   // Add search state
   const [searchQuery, setSearchQuery] = useState("");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -188,7 +197,7 @@ const WeeklyReport = () => {
                           subject="Action Item"
                         >
                           {report.ActionItems?.[0]?.description
-                            .split("//")
+                            .split("\n")
                             .map((desc: string, i: number) =>
                               desc.trim() ? <p key={i}>{desc.trim()} </p> : null
                             ) || []}
@@ -236,7 +245,7 @@ const WeeklyReport = () => {
                     No reports found.
                   </div>
                 ) : (
-                  reports.map((report, index) => {
+                  reports.map((report) => {
                     const { startDate, endDate } = getWeekRange(
                       report.createdAt
                     );
@@ -247,26 +256,26 @@ const WeeklyReport = () => {
                         key={report.id}
                         actionItem={
                           report.ActionItems?.[0]?.description
-                            .split("//")
+                            .split("\n")
                             .map((desc: string, i: number) =>
                               desc.trim() ? <p key={i}>{desc.trim()} </p> : null
                             ) || []
                         }
                         ongoingTask={
                           report.OngoingTasks?.[0]?.description
-                            .split("//")
+                            .split("\n")
                             .map((desc: string, i: number) =>
                               desc.trim() ? <p key={i}>{desc.trim()} </p> : null
                             ) || []
                         }
                         completedTask={
                           report.CompletedTasks?.[0]?.description
-                            .split("//")
+                            .split("\n")
                             .map((desc: string, i: number) =>
                               desc.trim() ? <p key={i}>{desc.trim()} </p> : null
                             ) || []
                         }
-                        weekNum={index + 1}
+                        weekNum={getWeekOfYear(report.createdAt)}
                       />
                     );
                   })

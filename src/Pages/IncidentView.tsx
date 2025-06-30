@@ -7,8 +7,6 @@ import { UserDetailsContext } from "../context/AuthContext.js";
 const IncidentView = () => {
   const { incidentDetails } = use(UserDetailsContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(incidentDetails?.voiceNote);
-
   return (
     <div className="flex flex-col h-screen ">
       <NavBar></NavBar>

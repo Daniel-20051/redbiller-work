@@ -8,10 +8,20 @@ import { UserDetailsContext } from "../context/AuthContext.js";
 
 const IncidentReport = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
   const [activeIncident, setActiveIncident] = useState<any>(null);
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDateFilter(e.target.value);
+  };
+
+  const clearDateFilter = () => {
+    setDateFilter("");
+  };
+
   const { userDetails, setIncidentDetails } = use(UserDetailsContext);
   const isAdmin =
     userDetails?.data.user.role == "admin" ||
@@ -79,9 +89,18 @@ const IncidentReport = () => {
                         outline-1 bg-white w-[115px] md:w-[170px]  outline-[#E7E3E3]
                       `}
                       type="date"
-                      value={searchTerm}
-                      onChange={handleSearchChange}
+                      value={dateFilter}
+                      onChange={handleDateChange}
                     />
+                  )}
+                  {isAdmin && dateFilter && (
+                    <button
+                      onClick={clearDateFilter}
+                      className="h-[35px] px-2 bg-red-500 text-white rounded-[4px] ml-1 hover:bg-red-600 transition-colors"
+                      title="Clear date filter"
+                    >
+                      ✕
+                    </button>
                   )}
                 </div>
                 <Link to="/incident-report/create">
@@ -98,6 +117,7 @@ const IncidentReport = () => {
             >
               <IncidentItem
                 searchTerm={searchTerm}
+                dateFilter={dateFilter}
                 onIncidentSelect={handleIncidentSelect}
               />
             </div>
