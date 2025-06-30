@@ -171,13 +171,13 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
                         return (
                           <div>
                             <span
-                              className="md:hidden ml-2 px-2  py-[1px] md:py-1 bg-primary text-white text-[8px] md:text-xs rounded font-semibold align-middle"
+                              className="md:hidden ml-2 px-2  py-[1px] md:py-1 bg-red-500 text-white text-[8px] md:text-xs rounded font-semibold align-middle"
                               title="Submitted late"
                             >
                               Late
                             </span>
                             <div
-                              className=" hidden md:block ml-2 px-2  py-[1px] md:py-1 bg-primary text-white text-[8px] md:text-xs rounded font-semibold align-middle"
+                              className=" hidden md:block ml-2 px-2  py-[1px] md:py-1 bg-red-500 text-white text-[8px] md:text-xs rounded font-semibold align-middle"
                               title="Submitted late"
                             >
                               Late
