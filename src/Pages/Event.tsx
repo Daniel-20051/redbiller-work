@@ -269,7 +269,6 @@ const Event = () => {
               let hours = 0,
                 minutes = 0;
               if (ev.eventTime) {
-                // Example format: "10:30 PM"
                 const match = ev.eventTime.match(/(\\d+):(\\d+)\\s*(AM|PM)/i);
                 if (match) {
                   hours = parseInt(match[1], 10);

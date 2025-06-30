@@ -130,11 +130,11 @@ const IncidentReport = () => {
           >
             <button
               onClick={() => setActiveIncident(false)}
-              className="flex items-center gap-2 rounded-lg absolute md:top-10 top-7 right-7 md:right-10 w-[65px] md:w-[80px] border-1 border-[#b9b9b9]
+              className="flex cursor-pointer items-center gap-2 rounded-lg absolute md:top-10 top-7 right-7 md:right-10 w-[65px] md:w-[80px] border-1 border-[#b9b9b9]
             font-[600] text-[13px] md:text-[16px] p-2 "
             >
               <img
-                className="w-[8px] md:w-[10px] h-[20px] md:h-[27px]  "
+                className="w-[8px]  md:w-[10px] h-[20px] md:h-[27px]  "
                 src="/assets/back.svg"
                 alt=""
               />
@@ -156,6 +156,13 @@ const IncidentReport = () => {
                     )}
                   </span>
                 </p>
+                {activeIncident?.voiceNote && (
+                  <audio
+                    className="mt-3 mb-3 md:mt-0 md:mb-0"
+                    controls
+                    src={activeIncident?.voiceNote}
+                  />
+                )}
 
                 <p className="text-gray-700 mb-4">
                   {activeIncident?.incidentMessage}

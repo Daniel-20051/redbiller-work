@@ -121,8 +121,8 @@ const IncidentItem: React.FC<IncidentItemProps> = ({
   };
 
   return (
-    <div>
-      <ul className="flex flex-col  w-[95%] gap-2 hover:cursor-pointer overflow-y-auto max-h-full  scroll-smooth ">
+    <div className="w-[95%]">
+      <ul className="flex flex-col  gap-2 hover:cursor-pointer overflow-y-auto max-h-full  scroll-smooth ">
         {filteredIncidents.map((incident, index) => (
           <li
             onClick={() => handleClick(incident)}
