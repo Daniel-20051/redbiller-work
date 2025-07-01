@@ -1,27 +1,41 @@
 import { useState, useRef, useEffect } from "react";
+import { AuthApis } from "../api";
+import { SuccessCard } from "../messageAlert/SuccessCard";
 
 import Modal from "./Modal";
 
 interface Props {
   name: string;
+  id: number;
+  firstName: string;
+  lastName: string;
+  middleName: string;
   PhoneNum: number;
   gender: string;
   email: string;
   imgUrl: string;
+  role: string;
   dob: string;
   department: string;
   onDelete: () => void;
+  refetch: () => void;
 }
 
 const UserInfo = ({
   name,
+  id,
+  firstName,
+  lastName,
+  middleName,
   PhoneNum,
   email,
   imgUrl,
   gender,
   department,
+  role,
   dob,
   onDelete,
+  refetch,
 }: Props) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
@@ -29,6 +43,48 @@ const UserInfo = ({
   const [isDeleteDpiner, setIsDeleteSpiner] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const [isSwiped, setIsSwiped] = useState(false);
+  const authApis = new AuthApis();
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
+
+  const handleCloseSuccess = () => {
+    setShowSuccess(false);
+  };
+
+  // Form state for edit modal
+  const [formData, setFormData] = useState({
+    firstName: firstName,
+    lastName: lastName,
+    middleName: middleName,
+    email: email,
+    dob: dob,
+    occupation: department,
+    gender: gender,
+    role: role,
+  });
+
+  // Update form data when props change
+  useEffect(() => {
+    setFormData({
+      firstName: firstName,
+      lastName: lastName,
+      middleName: middleName,
+      email: email,
+      dob: dob,
+      occupation: department,
+      gender: gender,
+      role: role,
+    });
+  }, [firstName, lastName, middleName, email, dob, department, gender, role]);
+
+  // Handle form input changes
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   // Handle escape key to close modals
   useEffect(() => {
@@ -43,6 +99,26 @@ const UserInfo = ({
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, []);
+
+  const handleEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsEditLoading(true);
+    try {
+      setIsSwiped(false);
+      const response: any = await authApis.editSignleUser(id, formData);
+
+      if (response.status === 200) {
+        setIsUpdateOpen(false);
+        setSuccessMessage("User details has been updated");
+        setShowSuccess(true);
+        setIsEditLoading(false);
+        refetch();
+      }
+    } catch (error) {
+      console.log(error);
+      setIsEditLoading(false);
+    }
+  };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -74,6 +150,13 @@ const UserInfo = ({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
+      <SuccessCard
+        message={successMessage}
+        isOpen={showSuccess}
+        onClose={handleCloseSuccess}
+        autoClose={true}
+        autoCloseTime={2000}
+      />
       <div
         className={`absolute  top-0 right-0 h-full flex transition-all duration-300 z-0 ${
           isSwiped ? "w-30" : "w-0"
@@ -215,7 +298,7 @@ const UserInfo = ({
 
         {/* Edit Modal */}
         <Modal isOpen={isUpdateOpen} onClose={() => setIsUpdateOpen(false)}>
-          <div className="flex flex-col w-[375px] h-[527px] rounded-[20px] items-center bg-white shadow-2xl">
+          <div className="flex flex-col w-[375px] h-auto rounded-[20px] items-center bg-white shadow-2xl">
             <div className="flex justify-between p-8 border-b-1 border-[#808080] w-full">
               <p className="text-primary font-[700] text-[16px] w-full">
                 Edit Profile
@@ -228,41 +311,82 @@ const UserInfo = ({
               </button>
             </div>
             <div>
-              <form className="flex flex-col" action="submit">
+              <form className="flex flex-col" onSubmit={handleEdit}>
                 <label className="text-[10px] font-[400] mt-2">
                   First Name
                 </label>
                 <input
                   className="border-1 w-[306px] h-[25px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
                   required
+                  value={formData.firstName}
+                  onChange={(e) =>
+                    handleInputChange("firstName", e.target.value)
+                  }
                 />
                 <label className="text-[10px] font-[400]">Middle Name</label>
-                <input className="border-1 w-[306px] h-[25px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none" />
+                <input
+                  className="border-1 w-[306px] h-[25px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
+                  value={formData.middleName}
+                  onChange={(e) =>
+                    handleInputChange("middleName", e.target.value)
+                  }
+                />
                 <label className="text-[10px] font-[400]">Surname</label>
-                <input className="border-1 w-[306px] h-[25px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none" />
+                <input
+                  className="border-1 w-[306px] h-[25px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
+                  value={formData.lastName}
+                  onChange={(e) =>
+                    handleInputChange("lastName", e.target.value)
+                  }
+                />
+                <label className="text-[10px] font-[400]">Email</label>
+                <input
+                  className="border-1 w-[306px] h-[25px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                />
                 <label className="text-[10px] font-[400]">Department</label>
-                <input className="border-1 w-[306px] h-[25px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none" />
+                <input
+                  className="border-1 w-[306px] h-[25px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
+                  value={formData.occupation}
+                  onChange={(e) =>
+                    handleInputChange("occupation", e.target.value)
+                  }
+                />
                 <div className="flex justify-between">
                   <div className="flex flex-col">
                     <label className="text-[10px] font-[400]">Gender</label>
-                    <input className="border-1 w-[104px] h-[50px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none" />
+                    <input
+                      className="border-1 w-[104px] h-[50px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] bg-gray-100 text-gray-500"
+                      value={formData.gender}
+                      disabled
+                      readOnly
+                    />
                   </div>
                   <div className="flex flex-col">
                     <label className="text-[10px] font-[400]">
                       Date of Birth
                     </label>
                     <input
-                      className="border-1 w-[104px] h-[50px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
-                      type="date"
+                      className="border-1 w-[104px] h-[50px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] bg-gray-100 text-gray-500"
+                      type="text"
+                      placeholder="MM-DD"
+                      value={formData.dob}
+                      disabled
+                      readOnly
                     />
                   </div>
                 </div>
-                <label className="text-[10px] font-[400] mb-2">
-                  Nationality
-                </label>
-                <input className="border-1 w-[306px] h-[25px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none" />
-                <div className="flex gap-3 justify-end">
+                <label className="text-[10px] font-[400]">Role</label>
+                <input
+                  className="border-1 w-[306px] h-[25px] mb-4 px-2 text-[12px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
+                  value={formData.role}
+                  onChange={(e) => handleInputChange("role", e.target.value)}
+                />
+                <div className="flex gap-3 justify-end mb-3">
                   <button
+                    type="button"
                     onClick={() => setIsUpdateOpen(false)}
                     className="bg-[#EFEFEF] py-2 px-3 font-[500] text-[13px] rounded-[8px] hover:cursor-pointer transition-all duration-200 hover:bg-gray-300"
                   >
@@ -270,9 +394,14 @@ const UserInfo = ({
                   </button>
                   <button
                     type="submit"
-                    className="bg-primary text-white py-2 px-3 font-[500] text-[13px] rounded-[8px] hover:cursor-pointer transition-all duration-200 hover:bg-primary/90"
+                    disabled={isEditLoading}
+                    className={` text-white py-2 px-3 font-[500] text-[13px] rounded-[8px]  transition-all duration-200 hover:bg-primary/90 ${
+                      isEditLoading
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : " bg-primary cursor-pointer"
+                    }`}
                   >
-                    Update
+                    {isEditLoading ? "Updating..." : "Update"}
                   </button>
                 </div>
               </form>

@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import { use, useState } from "react";
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import UserInfo from "../Components/UserInfo";
@@ -95,18 +95,23 @@ const User = () => {
             ) : (
               <div className="overflow-y-auto w-full mt-5 max-h-full hide-scrollbar scroll-smooth ">
                 {filteredUsers?.map((user: any, index: number) => (
-                  <React.Fragment key={index}>
-                    <UserInfo
-                      name={`${user?.firstName} ${user?.lastName}`}
-                      email={user?.email}
-                      dob={user?.dob}
-                      PhoneNum={800000000}
-                      gender={user?.gender}
-                      department={user?.occupation}
-                      imgUrl="/assets/blank-profile.png"
-                      onDelete={() => handleDeleteUser(user?.id)}
-                    />
-                  </React.Fragment>
+                  <UserInfo
+                    key={index}
+                    name={`${user?.firstName} ${user?.lastName}`}
+                    id={user?.id}
+                    role={user?.role}
+                    firstName={user?.firstName}
+                    lastName={user?.lastName}
+                    middleName={user?.middleName}
+                    email={user?.email}
+                    dob={user?.dob}
+                    PhoneNum={800000000}
+                    gender={user?.gender}
+                    department={user?.occupation}
+                    imgUrl="/assets/blank-profile.png"
+                    onDelete={() => handleDeleteUser(user?.id)}
+                    refetch={fetchAllUser}
+                  />
                 ))}
                 {filteredUsers?.length === 0 && (
                   <p className="text-center py-4 text-gray-500">

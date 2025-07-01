@@ -45,6 +45,7 @@ export class AuthApis {
       return err;
     }
   }
+  
 
   async getAllUser() {
     try{
@@ -73,7 +74,41 @@ export class AuthApis {
       if(!token){
         return null
       }
-      const response = await axios.delete(`${BASE_URL}/api/v1/admin/user-delete/${id}`,
+      const payload = {
+        isActive: false,
+      }
+      const response = await axios.patch(`${BASE_URL}/api/v1/auth/update-userdetails-admin/${id}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      return response;
+    }catch(err){
+      console.log(err)
+      return err
+    }
+  }
+  async editSignleUser(id: number, data: {firstName: string, lastName: string, middleName: string, email: string, dob: string, occupation: string, gender: string, role: string}) {
+    try{
+      const token = localStorage.getItem("authToken")
+      if(!token){
+        return null
+      }
+      const payload = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        middleName: data.middleName,
+        email: data.email,
+        dob: data.dob,
+        occupation: data.occupation,
+        gender: data.gender,
+        role: data.role,
+      }
+      const response = await axios.patch(`${BASE_URL}/api/v1/auth/update-userdetails-admin/${id}`,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`
