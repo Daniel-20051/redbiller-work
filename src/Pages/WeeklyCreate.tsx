@@ -4,6 +4,7 @@ import ReportCard from "../Components/ReportCard";
 import AlertCard from "../messageAlert/AlertCardProps";
 import { Icon } from "@iconify/react";
 import { SuccessCard } from "../messageAlert/SuccessCard";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { AuthApis } from "../api";
 const authApis = new AuthApis();
@@ -106,9 +107,19 @@ const WeeklyCreate = () => {
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full overflow-y-auto  max-h-[calc(100vh-55px)]  ">
         <SideBar>weekly-report</SideBar>
-        <div className="flex flex-1 flex-col items-center">
-          <p className="  place-self-start ml-[97px] mt-[50px] mb-[8%] font-[600] text-[20px]  ">
-            Submit Weekly Reports
+        <div className="flex flex-1 flex-col items-center relative">
+          <Link to="/weekly-report">
+            <div className="flex gap-4 absolute top-5 md:top-5 left-[40px] items-center ">
+              <img
+                className="w[9.14px] h-[16.17px] "
+                src="/assets/back.svg"
+                alt=""
+              />
+              <p className="font-[800] text-[16px] ">Weekly Report</p>
+            </div>
+          </Link>
+          <p className="  place-self-center ml-[97px] mt-[50px] mb-[5%] font-[600] text-[24px]  ">
+            New Report
           </p>
 
           <div className=" w-[90%] justify-center gap-13 mb-6 md:flex">

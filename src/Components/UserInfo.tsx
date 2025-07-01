@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { AuthApis } from "../api";
 import { SuccessCard } from "../messageAlert/SuccessCard";
+import AlertCard from "../messageAlert/AlertCardProps";
 
 import Modal from "./Modal";
 
@@ -46,10 +47,18 @@ const UserInfo = ({
   const authApis = new AuthApis();
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertType, setAlertType] = useState<
+    "success" | "error" | "info" | "warning"
+  >("info");
   const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
 
   const handleCloseSuccess = () => {
     setShowSuccess(false);
+  };
+  const handleCloseAlert = () => {
+    setShowAlert(false);
   };
 
   // Form state for edit modal
@@ -113,9 +122,14 @@ const UserInfo = ({
         setShowSuccess(true);
         setIsEditLoading(false);
         refetch();
+      } else {
+        setIsEditLoading(false);
+        setAlertMessage("An error occurred while updating user details");
+        setAlertType("error");
+        setShowAlert(true);
       }
     } catch (error) {
-      console.log(error);
+    } finally {
       setIsEditLoading(false);
     }
   };
@@ -156,6 +170,14 @@ const UserInfo = ({
         onClose={handleCloseSuccess}
         autoClose={true}
         autoCloseTime={2000}
+      />
+      <AlertCard
+        message={alertMessage}
+        type={alertType}
+        isOpen={showAlert}
+        onClose={handleCloseAlert}
+        autoClose={true}
+        autoCloseTime={3000}
       />
       <div
         className={`absolute  top-0 right-0 h-full flex transition-all duration-300 z-0 ${
@@ -395,7 +417,7 @@ const UserInfo = ({
                   <button
                     type="submit"
                     disabled={isEditLoading}
-                    className={` text-white py-2 px-3 font-[500] text-[13px] rounded-[8px]  transition-all duration-200 hover:bg-primary/90 ${
+                    className={` text-white py-2 px-3 font-[500] text-[13px] rounded-[8px]  transition-all duration-200  ${
                       isEditLoading
                         ? "bg-gray-400 cursor-not-allowed"
                         : " bg-primary cursor-pointer"

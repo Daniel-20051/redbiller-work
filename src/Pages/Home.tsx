@@ -149,7 +149,7 @@ const Home = () => {
                   </div>
                 ) : upcomingEvent ? (
                   <>
-                    <div className=" relative flex-1">
+                    <Link to="/events" className=" relative flex-1">
                       <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
                         Upcoming event
                       </p>
@@ -177,7 +177,7 @@ const Home = () => {
                           });
                         })()}
                       </p>
-                    </div>
+                    </Link>
                     <div className="hidden lg:inline">
                       <img
                         className="h-full"
@@ -215,7 +215,7 @@ const Home = () => {
                             <p className="text-[24px] md:text-[32px] font-[600] ml-[19px] pt-[19px]">
                               Incident Report
                             </p>
-                            <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] h-[1px] bg-[#C9C9C9]"></div>
+                            <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
                             <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px]">
                               {
                                 incidentreportHome?.data?.data.incidents[0]
@@ -238,9 +238,9 @@ const Home = () => {
                               })}
                             </p>
 
-                            <Link to="/incident-report/create" className="z-50">
+                            <Link to="/incident-report" className="z-50">
                               <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer z-20">
-                                Create
+                                View
                               </button>
                             </Link>
                           </>
@@ -319,9 +319,9 @@ const Home = () => {
                               minute: "2-digit",
                             })}
                       </p>
-                      <Link to="/weekly-report/create" className="z-50">
+                      <Link to="/weekly-report" className="z-50">
                         <button className="absolute  bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">
-                          Create
+                          View
                         </button>
                       </Link>
                     </Link>
