@@ -13,6 +13,8 @@ type UserDetailsContextType = {
   setIncidentDetails: any;
   eventDetails: any;
   setEventDetails: any;
+  fetchEventDetails: () => void;
+  updateEventDetails: (updatedEvent: any) => void;
 };
 
 const authApis = new AuthApis();
@@ -29,6 +31,8 @@ export const UserDetailsContext = createContext<UserDetailsContextType>({
   setIncidentDetails: null,
   eventDetails: null,
   setEventDetails: null,
+  fetchEventDetails: async () => {},
+  updateEventDetails: () => {},
 });
 
 function AuthContext({ children }: { children: React.ReactNode }) {
@@ -58,6 +62,20 @@ function AuthContext({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const fetchEventDetails = async () => {
+    try {
+      const response: any = await authApis.getAllEvents();
+      return response;
+    } catch (err) {
+      console.error("Error fetching event details:", err);
+      return err;
+    }
+  };
+
+  const updateEventDetails = (updatedEvent: any) => {
+    setEventDetails(updatedEvent);
+  };
+
   useEffect(() => {
     fetchUserDetails();
   }, []);
@@ -80,6 +98,8 @@ function AuthContext({ children }: { children: React.ReactNode }) {
         setIncidentDetails,
         eventDetails,
         setEventDetails,
+        fetchEventDetails,
+        updateEventDetails,
       }}
     >
       {children}

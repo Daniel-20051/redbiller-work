@@ -43,7 +43,7 @@ const Event = () => {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
   //Event Details
-  const { setEventDetails } = use(UserDetailsContext);
+  const { setEventDetails, fetchEventDetails } = use(UserDetailsContext);
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
@@ -147,6 +147,7 @@ const Event = () => {
         setFormattedTime("");
         setIsAddEventOpen(false);
         showSuccessMessage("Your event has been created successfully");
+        fetchEventDetails();
       }
       return response;
     } catch (error) {
@@ -252,7 +253,7 @@ const Event = () => {
     const fetchData = async () => {
       try {
         setEventLoading(true);
-        const response: any = await authApis.getAllEvents();
+        const response: any = await fetchEventDetails();
         setEvents(response.data.data);
         // Filter for upcoming events if event == 0, else show all
         const allEvents = response.data.data;
@@ -371,7 +372,9 @@ const Event = () => {
             <div className=" flex flex-col gap-6 w-[70%] md:w-[40%]">
               {isAdmin && (
                 <button
-                  onClick={() => setIsAddEventOpen(true)}
+                  onClick={() => {
+                    setIsAddEventOpen(true);
+                  }}
                   className="bg-primary cursor-pointer text-white py-3 md:py-4 text-[17px] md:text-[22px] font-[400] rounded-[15px]"
                 >
                   ADD EVENT

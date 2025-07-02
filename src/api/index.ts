@@ -276,6 +276,50 @@ export class AuthApis {
     }
   }
 
+  async updateEditEvent(eventId: number, data: { title: string, description: string, date: string, time: string }){
+    try{
+      const token = localStorage.getItem("authToken")
+      const payload = {
+        "eventTitle": data.title,
+        "eventDescription": data.description,
+        "eventDate": data.date,
+        "eventTime": data.time
+      }
+
+      const response = await axios.patch(`${BASE_URL}/api/v1/admin/update-event/${eventId}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    return response
+  }
+    catch(err){
+      return err
+    }
+  }
+  async deleteEvent(eventId: number){
+    try{
+      const token = localStorage.getItem("authToken")
+      
+
+      const response = await axios.delete(`${BASE_URL}/api/v1/admin/delete-event/${eventId}`,
+      
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    return response
+  }
+    catch(err){
+      return err
+    }
+  }
+
   
   // async getEvent(id: string){
   //   try{

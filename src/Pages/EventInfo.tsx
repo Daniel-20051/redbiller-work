@@ -1,10 +1,13 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { use } from "react";
 import { UserDetailsContext } from "../context/AuthContext.js";
 import { google, outlook, yahoo, CalendarEvent } from "calendar-link";
 import { useState, useRef, useEffect } from "react";
+import Modal from "../Components/Modal.js";
+import { AuthApis } from "../api";
+import { SuccessCard } from "../messageAlert/SuccessCard";
 
 const formatDate = (dateStr: string) => {
   if (!dateStr) return "";
@@ -127,10 +130,70 @@ const formatDateTime = (dateStr: string, timeStr: string) => {
   return `${year}-${month}-${day} ${formattedHours}:${formattedMinutes}:00 +0100`;
 };
 
+// Helper to convert 12-hour time to 24-hour format for <input type="time" />
+function to24HourFormat(time12h: string): string {
+  if (!time12h) return "";
+  const match = time12h.match(/^(\d{1,2}):(\d{2})\s*([APap][Mm])$/);
+  if (!match) return "";
+  let [_, hour, minute, period] = match;
+  let h = parseInt(hour, 10);
+  if (period.toLowerCase() === "pm" && h !== 12) h += 12;
+  if (period.toLowerCase() === "am" && h === 12) h = 0;
+  return `${h.toString().padStart(2, "0")}:${minute}`;
+}
+
+// Helper to convert 'yyyyMMdd' to 'yyyy-MM-dd' for <input type="date" />
+function toDateInputFormat(dateStr: string): string {
+  if (!dateStr || dateStr.length !== 8) return "";
+  const year = dateStr.substring(0, 4);
+  const month = dateStr.substring(4, 6);
+  const day = dateStr.substring(6, 8);
+  return `${year}-${month}-${day}`;
+}
+
+// Helper to convert 'HH:mm' to 'h:mm am/pm' for API if needed
+function to12HourFormat(time24h: string): string {
+  if (!time24h) return "";
+  const [hourStr, minute] = time24h.split(":");
+  let hour = parseInt(hourStr, 10);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+  return `${hour}:${minute} ${ampm}`;
+}
+
 const EventInfo = () => {
   const dropdownRef = useRef<HTMLUListElement>(null);
-  const { eventDetails } = use(UserDetailsContext);
+  const navigate = useNavigate();
+  const { eventDetails, updateEventDetails } = use(UserDetailsContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditLoading, setIsEditLoading] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  // Local state for edit modal fields
+  const [editTitle, setEditTitle] = useState(eventDetails?.eventTitle || "");
+  const [editDescription, setEditDescription] = useState(
+    eventDetails?.eventDescription || ""
+  );
+  const [editDate, setEditDate] = useState(
+    toDateInputFormat(eventDetails?.eventDate) || ""
+  );
+  const [editTime, setEditTime] = useState(
+    to24HourFormat(eventDetails?.eventTime) || ""
+  );
+
+  // When modal opens, initialize local state from eventDetails
+  useEffect(() => {
+    if (isEditModalOpen && eventDetails) {
+      setEditTitle(eventDetails.eventTitle || "");
+      setEditDescription(eventDetails.eventDescription || "");
+      setEditDate(toDateInputFormat(eventDetails.eventDate) || "");
+      setEditTime(to24HourFormat(eventDetails.eventTime) || "");
+    }
+  }, [isEditModalOpen, eventDetails]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -157,9 +220,70 @@ const EventInfo = () => {
   const googleUrl = google(event);
   const outlookUrl = outlook(event);
   const yahooUrl = yahoo(event);
+  const authApis = new AuthApis();
+
+  const handleUpdate = async () => {
+    if (isEditLoading) return;
+    try {
+      setIsEditLoading(true);
+      const response: any = await authApis.updateEditEvent(eventDetails?.id, {
+        title: editTitle,
+        description: editDescription,
+        date: editDate.replace(/-/g, ""), // 'yyyy-MM-dd' -> 'yyyyMMdd'
+        time: to12HourFormat(editTime), // 'HH:mm' -> 'h:mm am/pm'
+      });
+      if (response.status === 200) {
+        // Update the event details with the new data
+        const updatedEvent = {
+          ...eventDetails,
+          eventTitle: editTitle,
+          eventDescription: editDescription,
+          eventDate: editDate.replace(/-/g, ""),
+          eventTime: to12HourFormat(editTime),
+        };
+        updateEventDetails(updatedEvent);
+
+        setIsEditLoading(false);
+        setIsEditModalOpen(false);
+
+        setSuccessMessage("Event updated successfully");
+        setShowSuccess(true);
+      }
+    } catch (error) {
+    } finally {
+      setIsEditLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      setIsDeleteLoading(true);
+      const response: any = await authApis.deleteEvent(eventDetails?.id);
+      if (response.status === 200) {
+        setIsDeleteModalOpen(false);
+        setIsDeleteLoading(false);
+        setSuccessMessage("Event deleted successfully");
+        setShowSuccess(true);
+        // Navigate back to events page after a short delay to show the success message
+        setTimeout(() => {
+          navigate("/events");
+        }, 1500);
+      }
+    } catch (error) {
+    } finally {
+      setIsDeleteLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen ">
+      <SuccessCard
+        message={successMessage}
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        autoClose={true}
+        autoCloseTime={2000}
+      />
       <NavBar></NavBar>
       <div className=" flex flex-1 w-full overflow-y-auto  max-h-[calc(100vh-55px)] ">
         <SideBar>event</SideBar>
@@ -197,20 +321,40 @@ const EventInfo = () => {
                         {formatRelativeTime(eventDetails?.createdAt)}
                       </p>
                     </div>
-                    <div className="relative">
-                      <button
-                        className="bg-primary cursor-pointer text-[12px] md:text-[14px]  text-white px-4 py-3 rounded-md"
-                        onClick={() => setIsOpen(!isOpen)}
-                      >
-                        Add to Calendar
-                      </button>
-                      <ul
-                        ref={dropdownRef}
-                        className={`${
-                          isOpen ? "opacity-100" : "opacity-0 invisible"
-                        } transition-all absolute top-13 bg-white shadow rounded-[8px] border-1 border-[#EEEEEE] z-100`}
-                      >
-                        {/* <li className="cursor-pointer">
+                    <div className="flex gap-4">
+                      <div className={`flex gap-4 `}>
+                        <button
+                          onClick={() => {
+                            setIsEditModalOpen(true);
+                          }}
+                          className="w-1/2 flex cursor-pointer  items-center justify-center transition-all"
+                        >
+                          <img src="/assets/pen.svg" alt="pic" />
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setIsDeleteModalOpen(true);
+                          }}
+                          className="w-1/2 flex cursor-pointer  items-center justify-center transition-all"
+                        >
+                          <img src="/assets/dust-bin.svg" alt="pic" />
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <button
+                          className="bg-primary cursor-pointer text-[12px] md:text-[14px]  text-white px-4 py-3 rounded-md"
+                          onClick={() => setIsOpen(!isOpen)}
+                        >
+                          Add to Calendar
+                        </button>
+                        <ul
+                          ref={dropdownRef}
+                          className={`${
+                            isOpen ? "opacity-100" : "opacity-0 invisible"
+                          } transition-all absolute top-13 bg-white shadow rounded-[8px] border-1 border-[#EEEEEE] z-100`}
+                        >
+                          {/* <li className="cursor-pointer">
                           <a
                             target="_blank"
                             className=" flex items-center gap-3   px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"
@@ -228,250 +372,257 @@ const EventInfo = () => {
                             Apple
                           </a>
                         </li> */}
-                        <li className="cursor-pointer border-b py-1 px-2 md:px-4  border-[#EEEEEE]">
-                          <a
-                            target="_blank"
-                            className="flex items-center gap-3  px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"
-                            href={googleUrl}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="100"
-                              height="100"
-                              viewBox="0 0 48 48"
-                              className="w-5 md:w-7 h-5 md:h-7"
+                          <li className="cursor-pointer border-b py-1 px-2 md:px-4  border-[#EEEEEE]">
+                            <a
+                              target="_blank"
+                              className="flex items-center gap-3  px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"
+                              href={googleUrl}
                             >
-                              <path fill="#fff" d="M13 13h22v22H13z"></path>
-                              <path
-                                fill="#1e88e5"
-                                d="m25.68 20.92 1.008 1.44 1.584-1.152v8.352H30V18.616h-1.44zM22.943 23.745c.625-.574 1.013-1.37 1.013-2.249 0-1.747-1.533-3.168-3.417-3.168-1.602 0-2.972 1.009-3.33 2.453l1.657.421c.165-.664.868-1.146 1.673-1.146.942 0 1.709.646 1.709 1.44s-.767 1.44-1.709 1.44h-.997v1.728h.997c1.081 0 1.993.751 1.993 1.64 0 .904-.866 1.64-1.931 1.64-.962 0-1.784-.61-1.914-1.418L17 26.802c.262 1.636 1.81 2.87 3.6 2.87 2.007 0 3.64-1.511 3.64-3.368 0-1.023-.504-1.941-1.297-2.559"
-                              ></path>
-                              <path
-                                fill="#fbc02d"
-                                d="M34 42H14l-1-4 1-4h20l1 4z"
-                              ></path>
-                              <path
-                                fill="#4caf50"
-                                d="m38 35 4-1V14l-4-1-4 1v20z"
-                              ></path>
-                              <path
-                                fill="#1e88e5"
-                                d="m34 14 1-4-1-4H9a3 3 0 0 0-3 3v25l4 1 4-1V14z"
-                              ></path>
-                              <path fill="#e53935" d="M34 34v8l8-8z"></path>
-                              <path
-                                fill="#1565c0"
-                                d="M39 6h-5v8h8V9a3 3 0 0 0-3-3M9 42h5v-8H6v5a3 3 0 0 0 3 3"
-                              ></path>
-                            </svg>
-                            Google
-                          </a>
-                        </li>
-                        <li className="cursor-pointer border-b py-1 px-2 md:px-4  border-[#EEEEEE]">
-                          <a
-                            target="_blank"
-                            className=" flex items-center gap-3  px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"
-                            href={outlookUrl}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="100"
-                              height="100"
-                              viewBox="0 0 48 48"
-                              className="w-5 md:w-7 h-5 md:h-7"
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="100"
+                                height="100"
+                                viewBox="0 0 48 48"
+                                className="w-5 md:w-7 h-5 md:h-7"
+                              >
+                                <path fill="#fff" d="M13 13h22v22H13z"></path>
+                                <path
+                                  fill="#1e88e5"
+                                  d="m25.68 20.92 1.008 1.44 1.584-1.152v8.352H30V18.616h-1.44zM22.943 23.745c.625-.574 1.013-1.37 1.013-2.249 0-1.747-1.533-3.168-3.417-3.168-1.602 0-2.972 1.009-3.33 2.453l1.657.421c.165-.664.868-1.146 1.673-1.146.942 0 1.709.646 1.709 1.44s-.767 1.44-1.709 1.44h-.997v1.728h.997c1.081 0 1.993.751 1.993 1.64 0 .904-.866 1.64-1.931 1.64-.962 0-1.784-.61-1.914-1.418L17 26.802c.262 1.636 1.81 2.87 3.6 2.87 2.007 0 3.64-1.511 3.64-3.368 0-1.023-.504-1.941-1.297-2.559"
+                                ></path>
+                                <path
+                                  fill="#fbc02d"
+                                  d="M34 42H14l-1-4 1-4h20l1 4z"
+                                ></path>
+                                <path
+                                  fill="#4caf50"
+                                  d="m38 35 4-1V14l-4-1-4 1v20z"
+                                ></path>
+                                <path
+                                  fill="#1e88e5"
+                                  d="m34 14 1-4-1-4H9a3 3 0 0 0-3 3v25l4 1 4-1V14z"
+                                ></path>
+                                <path fill="#e53935" d="M34 34v8l8-8z"></path>
+                                <path
+                                  fill="#1565c0"
+                                  d="M39 6h-5v8h8V9a3 3 0 0 0-3-3M9 42h5v-8H6v5a3 3 0 0 0 3 3"
+                                ></path>
+                              </svg>
+                              Google
+                            </a>
+                          </li>
+                          <li className="cursor-pointer border-b py-1 px-2 md:px-4  border-[#EEEEEE]">
+                            <a
+                              target="_blank"
+                              className=" flex items-center gap-3  px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"
+                              href={outlookUrl}
                             >
-                              <path
-                                fill="#103262"
-                                d="m43.255 23.547-6.81-3.967v11.594H44v-6.331a1.5 1.5 0 0 0-.745-1.296"
-                              ></path>
-                              <path fill="#0084d7" d="M13 10h10v9H13z"></path>
-                              <path fill="#33afec" d="M23 10h10v9H23z"></path>
-                              <path fill="#54daff" d="M33 10h10v9H33z"></path>
-                              <path fill="#027ad4" d="M23 19h10v9H23z"></path>
-                              <path fill="#0553a4" d="M23 28h10v9H23z"></path>
-                              <path fill="#25a2e5" d="M33 19h10v9H33z"></path>
-                              <path fill="#0262b8" d="M33 28h10v9H33z"></path>
-                              <path
-                                d="M13 37h30V24.238l-14.01 8-15.99-8z"
-                                opacity="0.019"
-                              ></path>
-                              <path
-                                d="M13 37h30V24.476l-14.01 8-15.99-8z"
-                                opacity="0.038"
-                              ></path>
-                              <path
-                                d="M13 37h30V24.714l-14.01 8-15.99-8z"
-                                opacity="0.057"
-                              ></path>
-                              <path
-                                d="M13 37h30V24.952l-14.01 8-15.99-8z"
-                                opacity="0.076"
-                              ></path>
-                              <path
-                                d="M13 37h30V25.19l-14.01 8-15.99-8z"
-                                opacity="0.095"
-                              ></path>
-                              <path
-                                d="M13 37h30V25.429l-14.01 8-15.99-8z"
-                                opacity="0.114"
-                              ></path>
-                              <path
-                                d="M13 37h30V25.667l-14.01 8-15.99-8z"
-                                opacity="0.133"
-                              ></path>
-                              <path
-                                d="M13 37h30V25.905l-14.01 8-15.99-8z"
-                                opacity="0.152"
-                              ></path>
-                              <path
-                                d="M13 37h30V26.143l-14.01 8-15.99-8z"
-                                opacity="0.171"
-                              ></path>
-                              <path
-                                d="M13 37h30V26.381l-14.01 8-15.99-8z"
-                                opacity="0.191"
-                              ></path>
-                              <path
-                                d="M13 37h30V26.619l-14.01 8-15.99-8z"
-                                opacity="0.209"
-                              ></path>
-                              <path
-                                d="M13 37h30V26.857l-14.01 8-15.99-8z"
-                                opacity="0.229"
-                              ></path>
-                              <path
-                                d="M13 37h30v-9.905l-14.01 8-15.99-8z"
-                                opacity="0.248"
-                              ></path>
-                              <path
-                                d="M13 37h30v-9.667l-14.01 8-15.99-8z"
-                                opacity="0.267"
-                              ></path>
-                              <path
-                                d="M13 37h30v-9.429l-14.01 8-15.99-8z"
-                                opacity="0.286"
-                              ></path>
-                              <path
-                                d="M13 37h30v-9.19l-14.01 8-15.99-8z"
-                                opacity="0.305"
-                              ></path>
-                              <path
-                                d="M13 37h30v-8.952l-14.01 8-15.99-8z"
-                                opacity="0.324"
-                              ></path>
-                              <path
-                                d="M13 37h30v-8.714l-14.01 8-15.99-8z"
-                                opacity="0.343"
-                              ></path>
-                              <path
-                                d="M13 37h30v-8.476l-14.01 8-15.99-8z"
-                                opacity="0.362"
-                              ></path>
-                              <path
-                                d="M13 37h30v-8.238l-14.01 8-15.99-8z"
-                                opacity="0.381"
-                              ></path>
-                              <path
-                                d="M13 37h30v-8l-14.01 8L13 29z"
-                                opacity="0.4"
-                              ></path>
-                              <linearGradient
-                                id="Qf7015RosYe_HpjKeG0QTb_ut6gQeo5pNqf_gr2"
-                                x1="13.665"
-                                x2="41.285"
-                                y1="6.992"
-                                y2="9.074"
-                                gradientUnits="userSpaceOnUse"
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="100"
+                                height="100"
+                                viewBox="0 0 48 48"
+                                className="w-5 md:w-7 h-5 md:h-7"
                               >
-                                <stop offset="0.042" stopColor="#076db4"></stop>
-                                <stop offset="0.85" stopColor="#0461af"></stop>
-                              </linearGradient>
-                              <path
-                                fill="url(#Qf7015RosYe_HpjKeG0QTb_ut6gQeo5pNqf_gr2)"
-                                d="M43 10H13V8a2 2 0 0 1 2-2h26a2 2 0 0 1 2 2z"
-                              ></path>
-                              <linearGradient
-                                id="Qf7015RosYe_HpjKeG0QTc_ut6gQeo5pNqf_gr3"
-                                x1="28.153"
-                                x2="23.638"
-                                y1="33.218"
-                                y2="41.1"
-                                gradientUnits="userSpaceOnUse"
-                              >
-                                <stop offset="0" stopColor="#33acee"></stop>
-                                <stop offset="1" stopColor="#1b8edf"></stop>
-                              </linearGradient>
-                              <path
-                                fill="url(#Qf7015RosYe_HpjKeG0QTc_ut6gQeo5pNqf_gr3)"
-                                d="M13 25v15a2 2 0 0 0 2 2h27.004a1.98 1.98 0 0 0 1.221-.425z"
-                              ></path>
-                              <path
-                                d="M21.319 13H13v24h8.319A3.68 3.68 0 0 0 25 33.319V16.681A3.68 3.68 0 0 0 21.319 13"
-                                opacity="0.05"
-                              ></path>
-                              <path
-                                d="M21.213 36H13V13.333h8.213a3.12 3.12 0 0 1 3.121 3.121v16.425A3.12 3.12 0 0 1 21.213 36"
-                                opacity="0.07"
-                              ></path>
-                              <path
-                                d="M21.106 35H13V13.667h8.106a2.56 2.56 0 0 1 2.56 2.56V32.44a2.56 2.56 0 0 1-2.56 2.56"
-                                opacity="0.09"
-                              ></path>
-                              <linearGradient
-                                id="Qf7015RosYe_HpjKeG0QTd_ut6gQeo5pNqf_gr4"
-                                x1="3.53"
-                                x2="22.41"
-                                y1="14.53"
-                                y2="33.41"
-                                gradientUnits="userSpaceOnUse"
-                              >
-                                <stop offset="0" stopColor="#1784d8"></stop>
-                                <stop offset="1" stopColor="#0864c5"></stop>
-                              </linearGradient>
-                              <path
-                                fill="url(#Qf7015RosYe_HpjKeG0QTd_ut6gQeo5pNqf_gr4)"
-                                d="M21 34H5a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2"
-                              ></path>
-                              <path
-                                fill="#fff"
-                                d="M13 18.691c-3.111 0-4.985 2.377-4.985 5.309S9.882 29.309 13 29.309s4.985-2.377 4.985-5.308c0-2.933-1.874-5.31-4.985-5.31m0 8.826c-1.765 0-2.82-1.574-2.82-3.516s1.06-3.516 2.82-3.516 2.821 1.575 2.821 3.516-1.057 3.516-2.821 3.516"
-                              ></path>
-                            </svg>
-                            Outlook
-                          </a>
-                        </li>
-                        <li className="cursor-pointer border-b py-1 px-2 md:px-4  border-[#EEEEEE]">
-                          <a
-                            target="_blank"
-                            className=" flex items-center gap-3  px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"
-                            href={yahooUrl}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="100"
-                              height="100"
-                              viewBox="0 0 48 48"
-                              className="w-5 md:w-7 h-5 md:h-7"
+                                <path
+                                  fill="#103262"
+                                  d="m43.255 23.547-6.81-3.967v11.594H44v-6.331a1.5 1.5 0 0 0-.745-1.296"
+                                ></path>
+                                <path fill="#0084d7" d="M13 10h10v9H13z"></path>
+                                <path fill="#33afec" d="M23 10h10v9H23z"></path>
+                                <path fill="#54daff" d="M33 10h10v9H33z"></path>
+                                <path fill="#027ad4" d="M23 19h10v9H23z"></path>
+                                <path fill="#0553a4" d="M23 28h10v9H23z"></path>
+                                <path fill="#25a2e5" d="M33 19h10v9H33z"></path>
+                                <path fill="#0262b8" d="M33 28h10v9H33z"></path>
+                                <path
+                                  d="M13 37h30V24.238l-14.01 8-15.99-8z"
+                                  opacity="0.019"
+                                ></path>
+                                <path
+                                  d="M13 37h30V24.476l-14.01 8-15.99-8z"
+                                  opacity="0.038"
+                                ></path>
+                                <path
+                                  d="M13 37h30V24.714l-14.01 8-15.99-8z"
+                                  opacity="0.057"
+                                ></path>
+                                <path
+                                  d="M13 37h30V24.952l-14.01 8-15.99-8z"
+                                  opacity="0.076"
+                                ></path>
+                                <path
+                                  d="M13 37h30V25.19l-14.01 8-15.99-8z"
+                                  opacity="0.095"
+                                ></path>
+                                <path
+                                  d="M13 37h30V25.429l-14.01 8-15.99-8z"
+                                  opacity="0.114"
+                                ></path>
+                                <path
+                                  d="M13 37h30V25.667l-14.01 8-15.99-8z"
+                                  opacity="0.133"
+                                ></path>
+                                <path
+                                  d="M13 37h30V25.905l-14.01 8-15.99-8z"
+                                  opacity="0.152"
+                                ></path>
+                                <path
+                                  d="M13 37h30V26.143l-14.01 8-15.99-8z"
+                                  opacity="0.171"
+                                ></path>
+                                <path
+                                  d="M13 37h30V26.381l-14.01 8-15.99-8z"
+                                  opacity="0.191"
+                                ></path>
+                                <path
+                                  d="M13 37h30V26.619l-14.01 8-15.99-8z"
+                                  opacity="0.209"
+                                ></path>
+                                <path
+                                  d="M13 37h30V26.857l-14.01 8-15.99-8z"
+                                  opacity="0.229"
+                                ></path>
+                                <path
+                                  d="M13 37h30v-9.905l-14.01 8-15.99-8z"
+                                  opacity="0.248"
+                                ></path>
+                                <path
+                                  d="M13 37h30v-9.667l-14.01 8-15.99-8z"
+                                  opacity="0.267"
+                                ></path>
+                                <path
+                                  d="M13 37h30v-9.429l-14.01 8-15.99-8z"
+                                  opacity="0.286"
+                                ></path>
+                                <path
+                                  d="M13 37h30v-9.19l-14.01 8-15.99-8z"
+                                  opacity="0.305"
+                                ></path>
+                                <path
+                                  d="M13 37h30v-8.952l-14.01 8-15.99-8z"
+                                  opacity="0.324"
+                                ></path>
+                                <path
+                                  d="M13 37h30v-8.714l-14.01 8-15.99-8z"
+                                  opacity="0.343"
+                                ></path>
+                                <path
+                                  d="M13 37h30v-8.476l-14.01 8-15.99-8z"
+                                  opacity="0.362"
+                                ></path>
+                                <path
+                                  d="M13 37h30v-8.238l-14.01 8-15.99-8z"
+                                  opacity="0.381"
+                                ></path>
+                                <path
+                                  d="M13 37h30v-8l-14.01 8L13 29z"
+                                  opacity="0.4"
+                                ></path>
+                                <linearGradient
+                                  id="Qf7015RosYe_HpjKeG0QTb_ut6gQeo5pNqf_gr2"
+                                  x1="13.665"
+                                  x2="41.285"
+                                  y1="6.992"
+                                  y2="9.074"
+                                  gradientUnits="userSpaceOnUse"
+                                >
+                                  <stop
+                                    offset="0.042"
+                                    stopColor="#076db4"
+                                  ></stop>
+                                  <stop
+                                    offset="0.85"
+                                    stopColor="#0461af"
+                                  ></stop>
+                                </linearGradient>
+                                <path
+                                  fill="url(#Qf7015RosYe_HpjKeG0QTb_ut6gQeo5pNqf_gr2)"
+                                  d="M43 10H13V8a2 2 0 0 1 2-2h26a2 2 0 0 1 2 2z"
+                                ></path>
+                                <linearGradient
+                                  id="Qf7015RosYe_HpjKeG0QTc_ut6gQeo5pNqf_gr3"
+                                  x1="28.153"
+                                  x2="23.638"
+                                  y1="33.218"
+                                  y2="41.1"
+                                  gradientUnits="userSpaceOnUse"
+                                >
+                                  <stop offset="0" stopColor="#33acee"></stop>
+                                  <stop offset="1" stopColor="#1b8edf"></stop>
+                                </linearGradient>
+                                <path
+                                  fill="url(#Qf7015RosYe_HpjKeG0QTc_ut6gQeo5pNqf_gr3)"
+                                  d="M13 25v15a2 2 0 0 0 2 2h27.004a1.98 1.98 0 0 0 1.221-.425z"
+                                ></path>
+                                <path
+                                  d="M21.319 13H13v24h8.319A3.68 3.68 0 0 0 25 33.319V16.681A3.68 3.68 0 0 0 21.319 13"
+                                  opacity="0.05"
+                                ></path>
+                                <path
+                                  d="M21.213 36H13V13.333h8.213a3.12 3.12 0 0 1 3.121 3.121v16.425A3.12 3.12 0 0 1 21.213 36"
+                                  opacity="0.07"
+                                ></path>
+                                <path
+                                  d="M21.106 35H13V13.667h8.106a2.56 2.56 0 0 1 2.56 2.56V32.44a2.56 2.56 0 0 1-2.56 2.56"
+                                  opacity="0.09"
+                                ></path>
+                                <linearGradient
+                                  id="Qf7015RosYe_HpjKeG0QTd_ut6gQeo5pNqf_gr4"
+                                  x1="3.53"
+                                  x2="22.41"
+                                  y1="14.53"
+                                  y2="33.41"
+                                  gradientUnits="userSpaceOnUse"
+                                >
+                                  <stop offset="0" stopColor="#1784d8"></stop>
+                                  <stop offset="1" stopColor="#0864c5"></stop>
+                                </linearGradient>
+                                <path
+                                  fill="url(#Qf7015RosYe_HpjKeG0QTd_ut6gQeo5pNqf_gr4)"
+                                  d="M21 34H5a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2"
+                                ></path>
+                                <path
+                                  fill="#fff"
+                                  d="M13 18.691c-3.111 0-4.985 2.377-4.985 5.309S9.882 29.309 13 29.309s4.985-2.377 4.985-5.308c0-2.933-1.874-5.31-4.985-5.31m0 8.826c-1.765 0-2.82-1.574-2.82-3.516s1.06-3.516 2.82-3.516 2.821 1.575 2.821 3.516-1.057 3.516-2.821 3.516"
+                                ></path>
+                              </svg>
+                              Outlook
+                            </a>
+                          </li>
+                          <li className="cursor-pointer border-b py-1 px-2 md:px-4  border-[#EEEEEE]">
+                            <a
+                              target="_blank"
+                              className=" flex items-center gap-3  px-4 py-2 whitespace-nowrap text-[16px] text-[#4E4E4E] font-[600] hover:text-primary"
+                              href={yahooUrl}
                             >
-                              <path
-                                fill="#5e35b1"
-                                d="M4.209 14.881h7.423l4.557 11.834 4.777-11.834h7.349L17.07 42H9.501l3.086-7.04z"
-                              ></path>
-                              <circle
-                                cx="29.276"
-                                cy="30.522"
-                                r="4.697"
-                                fill="#5e35b1"
-                              ></circle>
-                              <path
-                                fill="#5e35b1"
-                                d="m34.693 6-7.48 18.042h8.231L42.925 6z"
-                              ></path>
-                            </svg>
-                            Yahoo
-                          </a>
-                        </li>
-                      </ul>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="100"
+                                height="100"
+                                viewBox="0 0 48 48"
+                                className="w-5 md:w-7 h-5 md:h-7"
+                              >
+                                <path
+                                  fill="#5e35b1"
+                                  d="M4.209 14.881h7.423l4.557 11.834 4.777-11.834h7.349L17.07 42H9.501l3.086-7.04z"
+                                ></path>
+                                <circle
+                                  cx="29.276"
+                                  cy="30.522"
+                                  r="4.697"
+                                  fill="#5e35b1"
+                                ></circle>
+                                <path
+                                  fill="#5e35b1"
+                                  d="m34.693 6-7.48 18.042h8.231L42.925 6z"
+                                ></path>
+                              </svg>
+                              Yahoo
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                   <p className="font-[500] mt-[11px] text-[16px] text-[#959595] ">
@@ -519,6 +670,125 @@ const EventInfo = () => {
                     <div className="border-1 border-[#C9C9C9] mb-8 w-[80%] place-self-center "></div>
                   </div>
                 </div>
+                <Modal
+                  isOpen={isEditModalOpen}
+                  onClose={() => setIsEditModalOpen(false)}
+                >
+                  <div className="w-auto h-auto bg-white rounded-[10px] ">
+                    <div className="flex justify-between p-4  border-b-1 border-[#808080] w-full">
+                      <p className="text-primary font-[700] text-[16px] w-full">
+                        Edit Event
+                      </p>
+                      <button
+                        className="place-self-end cursor-pointer transition-transform duration-200 hover:scale-110"
+                        onClick={() => setIsEditModalOpen(false)}
+                      >
+                        <img src="/assets/cancel-icon.svg" alt="" />
+                      </button>
+                    </div>
+                    <div className="px-8 py-6 flex flex-col gap-2">
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[14px] font-[700] ">
+                          Event Title
+                        </label>
+                        <input
+                          className="border-1 w-[306px] h-8 px-2  text-[14px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
+                          value={editTitle}
+                          onChange={(e) => setEditTitle(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[14px] font-[700] ">
+                          Event Description
+                        </label>
+                        <textarea
+                          className="border-1 w-[306px] min-h-15 h-auto px-2  text-[14px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
+                          value={editDescription}
+                          onChange={(e) => setEditDescription(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[14px] font-[700] ">
+                          Event Date
+                        </label>
+                        <input
+                          type="date"
+                          className="border-1 w-[306px]  h-8 px-2  text-[14px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
+                          value={editDate}
+                          onChange={(e) => setEditDate(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[14px] font-[700] ">
+                          Event Time
+                        </label>
+                        <input
+                          type="time"
+                          className="border-1 w-[306px]  h-8 px-2  text-[14px] border-black/20 rounded-[5px] transition-all duration-200 focus:border-primary focus:outline-none"
+                          value={editTime}
+                          onChange={(e) => setEditTime(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex gap-3 justify-end mt-3">
+                        <button
+                          type="button"
+                          onClick={() => setIsEditModalOpen(false)}
+                          className="bg-[#EFEFEF] py-2 px-3 font-[500] text-[13px] rounded-[8px] hover:cursor-pointer transition-all duration-200 hover:bg-gray-300"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          onClick={handleUpdate}
+                          className={` text-white py-2 px-3 font-[500] text-[13px] rounded-[8px]  transition-all duration-200 ${
+                            isEditLoading
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-primary cursor-pointer "
+                          }`}
+                        >
+                          {isEditLoading ? "Updating..." : "Update"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </Modal>
+                <Modal
+                  isOpen={isDeleteModalOpen}
+                  onClose={() => setIsDeleteModalOpen(false)}
+                >
+                  <div className="w-[45vh] h-auto bg-white rounded-[10px] ">
+                    <div className="flex justify-between p-4 rounded-t-[10px]  bg-[#efefef] w-full">
+                      <p className=" font-[700]  text-[16px] w-full">
+                        Delete Event
+                      </p>
+                    </div>
+                    <div className="px-8 py-6 flex flex-col gap-2">
+                      <div className="flex text-[#898A8D] flex-col gap-1">
+                        Delete this event?
+                      </div>
+                      <div className="flex gap-3 justify-end mt-3">
+                        <button
+                          type="button"
+                          onClick={() => setIsDeleteModalOpen(false)}
+                          className="bg-[#EFEFEF] py-2 px-3 font-[500] text-[13px] rounded-[8px] hover:cursor-pointer transition-all duration-200 hover:bg-gray-300"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          onClick={handleDelete}
+                          className={` text-white py-2 px-3 font-[500] text-[13px] rounded-[8px]  transition-all duration-200 ${
+                            isDeleteLoading
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-primary cursor-pointer "
+                          }`}
+                        >
+                          {isDeleteLoading ? "Deleting..." : "Confirm"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </Modal>
               </div>
             </div>
           </div>

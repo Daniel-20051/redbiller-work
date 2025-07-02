@@ -255,49 +255,62 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
         </table>
       )}
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <div className="w-[35vw] h-auto bg-white rounded-[10px] p-4">
-          <p className="font-semibold">Action Item</p>
-          <textarea
-            className="w-full h-[100px] border-1 border-gray-300 rounded-[5px] resize-none p-2"
-            value={actionItem}
-            onChange={(e) => setActionItem(e.target.value)}
-          />
-          <p className="font-semibold">Ongoing</p>
-          <textarea
-            className="w-full h-[100px] border-1 border-gray-300 rounded-[5px] resize-none p-2"
-            value={ongoing}
-            onChange={(e) => setOngoing(e.target.value)}
-          />
-          <p className="font-semibold">Completed</p>
-          <textarea
-            className="w-full h-[100px] border-1 border-gray-300 rounded-[5px] resize-none p-2"
-            value={completed}
-            onChange={(e) => setCompleted(e.target.value)}
-          />
+        <div className="w-[35vw] h-auto bg-white rounded-[10px] ">
+          <div className="flex justify-between p-4 mb-2 border-b-1 border-[#808080] w-full">
+            <p className="text-primary font-[700] text-[16px] w-full">
+              Edit Weekly Report
+            </p>
+            <button
+              className="place-self-end cursor-pointer transition-transform duration-200 hover:scale-110"
+              onClick={() => setIsEditModalOpen(false)}
+            >
+              <img src="/assets/cancel-icon.svg" alt="" />
+            </button>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold">Action Item</p>
+            <textarea
+              className="w-full h-[100px] border-1 border-gray-300 rounded-[5px] resize-none p-2"
+              value={actionItem}
+              onChange={(e) => setActionItem(e.target.value)}
+            />
+            <p className="font-semibold">Ongoing</p>
+            <textarea
+              className="w-full h-[100px] border-1 border-gray-300 rounded-[5px] resize-none p-2"
+              value={ongoing}
+              onChange={(e) => setOngoing(e.target.value)}
+            />
+            <p className="font-semibold">Completed</p>
+            <textarea
+              className="w-full h-[100px] border-1 border-gray-300 rounded-[5px] resize-none p-2"
+              value={completed}
+              onChange={(e) => setCompleted(e.target.value)}
+            />
 
-          <button
-            className={`w-full mt-4  h-[40px]  text-white rounded-[5px] 
+            <button
+              className={`w-full mt-4  h-[40px]  text-white rounded-[5px] 
               ${
                 isEditLoading
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-primary cursor-pointer"
               }`}
-            disabled={isEditLoading}
-            onClick={handleUpdate}
-          >
-            {isEditLoading ? (
-              <div className={`flex justify-center items-center h-auto `}>
-                <Icon
-                  icon="svg-spinners:ring-resize"
-                  width="27"
-                  height="27"
-                  color="#FFFFFF"
-                />
-              </div>
-            ) : (
-              "Update"
-            )}
-          </button>
+              disabled={isEditLoading}
+              onClick={handleUpdate}
+            >
+              {isEditLoading ? (
+                <div className={`flex justify-center items-center h-auto `}>
+                  <Icon
+                    icon="svg-spinners:ring-resize"
+                    width="27"
+                    height="27"
+                    color="#FFFFFF"
+                  />
+                </div>
+              ) : (
+                "Update"
+              )}
+            </button>
+          </div>
         </div>
       </Modal>
       <SuccessCard
