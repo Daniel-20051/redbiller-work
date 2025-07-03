@@ -91,7 +91,7 @@ const UserCard = ({ username, role }: Props) => {
               </p>
             </div>
           </div>
-          <tr className="outline-[1px] outline-[#7D7D7D] my-6 w-[full]"></tr>
+          <div className="outline-[1px] outline-[#7D7D7D] my-6 w-full"></div>
           <Link
             to="/profile"
             className="flex gap-3 bg-[#F2F2F2] p-[15px] rounded-[8px] hover:bg-[#d6cbcb]"

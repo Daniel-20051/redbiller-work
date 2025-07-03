@@ -18,10 +18,9 @@ export class AuthApis {
         ,
         { withCredentials: true }
       );
-      
       return response;
     } catch (error: any) {
-      console.log(error);
+      
       return error;
     }
   }

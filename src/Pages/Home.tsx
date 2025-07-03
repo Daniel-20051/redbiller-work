@@ -3,7 +3,7 @@ import NavBar from "../Components/NavBar";
 import { UserDetailsContext } from "../context/AuthContext";
 import { use } from "react";
 import SideBar from "../Components/SideBar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SmallSpiner from "../Components/smallSpiner";
 import { AuthApis } from "../api";
 import { Icon } from "@iconify/react";
@@ -21,6 +21,7 @@ const Home = () => {
   const isAdmin =
     userDetails?.data.user.role == "admin" ||
     userDetails?.data.user.role == "superadmin";
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -238,11 +239,15 @@ const Home = () => {
                               })}
                             </p>
 
-                            <Link to="/incident-report" className="z-50">
-                              <button className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer z-20">
-                                View
-                              </button>
-                            </Link>
+                            <button
+                              className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer z-20"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate("/incident-report");
+                              }}
+                            >
+                              View
+                            </button>
                           </>
                         ) : (
                           <div className="flex flex-col gap-2 justify-center items-center h-[100%]">
@@ -319,11 +324,15 @@ const Home = () => {
                               minute: "2-digit",
                             })}
                       </p>
-                      <Link to="/weekly-report" className="z-50">
-                        <button className="absolute  bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer">
-                          View
-                        </button>
-                      </Link>
+                      <button
+                        className="absolute  bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate("/weekly-report");
+                        }}
+                      >
+                        View
+                      </button>
                     </Link>
                   ) : (
                     <div className="flex flex-col gap-2 justify-center items-center h-full">

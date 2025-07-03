@@ -55,6 +55,17 @@ const Login = () => {
         showAlertMessage("Network Error", "error");
         setLoginSpiner(false);
       }
+      if (
+        responseData?.response?.data?.message ===
+        "your active has been deactivated, kindly reach out to the admin of your department"
+      ) {
+        showAlertMessage(
+          "Your account has been deactivated, kindly reach out to the admin of your department",
+          "error"
+        );
+        setLoginSpiner(false);
+        return;
+      }
     } catch (err: any) {
       showAlertMessage("An error occurred during login", "error");
       setLoginSpiner(false);

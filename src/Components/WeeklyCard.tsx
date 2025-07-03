@@ -17,9 +17,9 @@ const WeeklyCard = ({ user, subject, children }: Props) => {
       </div>
       <div className=" w-[85%]  border-1 border-[#C9C9C9] "></div>
       <p className="text-primary text-[16px] font-[700]  ">{subject}</p>
-      <p className="text-[#4E4E4E] text-[14px] w-[89%] font-[400]  overflow-y-auto  hide-scrollbar scroll-smooth  ">
+      <div className="text-[#4E4E4E] text-[14px] w-[89%] font-[400]  overflow-y-auto  hide-scrollbar scroll-smooth  ">
         {children}
-      </p>
+      </div>
     </div>
   );
 };
