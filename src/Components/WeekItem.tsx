@@ -1,8 +1,8 @@
 interface WeekItemProps {
   weekNum: number;
-  actionItem: string;
-  ongoingTask: string;
-  completedTask: string;
+  actionItem: React.ReactNode;
+  ongoingTask: React.ReactNode;
+  completedTask: React.ReactNode;
   startDate: string;
   endDate: string;
 }
@@ -31,10 +31,9 @@ const WeekItem = ({
           Action Item
         </p>
         <div className="h-[50%] ml-[50px] xl:ml-[188px] mr-[30px] xl:mr-[78px] border-[#E9E9E9] border-1 "></div>
-        <p className="font-[400] max-w-[45vw] md:max-w-[55vw] lg:max-w-[43vw] xl:max-w-[37vw] text-[14px] ">
-          {" "}
+        <div className="font-[400] max-w-[45vw] md:max-w-[55vw] lg:max-w-[43vw] xl:max-w-[37vw] text-[14px] ">
           {actionItem}
-        </p>
+        </div>
       </div>
       <div className="flex items-center  h-[33.3%] ">
         <div className="bg-[#B0AB51] w-[15px] md:w-[21px] ml-[15px] h-[15px] md:h-[21px] rounded-xl  "></div>
@@ -42,9 +41,9 @@ const WeekItem = ({
           Ongoing
         </p>
         <div className="h-[50%] ml-[67px] xl:ml-[209px] mr-[30px] xl:mr-[78px] border-[#E9E9E9] border-1"></div>
-        <p className="font-[400] max-w-[45vw] md:max-w-[55vw] lg:max-w-[43vw] xl:max-w-[37vw] text-[14px] ">
+        <div className="font-[400] max-w-[45vw] md:max-w-[55vw] lg:max-w-[43vw] xl:max-w-[37vw] text-[14px] ">
           {ongoingTask}
-        </p>
+        </div>
       </div>
       <div className="flex items-center  h-[33.3%] rounded-b-[15px]">
         <div className="bg-[#931D4E] w-[15px] md:w-[21px] ml-[15px] h-[15px] md:h-[21px] rounded-xl  "></div>
@@ -52,9 +51,9 @@ const WeekItem = ({
           Completed
         </p>
         <div className="h-[50%] ml-[53px] xl:ml-[192px] mr-[30px] xl:mr-[78px] border-[#E9E9E9] border-1"></div>
-        <p className="font-[400] max-w-[45vw] md:max-w-[55vw] lg:max-w-[43vw] xl:max-w-[37vw] text-[14px] ">
+        <div className="font-[400] max-w-[45vw] md:max-w-[55vw] lg:max-w-[43vw] xl:max-w-[37vw] text-[14px] ">
           {completedTask}
-        </p>
+        </div>
       </div>
     </div>
   );

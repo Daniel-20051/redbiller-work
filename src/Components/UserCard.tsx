@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect, use } from "react";
 import { Link } from "react-router-dom";
 import { UserDetailsContext } from "../context/AuthContext";
+import ProfileName from "./ProfileName";
 
 interface Props {
   username: string;
   role: string;
+  fullName?: string;
 }
 
-const UserCard = ({ username, role }: Props) => {
+const UserCard = ({ username, role, fullName }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { userDetails } = use(UserDetailsContext);
@@ -52,11 +54,8 @@ const UserCard = ({ username, role }: Props) => {
         src="/assets/dummynot.svg"
         alt=""
       /> */}
-      <img
-        className="w-[35px] h-[35px] rounded-[15px]"
-        src="/assets/blank-profile.png"
-        alt=""
-      />
+
+      <ProfileName name={fullName || ""} />
       <div
         onClick={() => {
           setIsOpen(!isOpen);
@@ -79,11 +78,7 @@ const UserCard = ({ username, role }: Props) => {
       {isOpen && (
         <div className=" flex w-[302px] h-[295px] pt-[38px] px-[29px]  flex-col bg-[#FAFAFA] rounded-[20px] z-50 absolute top-18 right-[1px] ">
           <div className="flex gap-6 items-center">
-            <img
-              className="w-[56px] h-[56px] ml-[15px] rounded-[50px]"
-              src="/assets/blank-profile.png"
-              alt=""
-            />
+            <ProfileName name={fullName || ""} />
             <div className="flex flex-col gap-1">
               <p className="font-[500] text-[12px] ">{username}</p>
               <p className="text-[#B2B2B2] font-[500] text-[12px]">

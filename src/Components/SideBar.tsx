@@ -157,6 +157,26 @@ const SideBar = ({ children }: Props) => {
           <p className="text-[15px] font-[500] ">Weekly Report</p>
         </Link>
         <Link
+          to="/chat"
+          onClick={handleMobileCollapse}
+          className={
+            children === "chat"
+              ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
+              : "text-black  flex w-full h-[55px] font-bold gap-3 items-center "
+          }
+        >
+          <img
+            className="w-[16px] h-[16px] ml-[30px] text-black "
+            src={
+              children === "chat"
+                ? "/assets/chat-active.svg"
+                : "/assets/chat.svg"
+            }
+            alt=""
+          />
+          <p className="text-[15px] font-[500] ">Chats</p>
+        </Link>
+        <Link
           to="/home"
           onClick={handleMobileCollapse}
           className={

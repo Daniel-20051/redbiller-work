@@ -20,7 +20,7 @@ export class AuthApis {
       );
       return response;
     } catch (error: any) {
-      
+      console.log(error)
       return error;
     }
   }

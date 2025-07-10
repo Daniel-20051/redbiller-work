@@ -37,6 +37,9 @@ const NavBar = () => {
       <UserCard
         username={`${formatName(userDetails?.data.user.firstName)}`}
         role={`${formatName(userDetails?.data.user.role)}`}
+        fullName={`${formatName(userDetails?.data.user.firstName)} ${formatName(
+          userDetails?.data.user.lastName
+        )}`}
       ></UserCard>
     </div>
   );

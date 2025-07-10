@@ -11,7 +11,8 @@ import IncidentCreate from "./Pages/IncidentCreate";
 import WeeklyCreate from "./Pages/WeeklyCreate";
 import Profile from "./Pages/Profile";
 import User from "./Pages/Users";
-import ProtectedRoute from "./routs/protectedRoute";
+import ProtectedRoute from "./routes/protectedRoute";
+import Chat from "./Pages/Chat";
 import { UserDetailsContext } from "./context/AuthContext.js";
 
 import IncidentView from "./Pages/IncidentView";
@@ -22,7 +23,7 @@ const App = () => {
     userDetails?.data.user.role == "admin" ||
     userDetails?.data.user.role == "superadmin";
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const INACTIVE_TIMEOUT = 10 * 60 * 1000; // 5 minutes in milliseconds
+  const INACTIVE_TIMEOUT = 10 * 60 * 1000; // 10 minutes in milliseconds
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -161,6 +162,7 @@ const App = () => {
             />
             <Route path="/profile" element={<Profile />} />
             {isAdmin && <Route path="/users" element={<User />} />}
+            <Route path="/chat" element={<Chat />} />
           </Route>
           {/* Catch all - redirect to home if authenticated, otherwise to login */}
           <Route
