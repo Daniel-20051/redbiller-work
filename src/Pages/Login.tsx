@@ -51,6 +51,11 @@ const Login = () => {
         setLoginSpiner(false);
         return;
       }
+      if (responseData?.status === 500) {
+        showAlertMessage("Internal Server Error", "error");
+        setLoginSpiner(false);
+        return;
+      }
       if (responseData?.code === "ERR_NETWORK") {
         showAlertMessage("Network Error", "error");
         setLoginSpiner(false);
