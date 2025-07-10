@@ -1,6 +1,5 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import socketService from "../services/socketService";
-import { UserDetailsContext } from "../context/AuthContext";
 
 // Define the shape of a message
 interface ChatMessage {
