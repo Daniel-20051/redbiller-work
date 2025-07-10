@@ -1,6 +1,5 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import socketService from "../services/socketService";
-import { UserDetailsContext } from "../context/AuthContext";
 
 // Define the shape of a message
 interface ChatMessage {
@@ -10,7 +9,6 @@ interface ChatMessage {
 }
 
 const ChatTest: React.FC = () => {
-  const { userDetails } = use(UserDetailsContext);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [isConnected, setIsConnected] = useState(false);

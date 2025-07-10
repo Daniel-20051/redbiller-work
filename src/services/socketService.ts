@@ -100,6 +100,19 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     });
   }
 
+  onReadBy(callback: DeliveryCallback): void {
+    this.socket?.on('mark_message_read', (data: any) => {
+      console.log('✅ Message read by:', data);
+      callback(data);
+    });
+  }
+  onTyping(callback: DeliveryCallback): void {
+    this.socket?.on('typing_start', (data: any) => {
+      console.log('✅ Message typing:', data);
+      callback(data);
+    });
+  }
+
   disconnect(): void {
     if (this.socket) {
       this.socket.disconnect();
