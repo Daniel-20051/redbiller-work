@@ -212,43 +212,47 @@ const Home = () => {
                       >
                         {incidentreportHome?.data?.data.incidents[0]
                           .incidentMessage ? (
-                          <>
-                            <p className="text-[24px] md:text-[32px] font-[600] ml-[19px] pt-[19px]">
-                              Incident Report
-                            </p>
-                            <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
-                            <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px]">
-                              {
-                                incidentreportHome?.data?.data.incidents[0]
-                                  .subject
-                              }
-                            </p>
-                            <p className="text-[#4E4E4E] ml-[30px] mt-[8px] text-[14px] font-[400] clamp-responsive">
-                              {
-                                incidentreportHome?.data?.data.incidents[0]
-                                  .incidentMessage
-                              }
-                            </p>
-                            <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
-                              {new Date(
-                                incidentreportHome?.data?.data.incidents[0].createdAt
-                              ).toLocaleString(undefined, {
-                                weekday: "long",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                            </p>
+                          <div className="flex flex-col justify-between py-4 pl-6 pr-4 h-full">
+                            <div>
+                              <p className="text-[24px] md:text-[32px] font-[600]  ">
+                                Incident Report
+                              </p>
+                              <div className="mt-2 md:mt-[23px]  w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
+                              <p className="text-primary text-[16px] font-[700] mt-[20px]">
+                                {
+                                  incidentreportHome?.data?.data.incidents[0]
+                                    .subject
+                                }
+                              </p>
+                              <p className="text-[#4E4E4E]  mt-[8px] text-[14px] font-[400] clamp-responsive">
+                                {
+                                  incidentreportHome?.data?.data.incidents[0]
+                                    .incidentMessage
+                                }
+                              </p>
+                            </div>
 
-                            <button
-                              className="absolute bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer z-20"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                navigate("/incident-report");
-                              }}
-                            >
-                              View
-                            </button>
-                          </>
+                            <div className="flex  justify-between">
+                              <p className="bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
+                                {new Date(
+                                  incidentreportHome?.data?.data.incidents[0].createdAt
+                                ).toLocaleString(undefined, {
+                                  weekday: "long",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </p>
+                              <button
+                                className="bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer z-20"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate("/incident-report");
+                                }}
+                              >
+                                View
+                              </button>
+                            </div>
+                          </div>
                         ) : (
                           <div className="flex flex-col gap-2 justify-center items-center h-[100%]">
                             <Icon
@@ -278,7 +282,7 @@ const Home = () => {
                     </div>
                   )}
                 </div>
-                <div className="w-full md:w-[47%]  h-full  bg-[#F2F2F2] rounded-[15px] pt-5  relative ">
+                <div className="w-full md:w-[47%]  h-full  bg-[#F2F2F2] rounded-[15px]  relative ">
                   {!spiner ? (
                     <div className="flex justify-center items-center h-full">
                       <Icon
@@ -289,50 +293,56 @@ const Home = () => {
                       />
                     </div>
                   ) : weeklyReportHome || weeklyReportHomeUser ? (
-                    <Link to="/weekly-report" className="flex flex-col">
-                      <p className="text-[24px] md:text-[32px] font-[600] ml-[19px]  ">
-                        Weekly Report
-                      </p>
-                      <div className="mt-2 md:mt-[23px] ml-[26px] w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
-                      <p className="text-primary text-[16px] font-[700] ml-[30px] mt-[20px] ">
-                        Action Items
-                      </p>
-                      <p className="text-[#4E4E4E] ml-[30px]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
-                        {isAdmin
-                          ? weeklyReportHome.ActionItems?.[0]?.description?.split(
-                              "//"
-                            )[0] || "No Action Items"
-                          : weeklyReportHomeUser.ActionItems?.[0]?.description?.split(
-                              "//"
-                            )[0] || "No Action Items"}
-                      </p>
-                      <p className="absolute bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
-                        {isAdmin
-                          ? new Date(weeklyReportHome.createdAt).toLocaleString(
-                              undefined,
-                              {
+                    <Link
+                      to="/weekly-report"
+                      className="flex flex-col justify-between  pl-6 pr-4 py-4 h-full"
+                    >
+                      <div>
+                        <p className="text-[24px] md:text-[32px] font-[600]  ">
+                          Weekly Report
+                        </p>
+                        <div className="mt-2 md:mt-[23px]  w-[150px] md:w-[222px] border-1 border-[#C9C9C9] "></div>
+                        <p className="text-primary text-[16px] font-[700] mt-[20px] ">
+                          Action Items
+                        </p>
+                        <p className="text-[#4E4E4E]  mt-[8px] text-[14px] font-[400] clamp-responsive ">
+                          {isAdmin
+                            ? weeklyReportHome.ActionItems?.[0]?.description?.split(
+                                "//"
+                              )[0] || "No Action Items"
+                            : weeklyReportHomeUser.ActionItems?.[0]?.description?.split(
+                                "//"
+                              )[0] || "No Action Items"}
+                        </p>
+                      </div>
+                      <div className="flex justify-between">
+                        <p className="bottom-3 lg:bottom-[30px] left-[35px] text-[#898A8D] text-[14px] font-[400] ">
+                          {isAdmin
+                            ? new Date(
+                                weeklyReportHome.createdAt
+                              ).toLocaleString(undefined, {
                                 weekday: "long",
                                 hour: "2-digit",
                                 minute: "2-digit",
-                              }
-                            )
-                          : new Date(
-                              weeklyReportHomeUser.createdAt
-                            ).toLocaleString(undefined, {
-                              weekday: "long",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                      </p>
-                      <button
-                        className="absolute  bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate("/weekly-report");
-                        }}
-                      >
-                        View
-                      </button>
+                              })
+                            : new Date(
+                                weeklyReportHomeUser.createdAt
+                              ).toLocaleString(undefined, {
+                                weekday: "long",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                        </p>
+                        <button
+                          className="bottom-3 lg:bottom-[25px] right-[46px] bg-primary text-white rounded-[10px] w-[86px] h-[34px] text-[15px] font-[400] cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate("/weekly-report");
+                          }}
+                        >
+                          View
+                        </button>
+                      </div>
                     </Link>
                   ) : (
                     <div className="flex flex-col gap-2 justify-center items-center h-full">

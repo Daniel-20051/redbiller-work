@@ -14,6 +14,7 @@ import User from "./Pages/Users";
 import ProtectedRoute from "./routes/protectedRoute";
 import Chat from "./Pages/Chat";
 import { UserDetailsContext } from "./context/AuthContext.js";
+import ChatTest from "./Pages/ChatTest";
 
 import IncidentView from "./Pages/IncidentView";
 
@@ -163,6 +164,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             {isAdmin && <Route path="/users" element={<User />} />}
             <Route path="/chat" element={<Chat />} />
+            <Route path="/chat-test" element={<ChatTest />} />
           </Route>
           {/* Catch all - redirect to home if authenticated, otherwise to login */}
           <Route

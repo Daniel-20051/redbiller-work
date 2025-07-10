@@ -48,9 +48,9 @@ const Chat = () => {
           <SideBar>chat</SideBar>
 
           <div className="flex flex-1 items-center justify-center p-3 gap-3">
-            <div className=" w-[40%] h-full flex flex-col gap-3  ">
+            <div className=" w-[40%] h-full flex flex-col gap-3  overflow-y-auto ">
               <div
-                className={`flex-1 flex flex-col items-center p-3  gap-3 rounded-lg border-1 border-[#d2d2d2] transition-all duration-300 ${
+                className={`flex-1  flex flex-col items-center p-3  gap-3 rounded-lg border-1 border-[#d2d2d2] transition-all duration-300 ${
                   isOpen ? "h-[43%]" : "h-[40%]"
                 }`}
               >
@@ -92,7 +92,7 @@ const Chat = () => {
                 </div>
               </div>
               <div
-                className={`flex flex-col  rounded-lg border-1 border-[#d2d2d2] 
+                className={`flex flex-col  rounded-lg border-1  border-[#d2d2d2] 
                   `}
               >
                 <div
