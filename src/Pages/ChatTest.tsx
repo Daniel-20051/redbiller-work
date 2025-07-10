@@ -16,7 +16,7 @@ const ChatTest: React.FC = () => {
   const [isConnected, setIsConnected] = useState(false);
 
   // Replace with actual values from your system
-  const userId = userDetails?.data.user.id;
+  const userId = "21";
   const chatId = "686e902e776cb0e814940d8b";
 
   useEffect(() => {
