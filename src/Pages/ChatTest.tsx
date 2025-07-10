@@ -10,13 +10,12 @@ interface ChatMessage {
 }
 
 const ChatTest: React.FC = () => {
-  const { userDetails } = use(UserDetailsContext);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [isConnected, setIsConnected] = useState(false);
 
   // Replace with actual values from your system
-  const userId = userDetails?.data.user.id;
+  const userId = "34";
   const chatId = "686e902e776cb0e814940d8b";
 
   useEffect(() => {
