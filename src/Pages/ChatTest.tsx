@@ -12,9 +12,10 @@ const ChatTest: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  const [typingInfo, setTypingInfo] = useState<string | null>(null);
 
   // Replace with actual values from your system
-  const userId = "21";
+  const userId = "34";
   const chatId = "686e902e776cb0e814940d8b";
 
   useEffect(() => {
@@ -44,6 +45,12 @@ const ChatTest: React.FC = () => {
       console.log("Message was delivered:", data);
     });
 
+    // Typing event listener
+    socketService.onTyping((data: any) => {
+      setTypingInfo(`${data.user || "Someone"} is typing...`);
+      setTimeout(() => setTypingInfo(null), 1500);
+    });
+
     // Cleanup
     return () => {
       socketService.disconnect();
@@ -54,6 +61,13 @@ const ChatTest: React.FC = () => {
     if (messageInput.trim() && isConnected) {
       socketService.sendMessage(chatId, messageInput);
       setMessageInput("");
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessageInput(e.target.value);
+    if (isConnected && socketService["socket"]) {
+      socketService["socket"].emit("typing_start", { chatId, user: userId });
     }
   };
 
@@ -73,6 +87,13 @@ const ChatTest: React.FC = () => {
       >
         Status: {isConnected ? "✅ Connected" : "❌ Disconnected"}
       </div>
+
+      {/* Typing Notification */}
+      {typingInfo && (
+        <div style={{ marginBottom: "10px", color: "#007bff" }}>
+          {typingInfo}
+        </div>
+      )}
 
       {/* Messages Display */}
       <div
@@ -110,7 +131,7 @@ const ChatTest: React.FC = () => {
         <input
           type="text"
           value={messageInput}
-          onChange={(e) => setMessageInput(e.target.value)}
+          onChange={handleInputChange}
           placeholder="Type a message..."
           style={{
             flex: 1,

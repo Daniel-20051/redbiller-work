@@ -106,9 +106,10 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
       callback(data);
     });
   }
+
   onTyping(callback: DeliveryCallback): void {
     this.socket?.on('typing_start', (data: any) => {
-      console.log('✅ Message typing:', data);
+      console.log('✍️ Typing event received:', data);
       callback(data);
     });
   }
