@@ -108,7 +108,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
   }
 
   onTyping(callback: DeliveryCallback): void {
-    this.socket?.on('typing_start', (data: any) => {
+    this.socket?.on('user_typing', (data: any) => {
       console.log('✍️ Typing event received:', data);
       callback(data);
     });

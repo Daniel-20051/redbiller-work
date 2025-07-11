@@ -13,6 +13,14 @@ const Chat = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
   const [search, setSearch] = useState("");
+  const [chatId, setChatId] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [isChatActive, setIsChatActive] = useState<boolean>(false);
+  const [previousChats, setPreviousChats] = useState<any[]>([]);
+  const [chatNumber, setChatNumber] = useState<number>(0);
+  const [isPreviousChatLoading, setIsPreviousChatLoading] =
+    useState<boolean>(false);
+  const [messages, setMessages] = useState<any[]>([]);
 
   const handleUsers = async () => {
     setIsUserLoading(true);
@@ -28,10 +36,6 @@ const Chat = () => {
     }
   };
 
-  useEffect(() => {
-    handleUsers();
-  }, []);
-
   const filteredUsers = users.filter(
     (user) =>
       (user.firstName + " " + user.lastName)
@@ -39,6 +43,39 @@ const Chat = () => {
         .includes(search.toLowerCase()) ||
       user.email.toLowerCase().includes(search.toLowerCase())
   );
+
+  function capitalizeName(name: string) {
+    return name
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  }
+
+  const handleChats = async () => {
+    setIsPreviousChatLoading(true);
+    try {
+      const response: any = await authApis.getUserAllChats();
+      setPreviousChats(response.data.data.chats);
+      setChatNumber(response.data.data.chats.length);
+    } catch (error) {
+    } finally {
+      setIsPreviousChatLoading(false);
+    }
+  };
+
+  const handleGetMessages = async (chatId: string) => {
+    try {
+      const response: any = await authApis.getAllMessages(chatId);
+      return response.data.data.messages;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
+  useEffect(() => {
+    handleUsers();
+    handleChats();
+  }, []);
 
   return (
     <div>
@@ -70,24 +107,43 @@ const Chat = () => {
                     className="w-full h-[35px] text-[16px] rounded-md border-1 border-[#d2d2d2] outline-0 p-2 pl-10"
                   />
                 </div>
-                <div className="w-full flex flex-col gap-3 overflow-y-auto flex-1">
-                  {isUserLoading ? (
-                    Array.from({ length: 8 }).map((_, i) => (
+                <div className="w-full flex flex-col gap-3  overflow-y-auto flex-1">
+                  {isPreviousChatLoading ? (
+                    Array.from({ length: 5 }).map((_, i) => (
                       <UserSkeleton key={i} />
                     ))
-                  ) : users.length === 0 ? (
-                    <div className="text-center text-gray-500 py-4">
-                      No members found.
+                  ) : chatNumber !== 0 ? (
+                    <div>
+                      {previousChats.map((chat: any, index: number) => (
+                        <ChatCard
+                          key={index}
+                          isChat={false}
+                          name={capitalizeName(chat.metadata.recipientName)}
+                          email={"gghelo@gmail.com"}
+                          onClick={async () => {
+                            setChatId(chat._id);
+                            console.log(chat._id);
+                            console.log(
+                              capitalizeName(chat.metadata.recipientName)
+                            );
+                            setName(
+                              capitalizeName(chat.metadata.recipientName)
+                            );
+                            setIsChatActive(true);
+
+                            // Fetch messages for this chat
+                            const chatMessages = await handleGetMessages(
+                              chat._id
+                            );
+                            setMessages(chatMessages);
+                          }}
+                        />
+                      ))}
                     </div>
                   ) : (
-                    users.map((user, index) => (
-                      <ChatCard
-                        key={index}
-                        isChat={false}
-                        name={user.firstName + " " + user.lastName}
-                        email={user.email}
-                      />
-                    ))
+                    <div className="text-center text-gray-500 py-4">
+                      No previous chats found.
+                    </div>
                   )}
                 </div>
               </div>
@@ -153,7 +209,11 @@ const Chat = () => {
                         filteredUsers.map((user, index) => (
                           <ChatCard
                             key={index}
-                            name={user.firstName + " " + user.lastName}
+                            name={
+                              capitalizeName(user.firstName) +
+                              " " +
+                              capitalizeName(user.lastName)
+                            }
                             email={user.email}
                             isChat={true}
                           />
@@ -169,7 +229,16 @@ const Chat = () => {
                 </div>
               </div>
             </div>
-            <ChatTextArea />
+            {
+              <ChatTextArea
+                chatId={chatId}
+                name={name}
+                isChatActive={isChatActive}
+                setIsChatActive={setIsChatActive}
+                messages={messages}
+                setMessages={setMessages}
+              />
+            }
           </div>
         </div>
       </div>

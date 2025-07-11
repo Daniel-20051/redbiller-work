@@ -17,16 +17,7 @@ function getInitials(name: string) {
 }
 
 function getColorFromName(name: string) {
-  const colors = [
-    "#FFD700",
-    "#FFB347",
-    "#FF6961",
-    "#AEC6CF",
-    "#CBAACB",
-    "#B39EB5",
-    "#FFB7B2",
-    "#779ECB",
-  ];
+  const colors = ["#AEC6CF"];
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash);

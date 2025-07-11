@@ -319,6 +319,39 @@ export class AuthApis {
     }
   }
 
+  async getUserAllChats(){
+    try{
+      const token = localStorage.getItem("authToken")
+      const response = await axios.get(`${BASE_URL}/api/v1/chat/user`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      return response
+    }
+    catch(err){
+      return err
+    }
+  }
+  async getAllMessages(chatId: string){
+    try{
+      const token = localStorage.getItem("authToken")
+      const response = await axios.get(`${BASE_URL}/api/v1/chat/${chatId}/messages`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      return response
+    }
+    catch(err){
+      return err
+    }
+  }
+
   
   // async getEvent(id: string){
   //   try{
