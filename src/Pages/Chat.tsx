@@ -119,7 +119,6 @@ const Chat = () => {
                           key={index}
                           isChat={false}
                           name={capitalizeName(chat.metadata.recipientName)}
-                          email={"gghelo@gmail.com"}
                           onClick={async () => {
                             setChatId(chat._id);
                             console.log(chat._id);
