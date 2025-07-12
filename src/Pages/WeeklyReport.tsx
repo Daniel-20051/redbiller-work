@@ -254,27 +254,25 @@ const WeeklyReport = () => {
                         startDate={startDate}
                         endDate={endDate}
                         key={report.id}
-                        actionItem={
-                          report.ActionItems?.[0]?.description
-                            .split("\n")
-                            .map((desc: string, i: number) =>
-                              desc.trim() ? <p key={i}>{desc.trim()} </p> : null
-                            ) || []
-                        }
-                        ongoingTask={
-                          report.OngoingTasks?.[0]?.description
-                            .split("\n")
-                            .map((desc: string, i: number) =>
-                              desc.trim() ? <p key={i}>{desc.trim()} </p> : null
-                            ) || []
-                        }
-                        completedTask={
-                          report.CompletedTasks?.[0]?.description
-                            .split("\n")
-                            .map((desc: string, i: number) =>
-                              desc.trim() ? <p key={i}>{desc.trim()} </p> : null
-                            ) || []
-                        }
+                        actionItem={(report.ActionItems?.[0]?.description ?? "")
+                          .split("\n")
+                          .map((desc: string, i: number) =>
+                            desc.trim() ? <p key={i}>{desc.trim()} </p> : null
+                          )}
+                        ongoingTask={(
+                          report.OngoingTasks?.[0]?.description ?? ""
+                        )
+                          .split("\n")
+                          .map((desc: string, i: number) =>
+                            desc.trim() ? <p key={i}>{desc.trim()} </p> : null
+                          )}
+                        completedTask={(
+                          report.CompletedTasks?.[0]?.description ?? ""
+                        )
+                          .split("\n")
+                          .map((desc: string, i: number) =>
+                            desc.trim() ? <p key={i}>{desc.trim()} </p> : null
+                          )}
                         weekNum={getWeekOfYear(report.createdAt)}
                       />
                     );

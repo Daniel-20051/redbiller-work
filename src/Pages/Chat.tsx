@@ -1,14 +1,17 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import ChatCard from "../Components/ChatCard";
 import { AuthApis } from "../api";
 import UserSkeleton from "../Components/UserSkeleton";
 import ChatTextArea from "../Components/ChatTextArea";
+import { UserDetailsContext } from "../context/AuthContext.js";
+
 const authApis = new AuthApis();
 
 const Chat = () => {
+  const { userDetails } = use(UserDetailsContext);
   const [isOpen, setIsOpen] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
@@ -21,6 +24,8 @@ const Chat = () => {
   const [isPreviousChatLoading, setIsPreviousChatLoading] =
     useState<boolean>(false);
   const [messages, setMessages] = useState<any[]>([]);
+  const [isNewChat, setIsNewChat] = useState<boolean>(false);
+  const [newChatId, setNewChatId] = useState<string>("");
 
   const handleUsers = async () => {
     setIsUserLoading(true);
@@ -36,12 +41,28 @@ const Chat = () => {
     }
   };
 
+  const handleSubmitDirectMessage = async (recipientId: string) => {
+    try {
+      const response: any = await authApis.submitDirectMessage({
+        recipientId: recipientId,
+      });
+      if (response?.data?.data?.chat?._id) {
+        setNewChatId(response.data.data.chat._id);
+      }
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
   const filteredUsers = users.filter(
     (user) =>
-      (user.firstName + " " + user.lastName)
+      // Exclude the current user from the list
+      user.id !== userDetails?.data.user.id &&
+      ((user.firstName + " " + user.lastName)
         .toLowerCase()
         .includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase())
+        user.email.toLowerCase().includes(search.toLowerCase()))
   );
 
   function capitalizeName(name: string) {
@@ -85,7 +106,7 @@ const Chat = () => {
           <SideBar>chat</SideBar>
 
           <div className="flex flex-1 items-center justify-center p-3 gap-3">
-            <div className=" w-[40%] h-full flex flex-col gap-3  overflow-y-auto ">
+            <div className=" flex-1 h-full flex flex-col gap-3  overflow-y-auto ">
               <div
                 className={`flex-1  flex flex-col items-center p-3  gap-3 rounded-lg border-1 border-[#d2d2d2] transition-all duration-300 ${
                   isOpen ? "h-[43%]" : "h-[40%]"
@@ -113,7 +134,7 @@ const Chat = () => {
                       <UserSkeleton key={i} />
                     ))
                   ) : chatNumber !== 0 ? (
-                    <div>
+                    <div className="flex flex-col gap-3">
                       {previousChats.map((chat: any, index: number) => (
                         <ChatCard
                           key={index}
@@ -121,14 +142,11 @@ const Chat = () => {
                           name={capitalizeName(chat.metadata.recipientName)}
                           onClick={async () => {
                             setChatId(chat._id);
-                            console.log(chat._id);
-                            console.log(
-                              capitalizeName(chat.metadata.recipientName)
-                            );
                             setName(
                               capitalizeName(chat.metadata.recipientName)
                             );
                             setIsChatActive(true);
+                            setIsNewChat(false);
 
                             // Fetch messages for this chat
                             const chatMessages = await handleGetMessages(
@@ -215,6 +233,18 @@ const Chat = () => {
                             }
                             email={user.email}
                             isChat={true}
+                            onClick={async () => {
+                              setName(
+                                capitalizeName(user.firstName) +
+                                  " " +
+                                  capitalizeName(user.lastName)
+                              );
+                              setIsChatActive(true);
+                              setMessages([]);
+                              setIsNewChat(true);
+                              setChatId(""); // Clear any previous chatId
+                              await handleSubmitDirectMessage(String(user.id));
+                            }}
                           />
                         ))
                       )}
@@ -236,6 +266,12 @@ const Chat = () => {
                 setIsChatActive={setIsChatActive}
                 messages={messages}
                 setMessages={setMessages}
+                isNewChat={isNewChat}
+                newChatId={newChatId}
+                onChatCreated={handleChats}
+                setIsNewChat={setIsNewChat}
+                setNewChatId={setNewChatId}
+                setChatId={setChatId}
               />
             }
           </div>

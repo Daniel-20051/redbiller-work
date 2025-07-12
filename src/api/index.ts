@@ -351,7 +351,49 @@ export class AuthApis {
       return err
     }
   }
+  
+  async submitDirectMessage(data: { recipientId: string }){
+    try{
+      const token = localStorage.getItem("authToken")
+      const payload = {
+        "recipientId": data.recipientId
+      }
 
+      const response = await axios.post(`${BASE_URL}/api/v1/chat/direct`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    return response
+  }
+    catch(err){
+      return err
+    }
+  }
+  async sendMessage(chatId: string, data: { content: string }){
+    try{
+      const token = localStorage.getItem("authToken")
+      const payload = {
+        "content": data.content
+      }
+
+      const response = await axios.post(`${BASE_URL}/api/v1/chat/${chatId}/message/`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    return response
+  }
+    catch(err){
+      return err
+    }
+  }
   
   // async getEvent(id: string){
   //   try{
