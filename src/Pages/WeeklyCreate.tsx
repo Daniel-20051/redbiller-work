@@ -122,7 +122,7 @@ const WeeklyCreate = () => {
             New Report
           </p>
 
-          <div className=" w-[90%] justify-center gap-13 mb-6 md:flex">
+          <div className=" w-[90%] justify-center gap-13 mb-6 md:flex ">
             <ReportCard
               name="Action Item"
               color="bg-primary"

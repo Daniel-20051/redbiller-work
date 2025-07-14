@@ -24,7 +24,7 @@ const ReportCard = ({ name, color, onValueChange, reset }: Props) => {
   }, [reset, onValueChange]);
 
   const handleAddTextbox = () => {
-    if (number <= 3) {
+    if (number <= 20) {
       setTextboxes([...textboxes, { id: Date.now(), value: "" }]);
       setNumber(number + 1);
     }
@@ -58,7 +58,7 @@ const ReportCard = ({ name, color, onValueChange, reset }: Props) => {
         >
           <p className="font-[600] text-[20px]  text-white ">{name}</p>
         </div>
-        <div className=" flex-1 flex-col gap-4 w-[90%] pt-[27px]  flex rounded-b-[15px]  items-center">
+        <div className=" flex-1 flex-col gap-4 w-[90%] py-6  flex rounded-b-[15px]  items-center overflow-y-auto ">
           {textboxes.map((textbox) => (
             <Textbox
               key={textbox.id}
@@ -70,7 +70,7 @@ const ReportCard = ({ name, color, onValueChange, reset }: Props) => {
 
           <button
             onClick={handleAddTextbox}
-            className="absolute cursor-pointer bottom-[10px] right-[20px] flex gap-2 border-1 w-auto h-auto border-[#D9D9D9] rounded-[5px] px-[15px] py-[8px]"
+            className="cursor-pointer place-self-end flex gap-2 border-1 w-auto h-auto border-[#D9D9D9] rounded-[5px] px-[15px] py-[8px]"
           >
             <img src="/assets/add-icon.svg" alt="" />
             Add

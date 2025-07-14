@@ -344,7 +344,7 @@ const ChatTextArea = ({
           />
         </div>
         <input
-          className="flex-1 outline-0 resize-none px-2 h-full py-2"
+          className="flex-1 outline-0 border-1 resize-none px-2 h-full py-2"
           placeholder={
             isNewChat && !newChatId
               ? "Creating chat..."
