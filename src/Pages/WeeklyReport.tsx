@@ -1,5 +1,3 @@
-import NavBar from "../Components/NavBar";
-import SideBar from "../Components/SideBar";
 import WeekItem from "../Components/WeekItem";
 import WeeklyCard from "../Components/WeeklyCard";
 import { Link } from "react-router-dom";
@@ -120,100 +118,29 @@ const WeeklyReport = () => {
   });
 
   return (
-    <div className="flex flex-col h-screen">
-      <NavBar></NavBar>
-      <div className=" flex flex-1 w-full overflow-y-auto  max-h-[calc(100vh-55px)]  ">
-        <SideBar>weekly-report</SideBar>
-        <div className=" flex flex-1 flex-col items-center justify-center ">
-          {isAdmin ? (
-            <>
-              <div className="border-1 p-5 border-[#D9D9D9] overflow-y-auto max-h-full hide-scrollbar scroll-smooth  rounded-[8px] w-[95%] h-[92.5%]">
-                <div className="flex flex-col gap-8">
-                  <p className="font-[600] text-[20px] ">Weekly Report</p>
-                  <div className="flex items-center justify-between ">
-                    <div className="relative">
-                      <img
-                        className=" absolute left-2 top-14 transform -translate-y-12  text-gray-500 "
-                        src="/assets/search.svg"
-                        alt=""
-                      />
-                      <input
-                        className="h-[35px] pl-8 px-4  rounded-[8px] outline-1 bg-white w-[115px] md:w-[260px]  outline-[#E7E3E3] "
-                        placeholder="Search"
-                        type="text"
-                        value={searchQuery}
-                        onChange={handleSearch}
-                      />
-                    </div>
-                    {userDetails?.data.user.role == "admin" && (
-                      <Link
-                        to="/weekly-report/create"
-                        className=" flex w-auto h-auto gap-2 items-center rounded-[8px] bg-primary pl-[10px] pr-[16px] py-[12px]"
-                      >
-                        <img
-                          className="w-[16px] h-[16px]  "
-                          src="/assets/plus-icon.svg"
-                          alt=""
-                        />
-                        <button className=" text-white font-[400] text-[12px]  ">
-                          New Report
-                        </button>
-                      </Link>
-                    )}
+    <div className=" flex flex-1 w-full overflow-y-auto  h-[calc(100vh-55px)]  ">
+      <div className=" flex flex-1 flex-col items-center justify-center ">
+        {isAdmin ? (
+          <>
+            <div className="border-1 p-5 border-[#D9D9D9] overflow-y-auto max-h-full hide-scrollbar scroll-smooth  rounded-[8px] w-[95%] h-[92.5%]">
+              <div className="flex flex-col gap-8">
+                <p className="font-[600] text-[20px] ">Weekly Report</p>
+                <div className="flex items-center justify-between ">
+                  <div className="relative">
+                    <img
+                      className=" absolute left-2 top-14 transform -translate-y-12  text-gray-500 "
+                      src="/assets/search.svg"
+                      alt=""
+                    />
+                    <input
+                      className="h-[35px] pl-8 px-4  rounded-[8px] outline-1 bg-white w-[115px] md:w-[260px]  outline-[#E7E3E3] "
+                      placeholder="Search"
+                      type="text"
+                      value={searchQuery}
+                      onChange={handleSearch}
+                    />
                   </div>
-                </div>
-                <div
-                  className={` ${
-                    isLoading
-                      ? "flex justify-center items-center h-[55vh]"
-                      : "grid grid-cols-1 md:grid-cols-3 justify-center"
-                  } gap-8 overflow-y-auto max-h-full hide-scrollbar scroll-smooth    py-10`}
-                >
-                  {isLoading ? (
-                    <div className={``}>
-                      <Icon
-                        icon="svg-spinners:ring-resize"
-                        width="30"
-                        height="30"
-                        color="#93221D"
-                      />
-                    </div>
-                  ) : filteredReports.length === 0 ? (
-                    <div className="flex col-span-3 justify-center items-center h-[55vh] text-gray-500 text-lg">
-                      No reports found.
-                    </div>
-                  ) : (
-                    filteredReports.map((report) => (
-                      <Link
-                        className=""
-                        to={`/weekly-report/${report.User.id}`}
-                        key={report.id}
-                      >
-                        <WeeklyCard
-                          user={
-                            report.User.firstName.charAt(0).toUpperCase() +
-                            report.User.firstName.slice(1).toLowerCase()
-                          }
-                          subject="Action Item"
-                        >
-                          {report.ActionItems?.[0]?.description
-                            .split("\n")
-                            .map((desc: string, i: number) =>
-                              desc.trim() ? <p key={i}>{desc.trim()} </p> : null
-                            ) || []}
-                        </WeeklyCard>
-                      </Link>
-                    ))
-                  )}
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className=" mt-16 w-[90%]">
-                <div className="flex justify-between items-center">
-                  <p className="font-[600] text-[20px] ">Weekly Reports</p>
-                  <div className="flex gap-6">
+                  {userDetails?.data.user.role == "admin" && (
                     <Link
                       to="/weekly-report/create"
                       className=" flex w-auto h-auto gap-2 items-center rounded-[8px] bg-primary pl-[10px] pr-[16px] py-[12px]"
@@ -227,12 +154,18 @@ const WeeklyReport = () => {
                         New Report
                       </button>
                     </Link>
-                  </div>
+                  )}
                 </div>
               </div>
-              <div className="mt-[48px] w-[90%] h-[90%] items-center overflow-y-auto max-h-full hide-scrollbar scroll-smooth ">
+              <div
+                className={` ${
+                  isLoading
+                    ? "flex justify-center items-center h-[55vh]"
+                    : "grid grid-cols-1 md:grid-cols-3 justify-center"
+                } gap-8 overflow-y-auto max-h-full hide-scrollbar scroll-smooth    py-10`}
+              >
                 {isLoading ? (
-                  <div className={`flex justify-center items-center h-[55vh] `}>
+                  <div className={``}>
                     <Icon
                       icon="svg-spinners:ring-resize"
                       width="30"
@@ -240,48 +173,105 @@ const WeeklyReport = () => {
                       color="#93221D"
                     />
                   </div>
-                ) : reports.length === 0 ? (
-                  <div className="flex justify-center items-center h-[55vh] text-gray-500 text-lg">
+                ) : filteredReports.length === 0 ? (
+                  <div className="flex col-span-3 justify-center items-center h-[55vh] text-gray-500 text-lg">
                     No reports found.
                   </div>
                 ) : (
-                  reports.map((report) => {
-                    const { startDate, endDate } = getWeekRange(
-                      report.createdAt
-                    );
-                    return (
-                      <WeekItem
-                        startDate={startDate}
-                        endDate={endDate}
-                        key={report.id}
-                        actionItem={(report.ActionItems?.[0]?.description ?? "")
+                  filteredReports.map((report) => (
+                    <Link
+                      className=""
+                      to={`/weekly-report/${report.User.id}`}
+                      key={report.id}
+                    >
+                      <WeeklyCard
+                        user={
+                          report.User.firstName.charAt(0).toUpperCase() +
+                          report.User.firstName.slice(1).toLowerCase()
+                        }
+                        subject="Action Item"
+                      >
+                        {report.ActionItems?.[0]?.description
                           .split("\n")
                           .map((desc: string, i: number) =>
                             desc.trim() ? <p key={i}>{desc.trim()} </p> : null
-                          )}
-                        ongoingTask={(
-                          report.OngoingTasks?.[0]?.description ?? ""
-                        )
-                          .split("\n")
-                          .map((desc: string, i: number) =>
-                            desc.trim() ? <p key={i}>{desc.trim()} </p> : null
-                          )}
-                        completedTask={(
-                          report.CompletedTasks?.[0]?.description ?? ""
-                        )
-                          .split("\n")
-                          .map((desc: string, i: number) =>
-                            desc.trim() ? <p key={i}>{desc.trim()} </p> : null
-                          )}
-                        weekNum={getWeekOfYear(report.createdAt)}
-                      />
-                    );
-                  })
+                          ) || []}
+                      </WeeklyCard>
+                    </Link>
+                  ))
                 )}
               </div>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className=" mt-16 w-[90%]">
+              <div className="flex justify-between items-center">
+                <p className="font-[600] text-[20px] ">Weekly Reports</p>
+                <div className="flex gap-6">
+                  <Link
+                    to="/weekly-report/create"
+                    className=" flex w-auto h-auto gap-2 items-center rounded-[8px] bg-primary pl-[10px] pr-[16px] py-[12px]"
+                  >
+                    <img
+                      className="w-[16px] h-[16px]  "
+                      src="/assets/plus-icon.svg"
+                      alt=""
+                    />
+                    <button className=" text-white font-[400] text-[12px]  ">
+                      New Report
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="mt-[48px] w-[90%] h-[90%] items-center overflow-y-auto max-h-full hide-scrollbar scroll-smooth ">
+              {isLoading ? (
+                <div className={`flex justify-center items-center h-[55vh] `}>
+                  <Icon
+                    icon="svg-spinners:ring-resize"
+                    width="30"
+                    height="30"
+                    color="#93221D"
+                  />
+                </div>
+              ) : reports.length === 0 ? (
+                <div className="flex justify-center items-center h-[55vh] text-gray-500 text-lg">
+                  No reports found.
+                </div>
+              ) : (
+                reports.map((report) => {
+                  const { startDate, endDate } = getWeekRange(report.createdAt);
+                  return (
+                    <WeekItem
+                      startDate={startDate}
+                      endDate={endDate}
+                      key={report.id}
+                      actionItem={(report.ActionItems?.[0]?.description ?? "")
+                        .split("\n")
+                        .map((desc: string, i: number) =>
+                          desc.trim() ? <p key={i}>{desc.trim()} </p> : null
+                        )}
+                      ongoingTask={(report.OngoingTasks?.[0]?.description ?? "")
+                        .split("\n")
+                        .map((desc: string, i: number) =>
+                          desc.trim() ? <p key={i}>{desc.trim()} </p> : null
+                        )}
+                      completedTask={(
+                        report.CompletedTasks?.[0]?.description ?? ""
+                      )
+                        .split("\n")
+                        .map((desc: string, i: number) =>
+                          desc.trim() ? <p key={i}>{desc.trim()} </p> : null
+                        )}
+                      weekNum={getWeekOfYear(report.createdAt)}
+                    />
+                  );
+                })
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

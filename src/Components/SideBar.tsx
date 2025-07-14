@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import GroupCard from "./GroupCard";
 import { use, useRef, useEffect } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
-import { useSidebar } from "../context/SidebarContext";
+import { useCurrentPage, useSidebar } from "../context/SidebarContext";
 import useMobile from "../hooks/UseMobile";
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
 }
 
 const SideBar = ({ children }: Props) => {
+  const { setCurrentPage } = useCurrentPage();
   const { userDetails } = use(UserDetailsContext);
   const isAdmin =
     userDetails?.data.user.role == "admin" ||
@@ -42,6 +43,9 @@ const SideBar = ({ children }: Props) => {
       toggleCollapse();
     }
   };
+  const handleCurrentPage = (page: string) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div
@@ -54,7 +58,10 @@ const SideBar = ({ children }: Props) => {
     >
       <div className="w-full">
         <Link
-          onClick={handleMobileCollapse}
+          onClick={() => {
+            handleCurrentPage("home");
+            handleMobileCollapse();
+          }}
           to="/home"
           className={
             children === "home"
@@ -76,7 +83,10 @@ const SideBar = ({ children }: Props) => {
 
         {isAdmin && (
           <Link
-            onClick={handleMobileCollapse}
+            onClick={() => {
+              handleCurrentPage("users");
+              handleMobileCollapse();
+            }}
             to="/users"
             className={
               children === "users"
@@ -98,7 +108,10 @@ const SideBar = ({ children }: Props) => {
         )}
         <Link
           to="/events"
-          onClick={handleMobileCollapse}
+          onClick={() => {
+            handleCurrentPage("event");
+            handleMobileCollapse();
+          }}
           className={
             children === "event"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -118,7 +131,10 @@ const SideBar = ({ children }: Props) => {
         </Link>
         <Link
           to="/incident-report"
-          onClick={handleMobileCollapse}
+          onClick={() => {
+            handleCurrentPage("incident-report");
+            handleMobileCollapse();
+          }}
           className={
             children === "incident-report"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -138,7 +154,10 @@ const SideBar = ({ children }: Props) => {
         </Link>
         <Link
           to="/weekly-report"
-          onClick={handleMobileCollapse}
+          onClick={() => {
+            handleCurrentPage("weekly-report");
+            handleMobileCollapse();
+          }}
           className={
             children === "weekly-report"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -158,7 +177,10 @@ const SideBar = ({ children }: Props) => {
         </Link>
         <Link
           to="/chat"
-          onClick={handleMobileCollapse}
+          onClick={() => {
+            handleCurrentPage("chat");
+            handleMobileCollapse();
+          }}
           className={
             children === "chat"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -178,7 +200,10 @@ const SideBar = ({ children }: Props) => {
         </Link>
         <Link
           to="/home"
-          onClick={handleMobileCollapse}
+          onClick={() => {
+            handleCurrentPage("home");
+            handleMobileCollapse();
+          }}
           className={
             children === "tasks"
               ? "text-white  flex w-full h-[55px] font-bold bg-primary gap-3 items-center "
@@ -197,9 +222,7 @@ const SideBar = ({ children }: Props) => {
           <p className="text-[15px] font-[500] ">Tasks</p>
         </Link>
       </div>
-      <div className="place-self-center mb-15 hidden  lg:inline ">
-        <GroupCard></GroupCard>
-      </div>
+      <div className="place-self-center mb-15 hidden  lg:inline "></div>
     </div>
   );
 };

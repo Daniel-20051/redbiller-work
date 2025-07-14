@@ -8,7 +8,12 @@ import { UserDetailsContext } from "../context/AuthContext.js";
 
 const authApis = new AuthApis();
 
-const Chat = () => {
+interface ChatDialogProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const { userDetails } = use(UserDetailsContext);
   const [isOpen, setIsOpen] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
@@ -97,9 +102,19 @@ const Chat = () => {
   }, []);
 
   return (
-    <div className=" flex flex-1 w-full relative h-[calc(100vh-55px)]">
-      <div className="flex flex-1 items-center justify-center p-3 gap-3">
-        <div className=" flex-1 h-full flex flex-col gap-3  overflow-y-auto ">
+    <div
+      className={`fixed inset-0 z-50 flex items-center px-5 md:px-10  pb-10 md:pb-15 justify-end transition-all duration-300 ${
+        open ? "visible opacity-100" : "invisible opacity-0"
+      }`}
+      onClick={onClose}
+    >
+      <div
+        className={`flex flex-col place-self-end relative p-2 bg-white rounded-2xl shadow-2xl w-full md:w-[400px] max-h-[80vh] transform transition-all duration-300 ${
+          open ? "translate-y-0 scale-100" : "translate-y-10 scale-95"
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className=" flex-1 h-full flex flex-col gap-3   overflow-y-auto ">
           <div
             className={`flex flex-col  rounded-lg border-1  border-[#d2d2d2] 
                   `}
@@ -247,26 +262,9 @@ const Chat = () => {
             </div>
           </div>
         </div>
-        {
-          <ChatTextArea
-            chatId={chatId}
-            name={name}
-            isChatActive={isChatActive}
-            setIsChatActive={setIsChatActive}
-            messages={messages}
-            setMessages={setMessages}
-            isNewChat={isNewChat}
-            newChatId={newChatId}
-            onChatCreated={handleChats}
-            setIsNewChat={setIsNewChat}
-            setNewChatId={setNewChatId}
-            setChatId={setChatId}
-            setIsChatTextAreaOpen={() => {}}
-          />
-        }
       </div>
     </div>
   );
 };
 
-export default Chat;
+export default ChatDialog;

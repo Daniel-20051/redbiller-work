@@ -1,6 +1,4 @@
 import { useState } from "react";
-import NavBar from "../Components/NavBar";
-import SideBar from "../Components/SideBar";
 import IncidentItem from "../Components/IncidentItem";
 import { Link } from "react-router-dom";
 import { use } from "react";
@@ -33,10 +31,8 @@ const IncidentReport = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <NavBar></NavBar>
-      <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
-        <SideBar>incident-report</SideBar>
+    <div className="flex flex-col h-[calc(100vh-55px)] ">
+      <div className=" flex flex-1 w-full ">
         <div className="flex flex-1 ">
           <div
             className={`flex flex-1 flex-col my-15 items-center ${

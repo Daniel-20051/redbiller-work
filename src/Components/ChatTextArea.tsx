@@ -27,6 +27,7 @@ const ChatTextArea = ({
   setIsNewChat,
   setNewChatId,
   setChatId,
+  setIsChatTextAreaOpen,
 }: {
   chatId: string;
   name: string;
@@ -40,6 +41,7 @@ const ChatTextArea = ({
   setIsNewChat: (isNewChat: boolean) => void;
   setNewChatId: (newChatId: string) => void;
   setChatId: (chatId: string) => void;
+  setIsChatTextAreaOpen: (isChatTextAreaOpen: boolean) => void;
 }) => {
   const { userDetails } = use(UserDetailsContext);
   const [text, setText] = useState("");
@@ -256,7 +258,9 @@ const ChatTextArea = ({
   }
 
   return (
-    <div className=" w-full md:w-[60%] border-1   border-[#d2d2d2] items-center rounded-lg h-full hidden md:flex flex-col">
+    <div
+      className={` w-full  border-1   border-[#d2d2d2] items-center rounded-lg h-full  flex-col max-h-[80vh] `}
+    >
       <div className="h-[60px] w-[97%] border-b-1 border-[#d2d2d2] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon
@@ -264,7 +268,10 @@ const ChatTextArea = ({
             className="cursor-pointer"
             width="24"
             height="24"
-            onClick={() => setIsChatActive(false)}
+            onClick={() => {
+              setIsChatActive(false);
+              setIsChatTextAreaOpen(false);
+            }}
           />
           <ProfileName name={name} />
           <div>
@@ -344,7 +351,7 @@ const ChatTextArea = ({
           />
         </div>
         <input
-          className="flex-1 outline-0 border-1 resize-none px-2 h-full py-2"
+          className="flex-1 outline-0 resize-none px-2 h-full py-2"
           placeholder={
             isNewChat && !newChatId
               ? "Creating chat..."

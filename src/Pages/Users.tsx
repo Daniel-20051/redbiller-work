@@ -1,6 +1,4 @@
 import { use, useState } from "react";
-import NavBar from "../Components/NavBar";
-import SideBar from "../Components/SideBar";
 import UserInfo from "../Components/UserInfo";
 import SmallSpiner from "../Components/smallSpiner";
 import { UserDetailsContext } from "../context/AuthContext";
@@ -50,8 +48,7 @@ const User = () => {
   };
 
   return (
-    <div className="flex flex-col  h-screen">
-      <NavBar />
+    <div className="flex flex-col  h-[calc(100vh-55px)]">
       {showAlert && (
         <AlertCard
           message={alertMessage}
@@ -62,7 +59,6 @@ const User = () => {
       )}
       <div className=" flex flex-1 w-full relative max-h-[calc(100vh-55px)]">
         <>
-          <SideBar>users</SideBar>
           <div className="flex-1 relative overflow-y-auto max-h-full hide-scrollbar   ">
             <p className="text-[#817979] text-lg absolute right-10 top-5 ">
               Total Members : <span>{allUser?.data.data.users.length}</span>

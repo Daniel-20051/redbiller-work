@@ -13,10 +13,10 @@ import Profile from "./Pages/Profile";
 import User from "./Pages/Users";
 import ProtectedRoute from "./routes/protectedRoute";
 import Chat from "./Pages/Chat";
-import { UserDetailsContext } from "./context/AuthContext.js";
-import ChatTest from "./Pages/ChatTest";
+import { UserDetailsContext } from "./context/AuthContext.tsx";
 
 import IncidentView from "./Pages/IncidentView";
+import DashboardLayout from "./Layouts/DashboardLayout.tsx";
 
 const App = () => {
   const { userDetails } = use(UserDetailsContext);
@@ -147,24 +147,25 @@ const App = () => {
           />
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/events" element={<Event />} />
-            <Route path="/events/:id" element={<EventInfo />} />
-            <Route path="/weekly-report" element={<WeeklyReport />} />
-            <Route path="/weekly-report/:id" element={<WeeklyView />} />
-            <Route path="/weekly-report/create" element={<WeeklyCreate />} />
-            <Route path="/incident-report" element={<IncidentReport />} />
-            {isAdmin && (
-              <Route path="/incident-report/:id" element={<IncidentView />} />
-            )}
-            <Route
-              path="/incident-report/create"
-              element={<IncidentCreate />}
-            />
-            <Route path="/profile" element={<Profile />} />
-            {isAdmin && <Route path="/users" element={<User />} />}
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/chat-test" element={<ChatTest />} />
+            <Route path="/" element={<DashboardLayout />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/events" element={<Event />} />
+              <Route path="/events/:id" element={<EventInfo />} />
+              <Route path="/weekly-report" element={<WeeklyReport />} />
+              <Route path="/weekly-report/:id" element={<WeeklyView />} />
+              <Route path="/weekly-report/create" element={<WeeklyCreate />} />
+              <Route path="/incident-report" element={<IncidentReport />} />
+              {isAdmin && (
+                <Route path="/incident-report/:id" element={<IncidentView />} />
+              )}
+              <Route
+                path="/incident-report/create"
+                element={<IncidentCreate />}
+              />
+              <Route path="/profile" element={<Profile />} />
+              {isAdmin && <Route path="/users" element={<User />} />}
+              <Route path="/chat" element={<Chat />} />
+            </Route>
           </Route>
           {/* Catch all - redirect to home if authenticated, otherwise to login */}
           <Route

@@ -19,6 +19,33 @@ export const SidebarProvider = ({
   );
 };
 
+// New CurrentPageContext
+const CurrentPageContext = createContext<{
+  currentPage: string;
+  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
+} | null>(null);
+
+export const CurrentPageProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [currentPage, setCurrentPage] = useState<string>("home");
+  return (
+    <CurrentPageContext.Provider value={{ currentPage, setCurrentPage }}>
+      {children}
+    </CurrentPageContext.Provider>
+  );
+};
+
+export const useCurrentPage = () => {
+  const context = useContext(CurrentPageContext);
+  if (!context) {
+    throw new Error("useCurrentPage must be used within a CurrentPageProvider");
+  }
+  return context;
+};
+
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
   if (!context) {

@@ -1,5 +1,3 @@
-import NavBar from "../Components/NavBar";
-import SideBar from "../Components/SideBar";
 import { Icon } from "@iconify/react";
 const currentDate = new Date();
 import { useRef, useState, useEffect } from "react";
@@ -157,7 +155,7 @@ const IncidentCreate = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className=" flex flex-1 w-full h-[calc(100vh-55px)] ">
       <AlertCard
         message={alertMessage}
         type={alertType}
@@ -173,11 +171,9 @@ const IncidentCreate = () => {
         autoClose={true}
         autoCloseTime={3000}
       />
-      <NavBar></NavBar>
-      <div className=" flex flex-1 w-full max-h-[calc(100vh-55px)] ">
-        <SideBar>incident-report</SideBar>
-        <div className="flex flex-1 items-center justify-center relative overflow-y-auto max-h-full  hide-scrollbar scroll-smooth ">
-          {/* <Link
+
+      <div className="flex flex-1 items-center justify-center relative overflow-y-auto max-h-full  hide-scrollbar scroll-smooth ">
+        {/* <Link
             to="/incident-report"
             className="flex items-center gap-2 rounded-lg absolute md:top-5 top-2 left-7 md:left-10 w-[65px] md:w-[80px] border-1 border-[#b9b9b9]
             font-[600] text-[13px] md:text-[16px] p-2 "
@@ -189,132 +185,127 @@ const IncidentCreate = () => {
             />
             Back
           </Link> */}
-          <div className="w-[87.8%] h-[85%] md:h-[81%] border-1 border-[#D9D9D9] relative overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  ">
-            <p className="font-[600] text-[13px] text-[#898A8D] absolute right-2 md:right-[62px] top-2 md:top-[22px]">
-              {currentDate.toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
+        <div className="w-[87.8%] h-[85%] md:h-[81%] border-1 border-[#D9D9D9] relative overflow-y-auto max-h-full  hide-scrollbar scroll-smooth  ">
+          <p className="font-[600] text-[13px] text-[#898A8D] absolute right-2 md:right-[62px] top-2 md:top-[22px]">
+            {currentDate.toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
+          <div className="flex flex-col items-center justify-center h-full ">
+            <p className=" text-[24px] md:text-[48px] font-[700] text-primary ">
+              Incident Report
             </p>
-            <div className="flex flex-col items-center justify-center h-full ">
-              <p className=" text-[24px] md:text-[48px] font-[700] text-primary ">
-                Incident Report
+            <form
+              onSubmit={sendReport}
+              className="w-[69%] text-left mt-[15px]  "
+            >
+              <p className="font-[400] text-[17px] md:text-[20px] mb-[11px] ">
+                Reason for Complaints
               </p>
-              <form
-                onSubmit={sendReport}
-                className="w-[69%] text-left mt-[15px]  "
-              >
-                <p className="font-[400] text-[17px] md:text-[20px] mb-[11px] ">
-                  Reason for Complaints
-                </p>
-                <div className="w-full ">
-                  <input
-                    onChange={handleSubject}
-                    value={subject}
-                    type="text"
-                    className=" border-1 p-2 w-full text-sm rounded-t-[5px] border-[#CCCCCC] focus:outline-0"
-                    name=""
-                    placeholder="Subject"
-                  />
-                  <textarea
-                    onChange={handleTextArea}
-                    value={textAreaValue || ""}
-                    className="resize-none p-[20px] w-full h-[35vh] border-[1px] border-t-0 rounded-b-[5px] border-[#CCCCCC] focus:outline-0"
-                    name=""
-                    id=""
-                  ></textarea>
-                </div>
-                <div className="md:flex justify-between items-center mt-[15px]">
-                  <input
-                    className="hidden"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    accept=".jpg,.jpeg,.png,.gif,.webp,.svg"
-                    type="file"
-                  />
+              <div className="w-full ">
+                <input
+                  onChange={handleSubject}
+                  value={subject}
+                  type="text"
+                  className=" border-1 p-2 w-full text-sm rounded-t-[5px] border-[#CCCCCC] focus:outline-0"
+                  name=""
+                  placeholder="Subject"
+                />
+                <textarea
+                  onChange={handleTextArea}
+                  value={textAreaValue || ""}
+                  className="resize-none p-[20px] w-full h-[35vh] border-[1px] border-t-0 rounded-b-[5px] border-[#CCCCCC] focus:outline-0"
+                  name=""
+                  id=""
+                ></textarea>
+              </div>
+              <div className="md:flex justify-between items-center mt-[15px]">
+                <input
+                  className="hidden"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept=".jpg,.jpeg,.png,.gif,.webp,.svg"
+                  type="file"
+                />
 
-                  <div className="md:flex-col  ">
-                    <div className="md:flex items-center gap-2 ">
+                <div className="md:flex-col  ">
+                  <div className="md:flex items-center gap-2 ">
+                    <button
+                      type="button"
+                      className=" flex gap-5 cursor-pointer justify-between items-center border-1 border-[#E7E3E3] pr-3 rounded-[8px] w-full md:w-auto px-[14px] h-auto py-[10px] "
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <p className="text-[#817979] font-[400] text-[14px]  max-w-[200px] overflow-x-auto whitespace-nowrap hide-scrollbar scroll-smooth ">
+                        {selectedFile ? selectedFile.name : "Upload"}
+                      </p>
+                      <img className=" " src="/assets/upload.svg" alt="" />
+                    </button>
+                    <button
+                      type="button"
+                      className={
+                        `flex items-center mt-2 md:mt-0 justify-between gap-5 pr-3 border-1 border-[#E7E3E3] rounded-[8px] w-full md:w-auto px-[14px] h-auto py-[10px] cursor-pointer ` +
+                        (isRecording
+                          ? "animate-pulse border-primary bg-[#f8f8f8]"
+                          : "")
+                      }
+                      onClick={handleRecordClick}
+                    >
+                      <p className="text-[14px] text-[#817979]">
+                        {isRecording
+                          ? "Tap to stop"
+                          : audioFile
+                          ? "Recorded Voice Note"
+                          : "Tap to record"}
+                      </p>
+                      <Icon
+                        icon="tabler:microphone-filled"
+                        width="20"
+                        height="20"
+                        color={isRecording ? "#d32f2f" : "#817979"}
+                        className={isRecording ? "animate-pulse" : ""}
+                      />
+                    </button>
+                  </div>
+                  {audioFile && audioUrl && (
+                    <div className="flex items-center  gap-1">
+                      <audio controls src={audioUrl} className="mt-2 w-full " />
                       <button
-                        type="button"
-                        className=" flex gap-5 cursor-pointer justify-between items-center border-1 border-[#E7E3E3] pr-3 rounded-[8px] w-full md:w-auto px-[14px] h-auto py-[10px] "
-                        onClick={() => fileInputRef.current?.click()}
+                        className="cursor-pointer"
+                        onClick={() => {
+                          setAudioFile(null);
+                          setAudioUrl(null);
+                        }}
                       >
-                        <p className="text-[#817979] font-[400] text-[14px]  max-w-[200px] overflow-x-auto whitespace-nowrap hide-scrollbar scroll-smooth ">
-                          {selectedFile ? selectedFile.name : "Upload"}
-                        </p>
-                        <img className=" " src="/assets/upload.svg" alt="" />
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          `flex items-center mt-2 md:mt-0 justify-between gap-5 pr-3 border-1 border-[#E7E3E3] rounded-[8px] w-full md:w-auto px-[14px] h-auto py-[10px] cursor-pointer ` +
-                          (isRecording
-                            ? "animate-pulse border-primary bg-[#f8f8f8]"
-                            : "")
-                        }
-                        onClick={handleRecordClick}
-                      >
-                        <p className="text-[14px] text-[#817979]">
-                          {isRecording
-                            ? "Tap to stop"
-                            : audioFile
-                            ? "Recorded Voice Note"
-                            : "Tap to record"}
-                        </p>
                         <Icon
-                          icon="tabler:microphone-filled"
-                          width="20"
-                          height="20"
-                          color={isRecording ? "#d32f2f" : "#817979"}
-                          className={isRecording ? "animate-pulse" : ""}
+                          icon="material-symbols:cancel-rounded"
+                          width="22"
+                          height="22"
+                          color="#93221d"
                         />
                       </button>
                     </div>
-                    {audioFile && audioUrl && (
-                      <div className="flex items-center  gap-1">
-                        <audio
-                          controls
-                          src={audioUrl}
-                          className="mt-2 w-full "
-                        />
-                        <button
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setAudioFile(null);
-                            setAudioUrl(null);
-                          }}
-                        >
-                          <Icon
-                            icon="material-symbols:cancel-rounded"
-                            width="22"
-                            height="22"
-                            color="#93221d"
-                          />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <button
-                    disabled={loading}
-                    type="submit"
-                    className={
-                      loading
-                        ? "bg-[#6b6b6b] w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white rounded-[8px]"
-                        : "w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white cursor-[pointer] bg-primary rounded-[8px]"
-                    }
-                  >
-                    {loading ? (
-                      <p className=" cursor-not-allowed">loading...</p>
-                    ) : (
-                      "Submit"
-                    )}
-                  </button>
+                  )}
                 </div>
-              </form>
-            </div>
+
+                <button
+                  disabled={loading}
+                  type="submit"
+                  className={
+                    loading
+                      ? "bg-[#6b6b6b] w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white rounded-[8px]"
+                      : "w-full md:w-auto h-auto px-[16px] py-[6.5px] mt-2 text-white cursor-[pointer] bg-primary rounded-[8px]"
+                  }
+                >
+                  {loading ? (
+                    <p className=" cursor-not-allowed">loading...</p>
+                  ) : (
+                    "Submit"
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
