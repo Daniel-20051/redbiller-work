@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import GroupCard from "./GroupCard";
 import { use, useRef, useEffect } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
 import { useCurrentPage, useSidebar } from "../context/SidebarContext";

@@ -21,7 +21,6 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const [search, setSearch] = useState("");
   const [chatId, setChatId] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [isChatActive, setIsChatActive] = useState<boolean>(false);
   const [previousChats, setPreviousChats] = useState<any[]>([]);
   const [chatNumber, setChatNumber] = useState<number>(0);
   const [isPreviousChatLoading, setIsPreviousChatLoading] =
@@ -29,6 +28,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const [messages, setMessages] = useState<any[]>([]);
   const [isNewChat, setIsNewChat] = useState<boolean>(false);
   const [newChatId, setNewChatId] = useState<string>("");
+  const [isChatTextAreaOpen, setIsChatTextAreaOpen] = useState<boolean>(false);
 
   const handleUsers = async () => {
     setIsUserLoading(true);
@@ -103,18 +103,22 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center px-5 md:px-10  pb-10 md:pb-15 justify-end transition-all duration-300 ${
+      className={`fixed inset-0 z-50 flex items-center px-5 md:px-10  pb-15 justify-end transition-all duration-300 ${
         open ? "visible opacity-100" : "invisible opacity-0"
       }`}
       onClick={onClose}
     >
       <div
-        className={`flex flex-col place-self-end relative p-2 bg-white rounded-2xl shadow-2xl w-full md:w-[400px] max-h-[80vh] transform transition-all duration-300 ${
+        className={` flex-col place-self-end relative p-2 bg-white rounded-2xl shadow-2xl w-full md:w-[400px] max-h-[80vh] transform transition-all duration-300 ${
           open ? "translate-y-0 scale-100" : "translate-y-10 scale-95"
-        }`}
+        } `}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className=" flex-1 h-full flex flex-col gap-3   overflow-y-auto ">
+        <div
+          className={` flex-1 h-full  flex-col gap-3 ${
+            isChatTextAreaOpen ? "hidden" : "flex"
+          }  overflow-y-auto `}
+        >
           <div
             className={`flex flex-col  rounded-lg border-1  border-[#d2d2d2] 
                   `}
@@ -185,12 +189,12 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                         email={user.email}
                         isChat={true}
                         onClick={async () => {
+                          setIsChatTextAreaOpen(true);
                           setName(
                             capitalizeName(user.firstName) +
                               " " +
                               capitalizeName(user.lastName)
                           );
-                          setIsChatActive(true);
                           setMessages([]);
                           setIsNewChat(true);
                           setChatId(""); // Clear any previous chatId
@@ -242,9 +246,9 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                       isChat={false}
                       name={capitalizeName(chat.metadata.recipientName)}
                       onClick={async () => {
+                        setIsChatTextAreaOpen(true);
                         setChatId(chat._id);
                         setName(capitalizeName(chat.metadata.recipientName));
-                        setIsChatActive(true);
                         setIsNewChat(false);
 
                         // Fetch messages for this chat
@@ -261,6 +265,26 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
               )}
             </div>
           </div>
+        </div>
+        <div
+          className={`flex min-h-[79vh] flex-col ${
+            isChatTextAreaOpen ? "flex" : "hidden"
+          }`}
+        >
+          <ChatTextArea
+            chatId={chatId}
+            name={name}
+            messages={messages}
+            setMessages={setMessages}
+            isNewChat={isNewChat}
+            newChatId={newChatId}
+            onChatCreated={handleChats}
+            setIsNewChat={setIsNewChat}
+            setNewChatId={setNewChatId}
+            setChatId={setChatId}
+            setIsChatTextAreaOpen={setIsChatTextAreaOpen}
+            isChatTextAreaOpen={isChatTextAreaOpen}
+          />
         </div>
       </div>
     </div>

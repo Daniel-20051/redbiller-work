@@ -71,6 +71,14 @@ const Login = () => {
         setLoginSpiner(false);
         return;
       }
+      if (responseData?.response?.data?.message === "jwt expired") {
+        showAlertMessage(
+          "Your session has expired, please login again",
+          "error"
+        );
+        setLoginSpiner(false);
+        return;
+      }
     } catch (err: any) {
       showAlertMessage("An error occurred during login", "error");
       setLoginSpiner(false);

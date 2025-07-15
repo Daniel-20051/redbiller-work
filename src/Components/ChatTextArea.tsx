@@ -17,8 +17,6 @@ const authApis = new AuthApis();
 const ChatTextArea = ({
   chatId,
   name,
-  isChatActive,
-  setIsChatActive,
   messages,
   setMessages,
   isNewChat,
@@ -28,11 +26,10 @@ const ChatTextArea = ({
   setNewChatId,
   setChatId,
   setIsChatTextAreaOpen,
+  isChatTextAreaOpen,
 }: {
   chatId: string;
   name: string;
-  isChatActive: boolean;
-  setIsChatActive: (isChatActive: boolean) => void;
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   isNewChat: boolean;
@@ -42,6 +39,7 @@ const ChatTextArea = ({
   setNewChatId: (newChatId: string) => void;
   setChatId: (chatId: string) => void;
   setIsChatTextAreaOpen: (isChatTextAreaOpen: boolean) => void;
+  isChatTextAreaOpen: boolean;
 }) => {
   const { userDetails } = use(UserDetailsContext);
   const [text, setText] = useState("");
@@ -75,7 +73,7 @@ const ChatTextArea = ({
 
   useEffect(() => {
     // Only connect to socket when both userId and chatId are provided, chat is active, and it's not a new chat
-    if (userId && chatId && isChatActive && !isNewChat) {
+    if (userId && chatId && isChatTextAreaOpen && !isNewChat) {
       // Connect to socket on mount
       socketService.connect(userId);
 
@@ -118,7 +116,7 @@ const ChatTextArea = ({
         setTypingInfo(`${data.user || "Someone"} is typing...`);
         setTimeout(() => setTypingInfo(null), 1500);
       });
-    } else if (!isChatActive && isConnected) {
+    } else if (!isChatTextAreaOpen && isConnected) {
       // Disconnect when chat becomes inactive
       socketService.disconnect();
       setIsConnected(false);
@@ -172,7 +170,7 @@ const ChatTextArea = ({
         setIsConnected(false);
       }
     };
-  }, [userId, chatId, isChatActive, isNewChat, newChatId]);
+  }, [userId, chatId, isChatTextAreaOpen, isNewChat, newChatId]);
 
   const handleSendMessage = async () => {
     if (text.trim()) {
@@ -244,19 +242,6 @@ const ChatTextArea = ({
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  if (!isChatActive) {
-    return (
-      <div className="flex-1 border-1  border-[#d2d2d2] items-center rounded-lg h-full flex flex-col">
-        <div className="flex flex-col items-center justify-center h-full">
-          <h2 className="text-2xl font-semibold">Select a name to chat</h2>
-          <p className="text-base text-gray-300 text-center max-w-xs">
-            Choose a contact from the list to start a conversation.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       className={` w-full  border-1   border-[#d2d2d2] items-center rounded-lg h-full  flex-col max-h-[80vh] `}
@@ -269,7 +254,6 @@ const ChatTextArea = ({
             width="24"
             height="24"
             onClick={() => {
-              setIsChatActive(false);
               setIsChatTextAreaOpen(false);
             }}
           />
