@@ -100,16 +100,32 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     });
   }
 
-  onReadBy(callback: DeliveryCallback): void {
+
+
+
+  onUserOffline(callback: any): void {
+    this.socket?.on('user_offline', (data: any) => {
+      console.log('🔴 User offline:', data);
+      callback(data);
+    });
+  }
+
+  onUserOnline(callback: any): void {
+    this.socket?.on('user_online', (data: any) => {
+      console.log('🟢 User online:', data);
+      callback(data);
+    });
+  }
+
+  onMarkMessageRead(callback: any): void {
     this.socket?.on('mark_message_read', (data: any) => {
       console.log('✅ Message read by:', data);
       callback(data);
     });
   }
 
-  onTyping(callback: DeliveryCallback): void {
+  onTyping(callback: any): void {
     this.socket?.on('user_typing', (data: any) => {
-      console.log('✍️ Typing event received:', data);
       callback(data);
     });
   }

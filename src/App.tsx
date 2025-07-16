@@ -12,7 +12,6 @@ import WeeklyCreate from "./Pages/WeeklyCreate";
 import Profile from "./Pages/Profile";
 import User from "./Pages/Users";
 import ProtectedRoute from "./routes/protectedRoute";
-import Chat from "./Pages/Chat";
 import { UserDetailsContext } from "./context/AuthContext.tsx";
 
 import IncidentView from "./Pages/IncidentView";
@@ -164,7 +163,6 @@ const App = () => {
               />
               <Route path="/profile" element={<Profile />} />
               {isAdmin && <Route path="/users" element={<User />} />}
-              <Route path="/chat" element={<Chat />} />
             </Route>
           </Route>
           {/* Catch all - redirect to home if authenticated, otherwise to login */}

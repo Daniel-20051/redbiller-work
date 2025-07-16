@@ -244,9 +244,10 @@ const ChatTextArea = ({
 
   return (
     <div
-      className={` w-full  border-1   border-[#d2d2d2] items-center rounded-lg h-full  flex-col max-h-[80vh] `}
+      className={`w-full border-1 border-[#d2d2d2] items-center rounded-lg h-full flex flex-col max-h-[77vh]`}
     >
-      <div className="h-[60px] w-[97%] border-b-1 border-[#d2d2d2] flex items-center justify-between">
+      {/* Header */}
+      <div className="h-[60px] w-[97%] border-b-1 border-[#d2d2d2] flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-2">
           <Icon
             icon="ic:round-arrow-back"
@@ -273,43 +274,49 @@ const ChatTextArea = ({
       </div>
 
       {/* Chat Messages Area */}
-      <div className="flex-1 px-3 pt-3 mb-3 w-full overflow-y-auto bg-white">
-        <div className="flex flex-col gap-3 h-full">
+      <div className="flex-1 w-full overflow-y-auto bg-white px-3 pt-3 mb-3">
+        <div className="flex flex-col gap-3 min-h-full">
           {isLoading ? (
             <MessageSkeleton />
           ) : (
             <>
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`flex ${
-                    message.senderId === userId
-                      ? "justify-end"
-                      : "justify-start"
-                  } animate-fadeIn`}
-                >
+              {messages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center min-h-[30vh] text-gray-400 text-base font-medium py-10">
+                  Start a conversation
+                </div>
+              ) : (
+                messages.map((message, index) => (
                   <div
-                    className={`max-w-[70%] md:max-w-[60%] lg:max-w-[50%] px-4 py-2 rounded-2xl shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.02] ${
+                    key={index}
+                    className={`flex ${
                       message.senderId === userId
-                        ? "bg-[#f2f2f2] text-gray-800 rounded-br-md"
-                        : "bg-primary text-white rounded-bl-md"
-                    }`}
+                        ? "justify-end"
+                        : "justify-start"
+                    } animate-fadeIn`}
                   >
-                    <p className="text-sm leading-relaxed break-words">
-                      {message.content}
-                    </p>
-                    <p
-                      className={`text-xs mt-1 ${
+                    <div
+                      className={`max-w-[70%] md:max-w-[60%]  lg:max-w-[50%] px-4 py-2 rounded-2xl shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.02] ${
                         message.senderId === userId
-                          ? "text-gray-500 text-right"
-                          : "text-gray-200 text-left"
+                          ? "bg-[#f2f2f2] text-gray-800 rounded-br-md"
+                          : "bg-primary text-white rounded-bl-md"
                       }`}
                     >
-                      {formatTime(new Date(message.createdAt))}
-                    </p>
+                      <p className="text-sm leading-relaxed break-words">
+                        {message.content}
+                      </p>
+                      <p
+                        className={`text-xs mt-1 ${
+                          message.senderId === userId
+                            ? "text-gray-500 text-right"
+                            : "text-gray-200 text-left"
+                        }`}
+                      >
+                        {formatTime(new Date(message.createdAt))}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </>
           )}
 
@@ -317,7 +324,8 @@ const ChatTextArea = ({
         </div>
       </div>
 
-      <div className=" w-full bg-[#F2F2F2] gap-5 flex items-center px-3 rounded-b-lg h-[60px]">
+      {/* Input Area */}
+      <div className="w-full bg-[#F2F2F2] gap-5 flex items-center px-3 rounded-b-lg h-[60px] flex-shrink-0">
         <div className="flex gap-2 items-center">
           <Icon
             icon="mingcute:emoji-fill"
