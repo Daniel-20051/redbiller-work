@@ -5,6 +5,7 @@ import socketService from "../services/socketService";
 import { UserDetailsContext } from "../context/AuthContext.js";
 import MessageSkeleton from "./MessageSkeleton";
 import { AuthApis } from "../api";
+import TypingSkeleton from "./TypingSkeleton";
 
 interface Message {
   content: string;
@@ -51,7 +52,9 @@ const ChatTextArea = ({
 
   const [typingInfo, setTypingInfo] = useState<string | null>(null);
 
-  const [messageStatus, setMessageStatus] = useState<string | null>("sent");
+  const [messageStatus, setMessageStatus] = useState<string | null>(
+    "delivered"
+  );
 
   const userId = userDetails?.data.user.id;
 
@@ -245,10 +248,14 @@ const ChatTextArea = ({
           <ProfileName name={name} online={isUserOnline(userId)} />
           <div>
             <p className="text-[15px] font-[500] ">{name}</p>
-            {typingInfo && (
+            {isUserOnline(userId) && typingInfo ? (
               <p className="text-[10px] font-[400] text-[#808080] ">
                 typing...
               </p>
+            ) : isUserOnline(userId) ? (
+              <p className="text-[10px] font-[400] text-[#808080] ">online</p>
+            ) : (
+              ""
             )}
           </div>
         </div>
