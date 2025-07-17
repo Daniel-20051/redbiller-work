@@ -87,19 +87,34 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     this.socket.emit('send_message', messageData);
   }
 
+  onUserGlobalStatus(callback: any): void {
+    this.socket?.on('user_global_status', (data: any) => {
+      
+      // Call the callback with the status data
+      callback(data);
+    });
+  }
+
   onNewMessage(callback: MessageCallback): void {
     this.socket?.on('new_message', (message: any) => {
       callback(message);
     });
   }
 
-  
+  onOnlineUsersList(callback: any): void {
+    this.socket?.on('online_users_list', (data: any) => {
+      callback(data);
+    
+    });
+  }
 
   onMessageDelivered(callback: DeliveryCallback): void {
     this.socket?.on('message_delivered', (data: any) => {
       callback(data);
     });
   }
+
+
 
   onLeaveChat(chatId: string): void {
     this.socket?.emit('leave_chat', { chatId }) 
@@ -112,14 +127,14 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
   onUserOffline(callback: any): void {
     this.socket?.on('user_offline', (data: any) => {
-      console.log('🔴 User offline:', data);
+      
       callback(data);
     });
   }
 
   onUserOnline(callback: any): void {
     this.socket?.on('user_online', (data: any) => {
-      console.log('🟢 User online:', data);
+      
       callback(data);
     });
   }

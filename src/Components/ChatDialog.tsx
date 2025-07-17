@@ -13,7 +13,8 @@ interface ChatDialogProps {
 }
 
 const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
-  const { userDetails, socketConnected } = use(UserDetailsContext);
+  const { userDetails, socketConnected, isUserOnline } =
+    use(UserDetailsContext);
 
   const [isOpen, setIsOpen] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
@@ -30,6 +31,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const [newChatId, setNewChatId] = useState<string>("");
   const [isChatTextAreaOpen, setIsChatTextAreaOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const handleUsers = async () => {
     setIsUserLoading(true);
     try {
@@ -270,6 +272,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                           key={index}
                           isChat={false}
                           name={capitalizeName(chat.metadata.recipientName)}
+                          online={isUserOnline(chat.metadata.recipientId)}
                           onClick={async () => {
                             if (!socketConnected) {
                               return; // Don't open chat if socket is not connected
@@ -301,7 +304,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
           )}
         </div>
         <div
-          className={`flex h-auto  max-h-[75vh] flex-col ${
+          className={`flex h-auto  max-h-[80vh] flex-col ${
             isChatTextAreaOpen ? "flex" : "hidden"
           }`}
         >

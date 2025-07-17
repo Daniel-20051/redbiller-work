@@ -22,7 +22,13 @@ const FloatingChatButton = ({ onClick }: { onClick: () => void }) => (
 export default function DashboardLayout() {
   const { currentPage } = useCurrentPage();
   const [chatOpen, setChatOpen] = useState(false);
-  const { userDetails } = use(UserDetailsContext);
+  const {
+    userDetails,
+    setOnlineUsers,
+    onlineUsers,
+    removeOnlineUser,
+    addOnlineUser,
+  } = use(UserDetailsContext);
   const { setSocketConnected } = use(UserDetailsContext);
 
   useEffect(() => {
@@ -30,7 +36,21 @@ export default function DashboardLayout() {
       socketService.connect(userDetails?.data.user.id);
       setSocketConnected(true);
     }
+    socketService.onOnlineUsersList((data: any) => {
+      setOnlineUsers(data.map((user: any) => user.userId));
+    });
+
+    socketService.onUserGlobalStatus((data: any) => {
+      const userId = data.userId;
+      if (data.status === "online") {
+        addOnlineUser(userId);
+      } else if (data.status === "offline") {
+        removeOnlineUser(userId);
+      }
+    });
   }, [userDetails]);
+
+  console.log("Online users", onlineUsers);
 
   return (
     <div>

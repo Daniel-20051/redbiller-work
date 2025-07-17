@@ -60,7 +60,7 @@ const ProfileName: React.FC<ProfileNameProps> = ({ name, online }) => {
             width: 10,
             height: 10,
             borderRadius: "50%",
-            background: "#FF2D2D",
+            background: "#00D26A",
             border: "2px solid white",
             display: "block",
           }}

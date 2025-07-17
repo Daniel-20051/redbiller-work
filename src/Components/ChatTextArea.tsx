@@ -45,7 +45,8 @@ const ChatTextArea = ({
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
 }) => {
-  const { userDetails, socketConnected } = use(UserDetailsContext);
+  const { userDetails, socketConnected, isUserOnline } =
+    use(UserDetailsContext);
   const [text, setText] = useState("");
 
   const [typingInfo, setTypingInfo] = useState<string | null>(null);
@@ -55,8 +56,6 @@ const ChatTextArea = ({
   const userId = userDetails?.data.user.id;
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const [userOnline, setUserOnline] = useState<boolean>(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -113,16 +112,6 @@ const ChatTextArea = ({
         console.log("Message delivered", data);
       });
 
-      socketService.onUserOnline((data: any) => {
-        console.log("User online", data);
-        setUserOnline(true);
-      });
-
-      socketService.onUserOffline((data: any) => {
-        console.log("User offline", data);
-        setUserOnline(false);
-      });
-
       // If no messages are received within 3 seconds, stop loading
       const timeout = setTimeout(() => {
         setIsLoading(false);
@@ -156,7 +145,6 @@ const ChatTextArea = ({
           const response: any = await authApis.sendMessage(newChatId, {
             content: text,
           });
-          console.log("Response", response);
 
           if (response.status === 201) {
             setText("");
@@ -169,8 +157,6 @@ const ChatTextArea = ({
                 isSent: true,
               },
             ]);
-            console.log("Messages", messages);
-            console.log("Message sent", text);
 
             // Call the callback to reload chats list after first message is sent
             if (onChatCreated) {
@@ -249,7 +235,7 @@ const ChatTextArea = ({
               handleLeaveChat();
             }}
           />
-          <ProfileName name={name} online={userOnline} />
+          <ProfileName name={name} online={isUserOnline(userId)} />
           <div>
             <p className="text-[15px] font-[500] ">{name}</p>
             {typingInfo && (
