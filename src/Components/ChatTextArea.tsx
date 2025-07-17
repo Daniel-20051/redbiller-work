@@ -106,6 +106,11 @@ const ChatTextArea = ({
         }
       });
 
+      socketService.onMessageDelivered((data: any) => {
+        setMessageStatus("delivered");
+        console.log("Message delivered", data);
+      });
+
       // If no messages are received within 3 seconds, stop loading
       const timeout = setTimeout(() => {
         setIsLoading(false);
@@ -121,14 +126,6 @@ const ChatTextArea = ({
     setMessages,
     isNewChat,
   ]);
-
-  // Listen for message delivered events
-  useEffect(() => {
-    socketService.onMessageDelivered((data: any) => {
-      setMessageStatus("delivered");
-      console.log("Message delivered", data);
-    });
-  }, []);
 
   const handleSendMessage = async () => {
     if (text.trim()) {

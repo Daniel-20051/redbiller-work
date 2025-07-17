@@ -97,7 +97,6 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
   onMessageDelivered(callback: DeliveryCallback): void {
     this.socket?.on('message_delivered', (data: any) => {
-      console.log('✅ Message delivered:', data);
       callback(data);
     });
   }

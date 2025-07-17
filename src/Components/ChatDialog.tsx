@@ -13,7 +13,7 @@ interface ChatDialogProps {
 }
 
 const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
-  const { userDetails } = use(UserDetailsContext);
+  const { userDetails, socketConnected } = use(UserDetailsContext);
 
   const [isOpen, setIsOpen] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
@@ -124,37 +124,127 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
             isChatTextAreaOpen ? "hidden" : "flex"
           }  overflow-y-auto `}
         >
-          <div
-            className={`flex flex-col  rounded-lg border-1  border-[#d2d2d2] 
-                  `}
-          >
-            <div
-              className={`flex bg-[#F2F2F2] px-3 h-[50px] items-center justify-between transition-transform duration-300 ${
-                isOpen ? "rounded-t-lg" : "rounded-lg"
-              }`}
-            >
-              <div className="flex items-center  gap-5 h-full">
-                <Icon icon="octicon:people-24" width="25" height="25" />
-                <p className="text-[15px] font-[500] ">All Members</p>
-              </div>
+          {!socketConnected ? (
+            <div className="flex flex-col items-center justify-center h-full gap-4">
               <Icon
-                className={`cursor-pointer transition-transform duration-300 ${
-                  isOpen ? "" : "rotate-180"
-                }`}
-                icon="ep:arrow-down"
-                width="24"
-                height="24"
-                onClick={() => setIsOpen((prev) => !prev)}
+                icon="svg-spinners:ring-resize"
+                width="40"
+                height="40"
+                color="#93221D"
               />
+              <p className="text-gray-600 text-center">
+                Connecting to chat server...
+              </p>
+              <p className="text-gray-400 text-sm text-center">
+                Please wait while we establish a secure connection
+              </p>
             </div>
-            <div
-              className={`transition-all duration-500 ease-in-out overflow-hidden`}
-              style={{
-                maxHeight: isOpen ? 300 : 0,
-                opacity: isOpen ? 1 : 0,
-              }}
-            >
-              <div className="p-3 flex flex-col items-center gap-3">
+          ) : (
+            <>
+              <div
+                className={`flex flex-col  rounded-lg border-1  border-[#d2d2d2] 
+                  `}
+              >
+                <div
+                  className={`flex bg-[#F2F2F2] px-3 h-[50px] items-center justify-between transition-transform duration-300 ${
+                    isOpen ? "rounded-t-lg" : "rounded-lg"
+                  }`}
+                >
+                  <div className="flex items-center  gap-5 h-full">
+                    <Icon icon="octicon:people-24" width="25" height="25" />
+                    <p className="text-[15px] font-[500] ">All Members</p>
+                  </div>
+                  <Icon
+                    className={`cursor-pointer transition-transform duration-300 ${
+                      isOpen ? "" : "rotate-180"
+                    }`}
+                    icon="ep:arrow-down"
+                    width="24"
+                    height="24"
+                    onClick={() => setIsOpen((prev) => !prev)}
+                  />
+                </div>
+                <div
+                  className={`transition-all duration-500 ease-in-out overflow-hidden`}
+                  style={{
+                    maxHeight: isOpen ? 300 : 0,
+                    opacity: isOpen ? 1 : 0,
+                  }}
+                >
+                  <div className="p-3 flex flex-col items-center gap-3">
+                    <div className="relative w-[97%]">
+                      <Icon
+                        icon="mynaui:search"
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                        width="20"
+                        height="20"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Search"
+                        className="w-full h-[35px] text-[16px] rounded-md border-1 border-[#d2d2d2] outline-0 p-2 pl-10"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </div>
+                    <div
+                      className="w-full flex flex-col gap-3 overflow-y-auto"
+                      style={{ maxHeight: "160px" }}
+                    >
+                      {isUserLoading ? (
+                        Array.from({ length: 5 }).map((_, i) => (
+                          <UserSkeleton key={i} />
+                        ))
+                      ) : filteredUsers.length === 0 ? (
+                        <div className="text-center text-gray-500 py-4">
+                          No members found.
+                        </div>
+                      ) : (
+                        filteredUsers.map((user, index) => (
+                          <ChatCard
+                            key={index}
+                            name={
+                              capitalizeName(user.firstName) +
+                              " " +
+                              capitalizeName(user.lastName)
+                            }
+                            email={user.email}
+                            isChat={true}
+                            onClick={async () => {
+                              if (!socketConnected) {
+                                return; // Don't open chat if socket is not connected
+                              }
+                              setIsChatTextAreaOpen(true);
+                              setName(
+                                capitalizeName(user.firstName) +
+                                  " " +
+                                  capitalizeName(user.lastName)
+                              );
+                              setMessages([]);
+                              setIsNewChat(true);
+                              setChatId(""); // Clear any previous chatId
+                              await handleSubmitDirectMessage(String(user.id));
+                            }}
+                          />
+                        ))
+                      )}
+                    </div>
+
+                    <button className="flex cursor-pointer font-medium items-center justify-center gap-2 bg-primary  w-[97%] text-white px-3 py-2 rounded-md ">
+                      <Icon icon="ic:round-plus" width="24" height="24" />
+                      Create Group
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                className={`flex-1  flex flex-col items-center p-3  gap-3 rounded-lg border-1 border-[#d2d2d2] transition-all duration-300 ${
+                  isOpen ? "h-[43%]" : "h-[40%]"
+                }`}
+              >
+                <div className="w-full flex place-self-start gap-2 items-center">
+                  <img src="./assets/redlogodashboard.svg" alt="" />
+                </div>
                 <div className="relative w-[97%]">
                   <Icon
                     icon="mynaui:search"
@@ -166,110 +256,49 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                     type="text"
                     placeholder="Search"
                     className="w-full h-[35px] text-[16px] rounded-md border-1 border-[#d2d2d2] outline-0 p-2 pl-10"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
                   />
                 </div>
-                <div
-                  className="w-full flex flex-col gap-3 overflow-y-auto"
-                  style={{ maxHeight: "160px" }}
-                >
-                  {isUserLoading ? (
+                <div className="w-full flex flex-col gap-3  overflow-y-auto flex-1">
+                  {isPreviousChatLoading ? (
                     Array.from({ length: 5 }).map((_, i) => (
                       <UserSkeleton key={i} />
                     ))
-                  ) : filteredUsers.length === 0 ? (
-                    <div className="text-center text-gray-500 py-4">
-                      No members found.
+                  ) : chatNumber !== 0 ? (
+                    <div className="flex flex-col gap-3">
+                      {previousChats.map((chat: any, index: number) => (
+                        <ChatCard
+                          key={index}
+                          isChat={false}
+                          name={capitalizeName(chat.metadata.recipientName)}
+                          onClick={async () => {
+                            if (!socketConnected) {
+                              return; // Don't open chat if socket is not connected
+                            }
+                            setIsChatTextAreaOpen(true);
+                            setChatId(chat._id);
+                            setName(
+                              capitalizeName(chat.metadata.recipientName)
+                            );
+                            setIsNewChat(false);
+
+                            // Fetch messages for this chat
+                            const chatMessages = await handleGetMessages(
+                              chat._id
+                            );
+                            setMessages(chatMessages);
+                          }}
+                        />
+                      ))}
                     </div>
                   ) : (
-                    filteredUsers.map((user, index) => (
-                      <ChatCard
-                        key={index}
-                        name={
-                          capitalizeName(user.firstName) +
-                          " " +
-                          capitalizeName(user.lastName)
-                        }
-                        email={user.email}
-                        isChat={true}
-                        onClick={async () => {
-                          setIsChatTextAreaOpen(true);
-                          setName(
-                            capitalizeName(user.firstName) +
-                              " " +
-                              capitalizeName(user.lastName)
-                          );
-                          setMessages([]);
-                          setIsNewChat(true);
-                          setChatId(""); // Clear any previous chatId
-                          await handleSubmitDirectMessage(String(user.id));
-                        }}
-                      />
-                    ))
+                    <div className="text-center text-gray-500 py-4">
+                      No previous chats found.
+                    </div>
                   )}
                 </div>
-
-                <button className="flex cursor-pointer font-medium items-center justify-center gap-2 bg-primary  w-[97%] text-white px-3 py-2 rounded-md ">
-                  <Icon icon="ic:round-plus" width="24" height="24" />
-                  Create Group
-                </button>
               </div>
-            </div>
-          </div>
-          <div
-            className={`flex-1  flex flex-col items-center p-3  gap-3 rounded-lg border-1 border-[#d2d2d2] transition-all duration-300 ${
-              isOpen ? "h-[43%]" : "h-[40%]"
-            }`}
-          >
-            <div className="w-full flex place-self-start gap-2 items-center">
-              <img src="./assets/redlogodashboard.svg" alt="" />
-            </div>
-            <div className="relative w-[97%]">
-              <Icon
-                icon="mynaui:search"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                width="20"
-                height="20"
-              />
-              <input
-                type="text"
-                placeholder="Search"
-                className="w-full h-[35px] text-[16px] rounded-md border-1 border-[#d2d2d2] outline-0 p-2 pl-10"
-              />
-            </div>
-            <div className="w-full flex flex-col gap-3  overflow-y-auto flex-1">
-              {isPreviousChatLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <UserSkeleton key={i} />
-                ))
-              ) : chatNumber !== 0 ? (
-                <div className="flex flex-col gap-3">
-                  {previousChats.map((chat: any, index: number) => (
-                    <ChatCard
-                      key={index}
-                      isChat={false}
-                      name={capitalizeName(chat.metadata.recipientName)}
-                      onClick={async () => {
-                        setIsChatTextAreaOpen(true);
-                        setChatId(chat._id);
-                        setName(capitalizeName(chat.metadata.recipientName));
-                        setIsNewChat(false);
-
-                        // Fetch messages for this chat
-                        const chatMessages = await handleGetMessages(chat._id);
-                        setMessages(chatMessages);
-                      }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center text-gray-500 py-4">
-                  No previous chats found.
-                </div>
-              )}
-            </div>
-          </div>
+            </>
+          )}
         </div>
         <div
           className={`flex h-auto  max-h-[79vh] flex-col ${
