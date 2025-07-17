@@ -60,9 +60,9 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     console.log(`📨 Joining chat room: ${chatId}`);
     this.socket.emit('join_chat', { chatId });
 
-    // this.socket.on('joined_chat', (data: any) => {
-    //   console.log('✅ Successfully joined chat:', data);
-    // });
+    this.socket.on('joined_chat', (data: any) => {
+      console.log('✅ Successfully joined chat:', data);
+    });
 
     this.socket.on('error', (error: any) => {
       console.error('❌ Error joining chat:', error);
@@ -118,8 +118,8 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
   onLeaveChat(chatId: string): void {
     this.socket?.emit('leave_chat', { chatId }) 
-
-    
+   ;
+ 
   }
 
 

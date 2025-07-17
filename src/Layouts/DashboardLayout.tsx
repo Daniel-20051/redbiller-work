@@ -22,13 +22,8 @@ const FloatingChatButton = ({ onClick }: { onClick: () => void }) => (
 export default function DashboardLayout() {
   const { currentPage } = useCurrentPage();
   const [chatOpen, setChatOpen] = useState(false);
-  const {
-    userDetails,
-    setOnlineUsers,
-    onlineUsers,
-    removeOnlineUser,
-    addOnlineUser,
-  } = use(UserDetailsContext);
+  const { userDetails, setOnlineUsers, removeOnlineUser, addOnlineUser } =
+    use(UserDetailsContext);
   const { setSocketConnected } = use(UserDetailsContext);
 
   useEffect(() => {
@@ -49,8 +44,6 @@ export default function DashboardLayout() {
       }
     });
   }, [userDetails]);
-
-  console.log("Online users", onlineUsers);
 
   return (
     <div>

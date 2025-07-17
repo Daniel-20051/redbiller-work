@@ -107,9 +107,8 @@ const ChatTextArea = ({
         }
       });
 
-      socketService.onMessageDelivered((data: any) => {
+      socketService.onMessageDelivered(() => {
         setMessageStatus("delivered");
-        console.log("Message delivered", data);
       });
 
       // If no messages are received within 3 seconds, stop loading
