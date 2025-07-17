@@ -56,6 +56,14 @@ const Login = () => {
         setLoginSpiner(false);
         return;
       }
+      if (responseData?.status === 429) {
+        showAlertMessage(
+          "Too many requests, please try again after 15 minutes",
+          "error"
+        );
+        setLoginSpiner(false);
+        return;
+      }
       if (responseData?.code === "ERR_NETWORK") {
         showAlertMessage("Network Error", "error");
         setLoginSpiner(false);

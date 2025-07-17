@@ -49,7 +49,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
       const response: any = await authApis.submitDirectMessage({
         recipientId: recipientId,
       });
-      console.log("Response", response);
+
       if (response?.data?.data?.chat?._id) {
         setNewChatId(response.data.data.chat._id);
       }
@@ -93,7 +93,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     try {
       const response: any = await authApis.getAllMessages(chatId);
       setIsLoading(false);
-      console.log("Response", response);
+
       return response.data.data.messages;
     } catch (error) {
       setIsLoading(false);
