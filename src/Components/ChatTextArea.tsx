@@ -5,7 +5,6 @@ import socketService from "../services/socketService";
 import { UserDetailsContext } from "../context/AuthContext.js";
 import MessageSkeleton from "./MessageSkeleton";
 import { AuthApis } from "../api";
-import TypingSkeleton from "./TypingSkeleton";
 
 interface Message {
   content: string;
