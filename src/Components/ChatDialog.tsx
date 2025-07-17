@@ -5,7 +5,6 @@ import { AuthApis } from "../api";
 import UserSkeleton from "../Components/UserSkeleton";
 import ChatTextArea from "../Components/ChatTextArea";
 import { UserDetailsContext } from "../context/AuthContext.js";
-
 const authApis = new AuthApis();
 
 interface ChatDialogProps {
@@ -15,6 +14,7 @@ interface ChatDialogProps {
 
 const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const { userDetails } = use(UserDetailsContext);
+
   const [isOpen, setIsOpen] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
@@ -29,7 +29,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const [isNewChat, setIsNewChat] = useState<boolean>(false);
   const [newChatId, setNewChatId] = useState<string>("");
   const [isChatTextAreaOpen, setIsChatTextAreaOpen] = useState<boolean>(false);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleUsers = async () => {
     setIsUserLoading(true);
     try {
@@ -49,6 +49,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
       const response: any = await authApis.submitDirectMessage({
         recipientId: recipientId,
       });
+      console.log("Response", response);
       if (response?.data?.data?.chat?._id) {
         setNewChatId(response.data.data.chat._id);
       }
@@ -88,10 +89,14 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   };
 
   const handleGetMessages = async (chatId: string) => {
+    setIsLoading(true);
     try {
       const response: any = await authApis.getAllMessages(chatId);
+      setIsLoading(false);
+      console.log("Response", response);
       return response.data.data.messages;
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
       return [];
     }
@@ -284,6 +289,8 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
             setChatId={setChatId}
             setIsChatTextAreaOpen={setIsChatTextAreaOpen}
             isChatTextAreaOpen={isChatTextAreaOpen}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
           />
         </div>
       </div>

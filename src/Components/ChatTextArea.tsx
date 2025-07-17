@@ -27,6 +27,8 @@ const ChatTextArea = ({
   setChatId,
   setIsChatTextAreaOpen,
   isChatTextAreaOpen,
+  isLoading,
+  setIsLoading,
 }: {
   chatId: string;
   name: string;
@@ -40,12 +42,15 @@ const ChatTextArea = ({
   setChatId: (chatId: string) => void;
   setIsChatTextAreaOpen: (isChatTextAreaOpen: boolean) => void;
   isChatTextAreaOpen: boolean;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
 }) => {
-  const { userDetails } = use(UserDetailsContext);
+  const { userDetails, socketConnected } = use(UserDetailsContext);
   const [text, setText] = useState("");
-  const [isConnected, setIsConnected] = useState(false);
+
   const [typingInfo, setTypingInfo] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+
+  const [messageStatus, setMessageStatus] = useState<string | null>("sent");
 
   const userId = userDetails?.data.user.id;
 
@@ -65,112 +70,65 @@ const ChatTextArea = ({
       // Clear messages and set loading when starting a new chat
       setMessages([]);
       setText(""); // Clear any existing text input
-      setIsLoading(true);
-      setIsConnected(false);
+
       setTypingInfo(null);
     }
   }, [isNewChat]);
 
+  // Handle socket connection
   useEffect(() => {
-    // Only connect to socket when both userId and chatId are provided, chat is active, and it's not a new chat
-    if (userId && chatId && isChatTextAreaOpen && !isNewChat) {
-      // Connect to socket on mount
-      socketService.connect(userId);
+    if (socketConnected && isChatTextAreaOpen && !isNewChat) {
+      socketService.joinChat(chatId);
+      setIsLoading(true);
 
-      const socket = socketService["socket"];
-
-      if (socket) {
-        // Connection handlers
-        socket.on("connect", () => {
-          setIsConnected(true);
-          setIsLoading(false);
-          socketService.joinChat(chatId);
-        });
-
-        socket.on("disconnect", () => {
-          setIsConnected(false);
-          setIsLoading(true);
-        });
-      }
-
+      // Listen for new messages
       socketService.onNewMessage((message: any) => {
-        console.log("📨 New message received in ChatTextArea:", message);
-
-        // Transform the socket message to match our Message interface
-        const newMessage: Message = {
-          content: message.content,
-          createdAt: message.createdAt,
-          senderId: message.senderId,
-          isSent: message.senderId === userId,
-        };
-
-        setMessages((prev) => [...prev, newMessage]);
-      });
-
-      socketService.onMessageDelivered((data: any) => {
-        console.log("Message was delivered:", data);
-      });
-
-      // Typing event listener
-      socketService.onTyping((data: any) => {
-        setTypingInfo(`${data.user || "Someone"} is typing...`);
-        setTimeout(() => setTypingInfo(null), 1500);
-      });
-    } else if (!isChatTextAreaOpen && isConnected) {
-      // Disconnect when chat becomes inactive
-      socketService.disconnect();
-      setIsConnected(false);
-      setIsLoading(true);
-      setTypingInfo(null);
-    } else if (isNewChat) {
-      // For new chats, always start with loading state
-      setIsLoading(true);
-      setIsConnected(false);
-
-      if (newChatId) {
-        // Load previous messages for the new chat
-        const loadPreviousMessages = async () => {
-          try {
-            const response: any = await authApis.getAllMessages(newChatId);
-            if (response?.data?.data?.messages) {
-              setMessages(response.data.data.messages);
-            }
-          } catch (error) {
-            console.log("Error loading previous messages:", error);
-          } finally {
-            setIsLoading(false);
-          }
-        };
-
-        loadPreviousMessages();
-      }
-    } else if (!isNewChat && chatId) {
-      // When transitioning from new chat to existing chat, load messages
-      const loadMessages = async () => {
-        try {
-          setIsLoading(true);
-          const response: any = await authApis.getAllMessages(chatId);
-          if (response?.data?.data?.messages) {
-            setMessages(response.data.data.messages);
-          }
-        } catch (error) {
-          console.log("Error loading messages:", error);
-        } finally {
+        if (message.senderId !== userId) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              content: message.content,
+              createdAt: message.createdAt,
+              senderId: message.senderId,
+              isSent: false,
+            },
+          ]);
+          // Set loading to false after receiving first message
           setIsLoading(false);
         }
-      };
+      });
 
-      loadMessages();
+      // Listen for typing events
+      socketService.onTyping((data: any) => {
+        if (data.user !== userId) {
+          setTypingInfo("typing");
+          setTimeout(() => setTypingInfo(null), 2000);
+        }
+      });
+
+      // If no messages are received within 3 seconds, stop loading
+      const timeout = setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
+
+      return () => clearTimeout(timeout);
     }
+  }, [
+    socketConnected,
+    isChatTextAreaOpen,
+    chatId,
+    userId,
+    setMessages,
+    isNewChat,
+  ]);
 
-    // Cleanup function
-    return () => {
-      if (isConnected) {
-        socketService.disconnect();
-        setIsConnected(false);
-      }
-    };
-  }, [userId, chatId, isChatTextAreaOpen, isNewChat, newChatId]);
+  // Listen for message delivered events
+  useEffect(() => {
+    socketService.onMessageDelivered((data: any) => {
+      setMessageStatus("delivered");
+      console.log("Message delivered", data);
+    });
+  }, []);
 
   const handleSendMessage = async () => {
     if (text.trim()) {
@@ -185,6 +143,7 @@ const ChatTextArea = ({
           const response: any = await authApis.sendMessage(newChatId, {
             content: text,
           });
+          console.log("Response", response);
 
           if (response.status === 201) {
             setText("");
@@ -197,6 +156,8 @@ const ChatTextArea = ({
                 isSent: true,
               },
             ]);
+            console.log("Messages", messages);
+            console.log("Message sent", text);
 
             // Call the callback to reload chats list after first message is sent
             if (onChatCreated) {
@@ -209,16 +170,26 @@ const ChatTextArea = ({
             setChatId(newChatId);
             // Clear newChatId since it's no longer needed
             setNewChatId("");
+            // Set loading to false since we now have messages
+            setIsLoading(false);
           }
         } catch (error) {
-          setIsLoading(false);
-
           console.log(error);
           return [];
         }
-      } else if (isConnected) {
+      } else if (socketConnected) {
         // Send message via socket for existing chats
         socketService.sendMessage(chatId, text);
+        setMessages((prev) => [
+          ...prev,
+          {
+            content: text,
+            createdAt: new Date(),
+            senderId: userId,
+            isSent: true,
+          },
+        ]);
+        setMessageStatus("sending");
         setText("");
       }
     }
@@ -226,7 +197,7 @@ const ChatTextArea = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
-    if (isConnected && socketService["socket"] && !isNewChat) {
+    if (socketConnected && socketService["socket"] && !isNewChat) {
       socketService["socket"].emit("typing_start", { chatId, user: userId });
     }
   };
@@ -241,6 +212,12 @@ const ChatTextArea = ({
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
+
+  // Find the last message sent by the current user
+  const lastUserMessageIndex = messages
+    .map((msg, idx) => ({ idx, senderId: msg.senderId }))
+    .filter((msg) => msg.senderId === userId)
+    .pop()?.idx;
 
   return (
     <div
@@ -274,11 +251,11 @@ const ChatTextArea = ({
       </div>
 
       {/* Chat Messages Area */}
-      <div className="flex-1 w-full overflow-y-auto bg-white px-3 pt-3 mb-3">
-        <div className="flex flex-col gap-3 min-h-full">
-          {isLoading ? (
-            <MessageSkeleton />
-          ) : (
+      {isLoading ? (
+        <MessageSkeleton />
+      ) : (
+        <div className="flex-1 w-full overflow-y-auto bg-white px-3 pt-3 mb-3">
+          <div className="flex flex-col gap-3 min-h-full">
             <>
               {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center min-h-[30vh] text-gray-400 text-base font-medium py-10">
@@ -305,24 +282,41 @@ const ChatTextArea = ({
                         {message.content}
                       </p>
                       <p
-                        className={`text-xs mt-1 ${
+                        className={`flex items-center gap-1 text-xs mt-1 ${
                           message.senderId === userId
                             ? "text-gray-500 text-right"
                             : "text-gray-200 text-left"
                         }`}
                       >
                         {formatTime(new Date(message.createdAt))}
+                        {message.senderId === userId &&
+                          index === lastUserMessageIndex &&
+                          (messageStatus === "sending" ? (
+                            <Icon
+                              icon="svg-spinners:clock"
+                              width="15"
+                              height="15"
+                              style={{ color: "#000" }}
+                            />
+                          ) : messageStatus === "delivered" ? (
+                            <Icon
+                              icon="material-symbols:check-rounded"
+                              width="15"
+                              height="15"
+                              style={{ color: "#000" }}
+                            />
+                          ) : null)}
                       </p>
                     </div>
                   </div>
                 ))
               )}
             </>
-          )}
 
-          <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Input Area */}
       <div className="w-full bg-[#F2F2F2] gap-5 flex items-center px-3 rounded-b-lg h-[60px] flex-shrink-0">
@@ -345,29 +339,20 @@ const ChatTextArea = ({
         <input
           className="flex-1 outline-0 resize-none px-2 h-full py-2"
           placeholder={
-            isNewChat && !newChatId
-              ? "Creating chat..."
-              : isNewChat && isLoading
-              ? "Loading messages..."
-              : isLoading
-              ? "Connecting..."
-              : "Type a message"
+            isNewChat && !newChatId ? "Creating chat..." : "Type a message"
           }
           value={text}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          disabled={isLoading}
         />
         {text.trim() ? (
           <Icon
-            className={`transition-transform duration-200 hover:scale-110 ${
-              isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-            }`}
+            className={`transition-transform duration-200 hover:scale-110 ${"cursor-pointer"}`}
             icon="mynaui:send-solid"
             width="24"
             height="24"
             style={{ color: "#93221D" }}
-            onClick={!isLoading ? handleSendMessage : undefined}
+            onClick={handleSendMessage}
           />
         ) : (
           <Icon

@@ -2,9 +2,12 @@ import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
 import { Outlet } from "react-router-dom";
 import { useCurrentPage } from "../context/SidebarContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatDialog from "../Components/ChatDialog";
 import { Icon } from "@iconify/react";
+import socketService from "../services/socketService";
+import { use } from "react";
+import { UserDetailsContext } from "../context/AuthContext";
 
 const FloatingChatButton = ({ onClick }: { onClick: () => void }) => (
   <button
@@ -19,6 +22,15 @@ const FloatingChatButton = ({ onClick }: { onClick: () => void }) => (
 export default function DashboardLayout() {
   const { currentPage } = useCurrentPage();
   const [chatOpen, setChatOpen] = useState(false);
+  const { userDetails } = use(UserDetailsContext);
+  const { setSocketConnected } = use(UserDetailsContext);
+
+  useEffect(() => {
+    if (userDetails?.data.user.id) {
+      socketService.connect(userDetails?.data.user.id);
+      setSocketConnected(true);
+    }
+  }, [userDetails]);
 
   return (
     <div>
@@ -31,7 +43,11 @@ export default function DashboardLayout() {
             <Outlet />
           </div>
         </div>
-        <FloatingChatButton onClick={() => setChatOpen(true)} />
+        <FloatingChatButton
+          onClick={() => {
+            setChatOpen(true);
+          }}
+        />
         <ChatDialog open={chatOpen} onClose={() => setChatOpen(false)} />
       </div>
     </div>

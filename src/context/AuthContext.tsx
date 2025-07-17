@@ -15,6 +15,8 @@ type UserDetailsContextType = {
   setEventDetails: any;
   fetchEventDetails: () => void;
   updateEventDetails: (updatedEvent: any) => void;
+  socketConnected: boolean;
+  setSocketConnected: (socketConnected: boolean) => void;
 };
 
 const authApis = new AuthApis();
@@ -33,6 +35,8 @@ export const UserDetailsContext = createContext<UserDetailsContextType>({
   setEventDetails: null,
   fetchEventDetails: async () => {},
   updateEventDetails: () => {},
+  socketConnected: false,
+  setSocketConnected: () => {},
 });
 
 function AuthContext({ children }: { children: React.ReactNode }) {
@@ -41,6 +45,7 @@ function AuthContext({ children }: { children: React.ReactNode }) {
   const [spiner, setSpiner] = useState<any>(true);
   const [incidentDetails, setIncidentDetails] = useState<any>(null);
   const [eventDetails, setEventDetails] = useState<any>(null);
+  const [socketConnected, setSocketConnected] = useState<boolean>(false);
 
   const fetchUserDetails = async () => {
     try {
@@ -100,6 +105,8 @@ function AuthContext({ children }: { children: React.ReactNode }) {
         setEventDetails,
         fetchEventDetails,
         updateEventDetails,
+        socketConnected,
+        setSocketConnected,
       }}
     >
       {children}

@@ -2,6 +2,7 @@ import React from "react";
 
 interface ProfileNameProps {
   name: string;
+  online?: boolean;
 }
 
 function getInitials(name: string) {
@@ -26,28 +27,45 @@ function getColorFromName(name: string) {
   return colors[index];
 }
 
-const ProfileName: React.FC<ProfileNameProps> = ({ name }) => {
+const ProfileName: React.FC<ProfileNameProps> = ({ name, online }) => {
   const initials = getInitials(name);
   const bgColor = getColorFromName(name);
 
   return (
-    <div
-      style={{
-        width: 40,
-        height: 40,
-        borderRadius: "50%",
-        background: bgColor,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "white",
-        fontWeight: 600,
-        fontSize: 22,
-        userSelect: "none",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-      }}
-    >
-      {initials}
+    <div style={{ position: "relative", display: "inline-block" }}>
+      <div
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: "50%",
+          background: bgColor,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white",
+          fontWeight: 600,
+          fontSize: 22,
+          userSelect: "none",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+        }}
+      >
+        {initials}
+      </div>
+      {online && (
+        <span
+          style={{
+            position: "absolute",
+            bottom: 2,
+            right: 2,
+            width: 10,
+            height: 10,
+            borderRadius: "50%",
+            background: "#FF2D2D",
+            border: "2px solid white",
+            display: "block",
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -68,6 +68,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
       console.error('❌ Error joining chat:', error);
     });
   }
+  
 
   sendMessage(chatId: string, content: string): void {
     if (!this.isConnected || !this.socket) {
@@ -82,16 +83,17 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
       tempId: Date.now(),
     };
 
-    console.log('📤 Sending message:', messageData);
+    
     this.socket.emit('send_message', messageData);
   }
 
   onNewMessage(callback: MessageCallback): void {
     this.socket?.on('new_message', (message: any) => {
-      console.log('📨 New message received:', message);
       callback(message);
     });
   }
+
+  
 
   onMessageDelivered(callback: DeliveryCallback): void {
     this.socket?.on('message_delivered', (data: any) => {
@@ -118,8 +120,15 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
   }
 
   onMarkMessageRead(callback: any): void {
-    this.socket?.on('mark_message_read', (data: any) => {
+    this.socket?.emit('mark_message_read', (data: any) => {
       console.log('✅ Message read by:', data);
+      callback(data);
+    });
+  }
+
+  onMessageRead(callback: any): void {
+    this.socket?.on('message_read', (data: any) => {
+      console.log('✅ Message read:', data);
       callback(data);
     });
   }
