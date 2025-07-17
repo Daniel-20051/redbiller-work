@@ -56,6 +56,8 @@ const ChatTextArea = ({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [userOnline, setUserOnline] = useState<boolean>(false);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -109,6 +111,16 @@ const ChatTextArea = ({
       socketService.onMessageDelivered((data: any) => {
         setMessageStatus("delivered");
         console.log("Message delivered", data);
+      });
+
+      socketService.onUserOnline((data: any) => {
+        console.log("User online", data);
+        setUserOnline(true);
+      });
+
+      socketService.onUserOffline((data: any) => {
+        console.log("User offline", data);
+        setUserOnline(false);
       });
 
       // If no messages are received within 3 seconds, stop loading
@@ -237,7 +249,7 @@ const ChatTextArea = ({
               handleLeaveChat();
             }}
           />
-          <ProfileName name={name} />
+          <ProfileName name={name} online={userOnline} />
           <div>
             <p className="text-[15px] font-[500] ">{name}</p>
             {typingInfo && (
