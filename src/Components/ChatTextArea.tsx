@@ -127,6 +127,10 @@ const ChatTextArea = ({
     isNewChat,
   ]);
 
+  const handleLeaveChat = () => {
+    socketService.onLeaveChat(chatId);
+  };
+
   const handleSendMessage = async () => {
     if (text.trim()) {
       if (isNewChat || !chatId) {
@@ -230,6 +234,7 @@ const ChatTextArea = ({
             height="24"
             onClick={() => {
               setIsChatTextAreaOpen(false);
+              handleLeaveChat();
             }}
           />
           <ProfileName name={name} />

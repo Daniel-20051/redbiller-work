@@ -101,6 +101,11 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     });
   }
 
+  onLeaveChat(chatId: string): void {
+    this.socket?.emit('leave_chat', { chatId }) 
+    console.log('🔴 Left chat:', chatId);
+  }
+
 
 
 

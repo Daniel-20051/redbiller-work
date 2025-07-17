@@ -114,7 +114,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
       onClick={onClose}
     >
       <div
-        className={` flex-col place-self-end overflow-y-auto  relative p-2 bg-white rounded-2xl shadow-2xl w-full md:w-[400px] max-h-[86vh] md:max-h-[80vh] transform transition-all duration-300 ${
+        className={` flex-col place-self-end overflow-y-auto  relative p-2 bg-white rounded-2xl shadow-2xl w-full md:w-[400px] max-h-[84vh] md:max-h-[80vh] transform transition-all duration-300 ${
           open ? "translate-y-0 scale-100" : "translate-y-10 scale-95"
         } `}
         onClick={(e) => e.stopPropagation()}
@@ -301,7 +301,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
           )}
         </div>
         <div
-          className={`flex h-auto  max-h-[79vh] flex-col ${
+          className={`flex h-auto  max-h-[75vh] flex-col ${
             isChatTextAreaOpen ? "flex" : "hidden"
           }`}
         >
