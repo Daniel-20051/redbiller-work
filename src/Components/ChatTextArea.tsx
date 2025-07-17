@@ -82,8 +82,8 @@ const ChatTextArea = ({
       socketService.joinChat(chatId);
       setIsLoading(true);
 
-      // Listen for new messages
-      socketService.onNewMessage((message: any) => {
+      // Define handlers
+      const handleNewMessage = (message: any) => {
         if (message.senderId !== userId) {
           setMessages((prev) => [
             ...prev,
@@ -97,26 +97,34 @@ const ChatTextArea = ({
           // Set loading to false after receiving first message
           setIsLoading(false);
         }
-      });
-
-      // Listen for typing events
-      socketService.onTyping((data: any) => {
+      };
+      const handleTyping = (data: any) => {
         if (data.user !== userId) {
           setTypingInfo("typing");
           setTimeout(() => setTypingInfo(null), 2000);
         }
-      });
-
-      socketService.onMessageDelivered(() => {
+      };
+      const handleDelivered = () => {
         setMessageStatus("delivered");
-      });
+      };
+
+      // Register handlers
+      socketService.onNewMessage(handleNewMessage);
+      socketService.onTyping(handleTyping);
+      socketService.onMessageDelivered(handleDelivered);
 
       // If no messages are received within 3 seconds, stop loading
       const timeout = setTimeout(() => {
         setIsLoading(false);
       }, 3000);
 
-      return () => clearTimeout(timeout);
+      // Cleanup: remove handlers
+      return () => {
+        clearTimeout(timeout);
+        socketService.offNewMessage(handleNewMessage);
+        socketService.offTyping(handleTyping);
+        socketService.offMessageDelivered(handleDelivered);
+      };
     }
   }, [
     socketConnected,

@@ -60,6 +60,8 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     console.log(`📨 Joining chat room: ${chatId}`);
     this.socket.emit('join_chat', { chatId });
 
+    // Remove any previous listener before adding a new one
+    this.socket.off('joined_chat');
     this.socket.on('joined_chat', (data: any) => {
       console.log('✅ Successfully joined chat:', data);
     });
@@ -67,6 +69,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     this.socket.on('error', (error: any) => {
       console.error('❌ Error joining chat:', error);
     });
+    
   }
   
 
@@ -96,9 +99,14 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
   }
 
   onNewMessage(callback: MessageCallback): void {
+    this.socket?.off('new_message');
     this.socket?.on('new_message', (message: any) => {
       callback(message);
     });
+  }
+
+  offNewMessage(callback: MessageCallback): void {
+    this.socket?.off('new_message', callback);
   }
 
   onOnlineUsersList(callback: any): void {
@@ -109,15 +117,20 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
   }
 
   onMessageDelivered(callback: DeliveryCallback): void {
+    this.socket?.off('message_delivered');
     this.socket?.on('message_delivered', (data: any) => {
       callback(data);
     });
   }
 
+  offMessageDelivered(callback: DeliveryCallback): void {
+    this.socket?.off('message_delivered', callback);
+  }
 
 
   onLeaveChat(chatId: string): void {
     this.socket?.emit('leave_chat', { chatId }) 
+    this.socket?.off('message_delivered');
    ;
  
   }
@@ -154,9 +167,14 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
   }
 
   onTyping(callback: any): void {
+    this.socket?.off('user_typing');
     this.socket?.on('user_typing', (data: any) => {
       callback(data);
     });
+  }
+
+  offTyping(callback: any): void {
+    this.socket?.off('user_typing', callback);
   }
 
   disconnect(): void {
