@@ -100,8 +100,9 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
   onNewMessage(callback: MessageCallback): void {
     this.socket?.off('new_message');
-    this.socket?.on('new_message', (message: any) => {
+    this.socket?.on('new_message', (message: any) => { 
       callback(message);
+      console.log("New message",message);
     });
   }
 

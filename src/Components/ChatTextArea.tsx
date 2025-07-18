@@ -29,6 +29,7 @@ const ChatTextArea = ({
   isChatTextAreaOpen,
   isLoading,
   setIsLoading,
+  recipientId,
 }: {
   chatId: string;
   name: string;
@@ -44,6 +45,7 @@ const ChatTextArea = ({
   isChatTextAreaOpen: boolean;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
+  recipientId: string;
 }) => {
   const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);
@@ -227,6 +229,8 @@ const ChatTextArea = ({
     .filter((msg) => msg.senderId === userId)
     .pop()?.idx;
 
+  console.log(isUserOnline(recipientId));
+
   return (
     <div
       className={`w-full border-1 border-[#d2d2d2] items-center rounded-lg h-full flex flex-col max-h-[77vh]`}
@@ -244,14 +248,14 @@ const ChatTextArea = ({
               handleLeaveChat();
             }}
           />
-          <ProfileName name={name} online={isUserOnline(userId)} />
+          <ProfileName name={name} online={isUserOnline(recipientId)} />
           <div>
             <p className="text-[15px] font-[500] ">{name}</p>
-            {isUserOnline(userId) && typingInfo ? (
+            {isUserOnline(recipientId) && typingInfo ? (
               <p className="text-[10px] font-[400] text-[#808080] ">
                 typing...
               </p>
-            ) : isUserOnline(userId) ? (
+            ) : isUserOnline(recipientId) ? (
               <p className="text-[10px] font-[400] text-[#808080] ">online</p>
             ) : (
               ""

@@ -31,6 +31,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const [newChatId, setNewChatId] = useState<string>("");
   const [isChatTextAreaOpen, setIsChatTextAreaOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [recipientId, setRecipientId] = useState<string>("");
 
   const handleUsers = async () => {
     setIsUserLoading(true);
@@ -222,6 +223,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                                   " " +
                                   capitalizeName(user.lastName)
                               );
+                              setRecipientId(String(user.id));
                               setMessages([]);
                               setIsNewChat(true);
                               setChatId(""); // Clear any previous chatId
@@ -260,13 +262,16 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                     className="w-full h-[35px] text-[16px] rounded-md border-1 border-[#d2d2d2] outline-0 p-2 pl-10"
                   />
                 </div>
-                <div className="w-full flex flex-col gap-3  overflow-y-auto flex-1">
+                <div
+                  className="w-full flex flex-col gap-3  overflow-y-auto flex-1"
+                  style={{ maxHeight: "230px" }}
+                >
                   {isPreviousChatLoading ? (
                     Array.from({ length: 5 }).map((_, i) => (
                       <UserSkeleton key={i} />
                     ))
                   ) : chatNumber !== 0 ? (
-                    <div className="flex flex-col gap-3">
+                    <div className="flex flex-col overflow-y-auto gap-3">
                       {previousChats.map((chat: any, index: number) => (
                         <ChatCard
                           key={index}
@@ -282,6 +287,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                             setName(
                               capitalizeName(chat.metadata.recipientName)
                             );
+                            setRecipientId(chat.metadata.recipientId);
                             setIsNewChat(false);
 
                             // Fetch messages for this chat
@@ -323,6 +329,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
             isChatTextAreaOpen={isChatTextAreaOpen}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
+            recipientId={recipientId}
           />
         </div>
       </div>
