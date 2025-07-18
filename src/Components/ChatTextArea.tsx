@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect, use } from "react";
+import React, { useState, useRef, useEffect, use } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import ProfileName from "./ProfileName";
 import socketService from "../services/socketService";
 import { UserDetailsContext } from "../context/AuthContext.js";
 import MessageSkeleton from "./MessageSkeleton";
 import { AuthApis } from "../api";
+import DateSeparator from "./DateSeparator";
 
 interface Message {
   content: string;
@@ -229,8 +230,6 @@ const ChatTextArea = ({
     .filter((msg) => msg.senderId === userId)
     .pop()?.idx;
 
-  console.log(isUserOnline(recipientId));
-
   return (
     <div
       className={`w-full border-1 border-[#d2d2d2] items-center rounded-lg h-full flex flex-col max-h-[77vh]`}
@@ -246,6 +245,7 @@ const ChatTextArea = ({
             onClick={() => {
               setIsChatTextAreaOpen(false);
               handleLeaveChat();
+              setMessages([]);
             }}
           />
           <ProfileName name={name} online={isUserOnline(recipientId)} />
@@ -279,54 +279,84 @@ const ChatTextArea = ({
                   Start a conversation
                 </div>
               ) : (
-                messages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`flex ${
-                      message.senderId === userId
-                        ? "justify-end"
-                        : "justify-start"
-                    } animate-fadeIn`}
-                  >
-                    <div
-                      className={`max-w-[70%] md:max-w-[60%]  lg:max-w-[50%] px-4 py-2 rounded-2xl shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.02] ${
-                        message.senderId === userId
-                          ? "bg-[#f2f2f2] text-gray-800 rounded-br-md"
-                          : "bg-primary text-white rounded-bl-md"
-                      }`}
-                    >
-                      <p className="text-sm leading-relaxed break-words">
-                        {message.content}
-                      </p>
-                      <p
-                        className={`flex items-center gap-1 text-xs mt-1 ${
-                          message.senderId === userId
-                            ? "text-gray-500 text-right"
-                            : "text-gray-200 text-left"
-                        }`}
-                      >
-                        {formatTime(new Date(message.createdAt))}
-                        {message.senderId === userId &&
-                          index === lastUserMessageIndex &&
-                          (messageStatus === "sending" ? (
-                            <Icon
-                              icon="svg-spinners:clock"
-                              width="15"
-                              height="15"
-                              style={{ color: "#000" }}
-                            />
-                          ) : messageStatus === "delivered" ? (
-                            <Icon
-                              icon="material-symbols:check-rounded"
-                              width="15"
-                              height="15"
-                              style={{ color: "#000" }}
-                            />
-                          ) : null)}
-                      </p>
-                    </div>
-                  </div>
-                ))
+                (() => {
+                  let lastMessageDate: string | null = null;
+                  return messages.map((message, index) => {
+                    const messageDate = new Date(message.createdAt);
+                    const formattedDate = messageDate.toLocaleDateString();
+
+                    // Optionally, show "Today" or "Yesterday"
+                    const today = new Date();
+                    const yesterday = new Date();
+                    yesterday.setDate(today.getDate() - 1);
+
+                    let dateLabel = formattedDate;
+                    if (messageDate.toDateString() === today.toDateString()) {
+                      dateLabel = "Today";
+                    } else if (
+                      messageDate.toDateString() === yesterday.toDateString()
+                    ) {
+                      dateLabel = "Yesterday";
+                    }
+
+                    const showDateSeparator =
+                      !lastMessageDate || lastMessageDate !== formattedDate;
+                    lastMessageDate = formattedDate;
+
+                    return (
+                      <React.Fragment key={index}>
+                        {showDateSeparator && (
+                          <DateSeparator date={dateLabel} />
+                        )}
+                        <div
+                          className={`flex ${
+                            message.senderId === userId
+                              ? "justify-end"
+                              : "justify-start"
+                          } animate-fadeIn`}
+                        >
+                          <div
+                            className={`max-w-[70%] md:max-w-[60%]  lg:max-w-[50%] px-4 py-2 rounded-2xl shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.02] ${
+                              message.senderId === userId
+                                ? "bg-[#f2f2f2] text-gray-800 rounded-br-md"
+                                : "bg-primary text-white rounded-bl-md"
+                            }`}
+                          >
+                            <p className="text-sm leading-relaxed break-words">
+                              {message.content}
+                            </p>
+                            <p
+                              className={`flex items-center gap-1 text-xs mt-1 ${
+                                message.senderId === userId
+                                  ? "text-gray-500 text-right"
+                                  : "text-gray-200 text-left"
+                              }`}
+                            >
+                              {formatTime(new Date(message.createdAt))}
+                              {message.senderId === userId &&
+                                index === lastUserMessageIndex &&
+                                (messageStatus === "sending" ? (
+                                  <Icon
+                                    icon="svg-spinners:clock"
+                                    width="15"
+                                    height="15"
+                                    style={{ color: "#000" }}
+                                  />
+                                ) : messageStatus === "delivered" ? (
+                                  <Icon
+                                    icon="material-symbols:check-rounded"
+                                    width="15"
+                                    height="15"
+                                    style={{ color: "#000" }}
+                                  />
+                                ) : null)}
+                            </p>
+                          </div>
+                        </div>
+                      </React.Fragment>
+                    );
+                  });
+                })()
               )}
             </>
 
