@@ -44,6 +44,12 @@ function getWeekRange(dateString: string) {
 
 const WeeklyReport = () => {
   const { userDetails } = use(UserDetailsContext);
+  const [isUserDetailsLoading, setIsUserDetailsLoading] = useState(true);
+  useEffect(() => {
+    if (userDetails && userDetails.data && userDetails.data.user) {
+      setIsUserDetailsLoading(false);
+    }
+  }, [userDetails]);
   const isAdmin =
     userDetails?.data.user.role == "admin" ||
     userDetails?.data.user.role == "superadmin";
@@ -116,6 +122,19 @@ const WeeklyReport = () => {
       report.ActionItems?.[0]?.description.toLowerCase() || "";
     return userName.includes(searchQuery) || actionItems.includes(searchQuery);
   });
+
+  if (isUserDetailsLoading) {
+    return (
+      <div className="flex justify-center items-center h-[80vh]">
+        <Icon
+          icon="svg-spinners:ring-resize"
+          width="40"
+          height="40"
+          color="#93221D"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className=" flex flex-1 w-full overflow-y-auto  h-[calc(100vh-55px)]  ">

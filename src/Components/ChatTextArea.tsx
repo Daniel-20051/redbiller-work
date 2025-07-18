@@ -73,13 +73,41 @@ const ChatTextArea = ({
   // Handle new chat state changes
   useEffect(() => {
     if (isNewChat) {
-      // Clear messages and set loading when starting a new chat
+      // Show skeleton while creating chat
+      setIsLoading(true);
       setMessages([]);
       setText(""); // Clear any existing text input
-
       setTypingInfo(null);
     }
   }, [isNewChat]);
+
+  // Fetch previous messages for new chatId as soon as it's available
+  useEffect(() => {
+    if (isNewChat && newChatId) {
+      (async () => {
+        setIsLoading(true);
+        try {
+          const prevMessagesResponse = await authApis.getAllMessages(newChatId);
+          if (
+            prevMessagesResponse &&
+            typeof prevMessagesResponse === "object" &&
+            "data" in prevMessagesResponse &&
+            prevMessagesResponse.data &&
+            typeof prevMessagesResponse.data === "object" &&
+            "data" in prevMessagesResponse.data &&
+            prevMessagesResponse.data.data &&
+            typeof prevMessagesResponse.data.data === "object" &&
+            "messages" in prevMessagesResponse.data.data
+          ) {
+            setMessages(prevMessagesResponse.data.data.messages as Message[]);
+          }
+        } catch (err) {
+          // Optionally handle error
+        }
+        setIsLoading(false);
+      })();
+    }
+  }, [isNewChat, newChatId]);
 
   // Handle socket connection
   useEffect(() => {
@@ -181,8 +209,7 @@ const ChatTextArea = ({
             setChatId(newChatId);
             // Clear newChatId since it's no longer needed
             setNewChatId("");
-            // Set loading to false since we now have messages
-            setIsLoading(false);
+            // No need to fetch previous messages or set loading here, just update messages array
           }
         } catch (error) {
           console.log(error);
@@ -326,7 +353,7 @@ const ChatTextArea = ({
                               {message.content}
                             </p>
                             <p
-                              className={`flex items-center gap-1 text-xs mt-1 ${
+                              className={`flex justify-between items-center gap-1 text-xs mt-1 ${
                                 message.senderId === userId
                                   ? "text-gray-500 text-right"
                                   : "text-gray-200 text-left"
