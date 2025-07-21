@@ -15,7 +15,7 @@ const ChatTest: React.FC = () => {
   const [typingInfo, setTypingInfo] = useState<string | null>(null);
 
   // Replace with actual values from your system
-  const userId = "34";
+  const userId = "21";
   const chatId = "686e902e776cb0e814940d8b";
 
   useEffect(() => {
