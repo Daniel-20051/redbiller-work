@@ -100,9 +100,21 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
   onNewMessage(callback: MessageCallback): void {
     this.socket?.off('new_message');
+    
     this.socket?.on('new_message', (message: any) => { 
       callback(message);
       console.log("New message",message);
+       // Show browser notification if tab is not active
+       if (
+        "Notification" in window &&
+        Notification.permission === "granted" &&
+        document.visibilityState !== "visible"
+      ) {
+        new Notification("New Message", {
+          body: message.content,
+          icon: "/assets/chat-active.svg",
+        });
+      }
     });
   }
 

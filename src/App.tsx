@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useState, useEffect, use, useCallback } from "react";
+import { useState, useEffect, use, useCallback, useContext } from "react";
 import Login from "./Pages/Login";
 import Home from "./Pages/Home";
 import EventInfo from "./Pages/EventInfo";
@@ -16,6 +16,34 @@ import { UserDetailsContext } from "./context/AuthContext.tsx";
 
 import IncidentView from "./Pages/IncidentView";
 import DashboardLayout from "./Layouts/DashboardLayout.tsx";
+import socketService from "./services/socketService";
+// Only import useContext and useEffect once from react
+
+const VAPID_PUBLIC_KEY =
+  "BCznLayethUPdKhIQaOcX1WGoenV6e4ZDflbNwcqHEn6qPVXCg6pDMCbrFjLfCjw3U-k1DmNaBHs3Cse10FDQ8s";
+
+function urlBase64ToUint8Array(base64String: string) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+async function subscribeUser(socket: any) {
+  if ("serviceWorker" in navigator && "PushManager" in window) {
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+    });
+    // Send subscription to backend via socket
+    socket.emit("push", subscription);
+  }
+}
 
 const App = () => {
   const { userDetails } = use(UserDetailsContext);
@@ -29,6 +57,12 @@ const App = () => {
     const token = localStorage.getItem("authToken");
     if (token) {
       setIsAuthenticated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission();
     }
   }, []);
 
@@ -126,6 +160,23 @@ const App = () => {
       window.removeEventListener("blur", handleBlur);
     };
   }, [isAuthenticated, logoutDueToInactivity]);
+
+  const { socketConnected } = useContext(UserDetailsContext);
+
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (socketConnected) {
+      const socketInstance = (socketService as any).socket;
+      if (socketInstance) {
+        subscribeUser(socketInstance);
+      }
+    }
+  }, [socketConnected]);
 
   return (
     <div>
