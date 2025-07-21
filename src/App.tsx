@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useState, useEffect, use, useCallback, useContext } from "react";
+import { useState, useEffect, use, useCallback } from "react";
 import Login from "./Pages/Login";
 import Home from "./Pages/Home";
 import EventInfo from "./Pages/EventInfo";
@@ -16,7 +16,7 @@ import { UserDetailsContext } from "./context/AuthContext.tsx";
 
 import IncidentView from "./Pages/IncidentView";
 import DashboardLayout from "./Layouts/DashboardLayout.tsx";
-import socketService from "./services/socketService";
+import { AuthApis } from "./api";
 // Only import useContext and useEffect once from react
 
 const VAPID_PUBLIC_KEY =
@@ -33,15 +33,50 @@ function urlBase64ToUint8Array(base64String: string) {
   return outputArray;
 }
 
-async function subscribeUser(socket: any) {
+const authApis = new AuthApis();
+
+async function subscribeUser() {
   if ("serviceWorker" in navigator && "PushManager" in window) {
     const registration = await navigator.serviceWorker.ready;
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
     });
-    // Send subscription to backend via socket
-    socket.emit("push", subscription);
+
+    // Extract keys in the correct format, with null checks
+    const p256dhKey = subscription.getKey("p256dh");
+    const authKey = subscription.getKey("auth");
+    let p256dh = undefined;
+    let auth = undefined;
+    if (p256dhKey) {
+      p256dh = btoa(String.fromCharCode(...new Uint8Array(p256dhKey)));
+    }
+    if (authKey) {
+      auth = btoa(String.fromCharCode(...new Uint8Array(authKey)));
+    }
+
+    console.log("Subscription", subscription);
+    console.log("P256DH", p256dh);
+    console.log("Auth", auth);
+
+    if (p256dh && auth) {
+      try {
+        const response = await authApis.subscribeUser({
+          endpoint: subscription.endpoint,
+          keys: {
+            p256dh,
+            auth,
+          },
+        });
+        console.log("Formatted Subscription", response);
+      } catch (err) {
+        console.log("Error subscribing user", err);
+      }
+    } else {
+      console.error(
+        "Push subscription keys are missing, not sending to backend."
+      );
+    }
   }
 }
 
@@ -161,22 +196,17 @@ const App = () => {
     };
   }, [isAuthenticated, logoutDueToInactivity]);
 
-  const { socketConnected } = useContext(UserDetailsContext);
+  useEffect(() => {
+    if (isAuthenticated) {
+      subscribeUser();
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js");
     }
   }, []);
-
-  useEffect(() => {
-    if (socketConnected) {
-      const socketInstance = (socketService as any).socket;
-      if (socketInstance) {
-        subscribeUser(socketInstance);
-      }
-    }
-  }, [socketConnected]);
 
   return (
     <div>

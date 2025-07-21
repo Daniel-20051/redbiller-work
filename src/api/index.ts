@@ -394,6 +394,33 @@ export class AuthApis {
       return err
     }
   }
+  async subscribeUser(data: { endpoint: string, keys: { p256dh: string, auth: string } }){
+    try{
+      const token = localStorage.getItem("authToken")
+      const payload = {
+        "subscription":{
+          "endpoint": data.endpoint,
+          "keys": {
+            "p256dh": data.keys.p256dh,
+            "auth": data.keys.auth
+          }
+        }
+      }
+
+      const response = await axios.post(`${BASE_URL}/api/v1/chat/push/subscribe`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    return response
+  }
+    catch(err){
+      return err
+    }
+  }
   
   // async getEvent(id: string){
   //   try{
