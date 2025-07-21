@@ -55,10 +55,6 @@ async function subscribeUser() {
       auth = btoa(String.fromCharCode(...new Uint8Array(authKey)));
     }
 
-    console.log("Subscription", subscription);
-    console.log("P256DH", p256dh);
-    console.log("Auth", auth);
-
     if (p256dh && auth) {
       try {
         const response = await authApis.subscribeUser({
