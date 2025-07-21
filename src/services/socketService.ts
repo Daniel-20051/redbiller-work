@@ -60,6 +60,8 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     console.log(`📨 Joining chat room: ${chatId}`);
     this.socket.emit('join_chat', { chatId });
 
+    // Remove any previous listener before adding a new one
+    this.socket.off('joined_chat');
     this.socket.on('joined_chat', (data: any) => {
       console.log('✅ Successfully joined chat:', data);
     });
@@ -67,7 +69,9 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     this.socket.on('error', (error: any) => {
       console.error('❌ Error joining chat:', error);
     });
+    
   }
+  
 
   sendMessage(chatId: string, content: string): void {
     if (!this.isConnected || !this.socket) {
@@ -82,36 +86,108 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
       tempId: Date.now(),
     };
 
-    console.log('📤 Sending message:', messageData);
+    
     this.socket.emit('send_message', messageData);
   }
 
-  onNewMessage(callback: MessageCallback): void {
-    this.socket?.on('new_message', (message: any) => {
-      console.log('📨 New message received:', message);
-      callback(message);
-    });
-  }
-
-  onMessageDelivered(callback: DeliveryCallback): void {
-    this.socket?.on('message_delivered', (data: any) => {
-      console.log('✅ Message delivered:', data);
+  onUserGlobalStatus(callback: any): void {
+    this.socket?.on('user_global_status', (data: any) => {
+      
+      // Call the callback with the status data
       callback(data);
     });
   }
 
-  onReadBy(callback: DeliveryCallback): void {
-    this.socket?.on('mark_message_read', (data: any) => {
+  onNewMessage(callback: MessageCallback): void {
+    this.socket?.off('new_message');
+    
+    this.socket?.on('new_message', (message: any) => { 
+      callback(message);
+      console.log("New message",message);
+       // Show browser notification if tab is not active
+       if (
+        "Notification" in window &&
+        Notification.permission === "granted" &&
+        document.visibilityState !== "visible"
+      ) {
+        new Notification("New Message", {
+          body: message.content,
+          icon: "/assets/chat-active.svg",
+        });
+      }
+    });
+  }
+
+  offNewMessage(callback: MessageCallback): void {
+    this.socket?.off('new_message', callback);
+  }
+
+  onOnlineUsersList(callback: any): void {
+    this.socket?.on('online_users_list', (data: any) => {
+      callback(data);
+    
+    });
+  }
+
+  onMessageDelivered(callback: DeliveryCallback): void {
+    this.socket?.off('message_delivered');
+    this.socket?.on('message_delivered', (data: any) => {
+      callback(data);
+    });
+  }
+
+  offMessageDelivered(callback: DeliveryCallback): void {
+    this.socket?.off('message_delivered', callback);
+  }
+
+
+  onLeaveChat(chatId: string): void {
+    this.socket?.emit('leave_chat', { chatId }) 
+    this.socket?.off('message_delivered');
+   ;
+ 
+  }
+
+
+
+
+  onUserOffline(callback: any): void {
+    this.socket?.on('user_offline', (data: any) => {
+      
+      callback(data);
+    });
+  }
+
+  onUserOnline(callback: any): void {
+    this.socket?.on('user_online', (data: any) => {
+      
+      callback(data);
+    });
+  }
+
+  onMarkMessageRead(callback: any): void {
+    this.socket?.emit('mark_message_read', (data: any) => {
       console.log('✅ Message read by:', data);
       callback(data);
     });
   }
 
-  onTyping(callback: DeliveryCallback): void {
-    this.socket?.on('typing_start', (data: any) => {
-      console.log('✍️ Typing event received:', data);
+  onMessageRead(callback: any): void {
+    this.socket?.on('message_read', (data: any) => {
+      console.log('✅ Message read:', data);
       callback(data);
     });
+  }
+
+  onTyping(callback: any): void {
+    this.socket?.off('user_typing');
+    this.socket?.on('user_typing', (data: any) => {
+      callback(data);
+    });
+  }
+
+  offTyping(callback: any): void {
+    this.socket?.off('user_typing', callback);
   }
 
   disconnect(): void {

@@ -56,6 +56,14 @@ const Login = () => {
         setLoginSpiner(false);
         return;
       }
+      if (responseData?.status === 429) {
+        showAlertMessage(
+          "Too many requests, please try again after 15 minutes",
+          "error"
+        );
+        setLoginSpiner(false);
+        return;
+      }
       if (responseData?.code === "ERR_NETWORK") {
         showAlertMessage("Network Error", "error");
         setLoginSpiner(false);
@@ -66,6 +74,14 @@ const Login = () => {
       ) {
         showAlertMessage(
           "Your account has been deactivated, kindly reach out to the admin of your department",
+          "error"
+        );
+        setLoginSpiner(false);
+        return;
+      }
+      if (responseData?.response?.data?.message === "jwt expired") {
+        showAlertMessage(
+          "Your session has expired, please login again",
           "error"
         );
         setLoginSpiner(false);

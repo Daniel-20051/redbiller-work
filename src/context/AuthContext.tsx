@@ -15,6 +15,13 @@ type UserDetailsContextType = {
   setEventDetails: any;
   fetchEventDetails: () => void;
   updateEventDetails: (updatedEvent: any) => void;
+  socketConnected: boolean;
+  setSocketConnected: (socketConnected: boolean) => void;
+  onlineUsers: string[];
+  setOnlineUsers: (onlineUsers: string[]) => void;
+  addOnlineUser: (userId: string) => void;
+  removeOnlineUser: (userId: string) => void;
+  isUserOnline: (userId: string) => boolean;
 };
 
 const authApis = new AuthApis();
@@ -33,6 +40,13 @@ export const UserDetailsContext = createContext<UserDetailsContextType>({
   setEventDetails: null,
   fetchEventDetails: async () => {},
   updateEventDetails: () => {},
+  socketConnected: false,
+  setSocketConnected: () => {},
+  onlineUsers: [],
+  setOnlineUsers: () => {},
+  addOnlineUser: () => {},
+  removeOnlineUser: () => {},
+  isUserOnline: () => false,
 });
 
 function AuthContext({ children }: { children: React.ReactNode }) {
@@ -41,6 +55,8 @@ function AuthContext({ children }: { children: React.ReactNode }) {
   const [spiner, setSpiner] = useState<any>(true);
   const [incidentDetails, setIncidentDetails] = useState<any>(null);
   const [eventDetails, setEventDetails] = useState<any>(null);
+  const [socketConnected, setSocketConnected] = useState<boolean>(false);
+  const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
 
   const fetchUserDetails = async () => {
     try {
@@ -72,6 +88,24 @@ function AuthContext({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const addOnlineUser = (userId: string) => {
+    setOnlineUsers((prev) => {
+      const safePrev = Array.isArray(prev) ? prev : [];
+      if (!safePrev.includes(userId)) {
+        return [...safePrev, userId];
+      }
+      return safePrev;
+    });
+  };
+
+  const removeOnlineUser = (userId: string) => {
+    setOnlineUsers((prev) => prev.filter((id) => id !== userId));
+  };
+
+  const isUserOnline = (userId: string) => {
+    return onlineUsers.includes(userId);
+  };
+
   const updateEventDetails = (updatedEvent: any) => {
     setEventDetails(updatedEvent);
   };
@@ -100,6 +134,13 @@ function AuthContext({ children }: { children: React.ReactNode }) {
         setEventDetails,
         fetchEventDetails,
         updateEventDetails,
+        socketConnected,
+        setSocketConnected,
+        onlineUsers,
+        setOnlineUsers,
+        addOnlineUser,
+        removeOnlineUser,
+        isUserOnline,
       }}
     >
       {children}

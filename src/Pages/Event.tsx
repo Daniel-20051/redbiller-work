@@ -1,5 +1,3 @@
-import NavBar from "../Components/NavBar";
-import SideBar from "../Components/SideBar";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
@@ -329,7 +327,7 @@ const Event = () => {
   }, [event, isAddEventOpen]);
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className=" py-5 h-[calc(100vh-55px)]">
       <AlertCard
         message={alertMessage}
         type={alertType}
@@ -345,193 +343,183 @@ const Event = () => {
         autoClose={true}
         autoCloseTime={2000}
       />
-      <NavBar></NavBar>
-      <div className="flex flex-1 w-full overflow-y-auto max-h-[calc(100vh-55px)]">
-        <SideBar>event</SideBar>
 
-        <div className="flex flex-1 flex-col">
-          <div
-            className={`pb-10 flex  justify-center w-full relative items-end ${
-              isAdmin ? "h-[30vh]" : "h-[15%] md:h-[20%]"
-            }`}
-          >
-            <div className="bg-[#F2F2F2] w-[161px] px-[24px] py-[17px] h-[50px] items-center font-[600] rounded-[8px] absolute right-[50px] hidden md:flex">
-              <img
-                className="w-[16px] h-[16px]"
-                src="/assets/search.svg"
-                alt=""
-              />
-              <input
-                className="w-[110px] pl-[17px] h-[50px] outline-0"
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={handleSearch}
-              />
-            </div>
-            <div className=" flex flex-col gap-6 w-[70%] md:w-[40%]">
-              {isAdmin && (
-                <button
-                  onClick={() => {
-                    setIsAddEventOpen(true);
-                  }}
-                  className="bg-primary cursor-pointer text-white py-3 md:py-4 text-[17px] md:text-[22px] font-[400] rounded-[15px]"
-                >
-                  ADD EVENT
-                </button>
-              )}
-              <div className="bg-[#F2F2F2] rounded-[60px] p-1 flex">
-                <button
-                  onClick={() => {
-                    setEvent(0);
-                  }}
-                  className={`py-2 w-[50%] cursor-pointer md:py-3 px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
-                    event == 0 ? "bg-white text-primary" : "text-[#898A8D]"
-                  }`}
-                >
-                  Upcoming
-                </button>
-                <button
-                  onClick={() => {
-                    setEvent(1);
-                  }}
-                  className={`py-2 w-[50%] md:py-3 cursor-pointer px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
-                    event == 1 ? "bg-white text-primary" : "text-[#898A8D]"
-                  }`}
-                >
-                  All Event
-                </button>
-              </div>
-            </div>
+      <div
+        className={`pb-10 flex  justify-center w-full relative items-end ${
+          isAdmin ? "h-[28vh]" : "h-[15%] md:h-[20%]"
+        }`}
+      >
+        <div className="bg-[#F2F2F2] w-[161px] px-[24px] py-[17px] h-[50px] items-center font-[600] rounded-[8px] absolute right-[50px] hidden md:flex">
+          <img className="w-[16px] h-[16px]" src="/assets/search.svg" alt="" />
+          <input
+            className="w-[110px] pl-[17px] h-[50px] outline-0"
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={handleSearch}
+          />
+        </div>
+        <div className=" flex flex-col gap-6 w-[70%] md:w-[40%]">
+          {isAdmin && (
+            <button
+              onClick={() => {
+                setIsAddEventOpen(true);
+              }}
+              className="bg-primary cursor-pointer text-white py-3 md:py-4 text-[17px] md:text-[22px] font-[400] rounded-[15px]"
+            >
+              ADD EVENT
+            </button>
+          )}
+          <div className="bg-[#F2F2F2] rounded-[60px] p-1 flex">
+            <button
+              onClick={() => {
+                setEvent(0);
+              }}
+              className={`py-2 w-[50%] cursor-pointer md:py-3 px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
+                event == 0 ? "bg-white text-primary" : "text-[#898A8D]"
+              }`}
+            >
+              Upcoming
+            </button>
+            <button
+              onClick={() => {
+                setEvent(1);
+              }}
+              className={`py-2 w-[50%] md:py-3 cursor-pointer px-3 text-[17px] md:text-[22px] rounded-[60px] font-[600] ${
+                event == 1 ? "bg-white text-primary" : "text-[#898A8D]"
+              }`}
+            >
+              All Event
+            </button>
           </div>
-          <div className="flex-1 w-full overflow-y-auto max-h-full hide-scrollbar scroll-smooth">
-            {eventLoading ? (
-              <div className="flex justify-center items-center h-[55vh]">
-                <Icon
-                  icon="svg-spinners:ring-resize"
-                  width="30"
-                  height="30"
-                  color="#93221D"
-                />
-              </div>
-            ) : paginatedEvents.length > 0 ? (
-              paginatedEvents.map((event, index) => (
-                <div
-                  onClick={() => {
-                    setEventDetails(event);
-                  }}
-                >
-                  <EventItem
-                    key={index}
-                    createdAt={formatRelativeTime(event.createdAt)}
-                    weekday={formatDate(event.eventDate, true)}
-                    title={event.eventTitle}
-                    date={formatDate(event.eventDate)}
-                    time={event.eventTime}
-                    description={event.eventDescription}
+        </div>
+      </div>
+      <div className="flex-1 w-full overflow-y-auto max-h-full hide-scrollbar scroll-smooth">
+        {eventLoading ? (
+          <div className="flex justify-center items-center h-[55vh]">
+            <Icon
+              icon="svg-spinners:ring-resize"
+              width="30"
+              height="30"
+              color="#93221D"
+            />
+          </div>
+        ) : paginatedEvents.length > 0 ? (
+          paginatedEvents.map((event, index) => (
+            <div
+              onClick={() => {
+                setEventDetails(event);
+              }}
+            >
+              <EventItem
+                key={index}
+                createdAt={formatRelativeTime(event.createdAt)}
+                weekday={formatDate(event.eventDate, true)}
+                title={event.eventTitle}
+                date={formatDate(event.eventDate)}
+                time={event.eventTime}
+                description={event.eventDescription}
+              />
+            </div>
+          ))
+        ) : (
+          <div className="flex gap-4 flex-col justify-center items-center h-[50vh]">
+            <img src="/assets/event-image.svg" alt="" />
+            <p className="uppercase font-[600] text-[25px] md:text-[30px]">
+              No upcoming Event
+            </p>
+          </div>
+        )}
+      </div>
+      {totalPages > 1 && event == 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
+      <Dialog
+        open={isAddEventOpen}
+        onClose={() => setIsAddEventOpen(false)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 flex w-screen items-center justify-center md:px-12 px-7 py-6 bg-black/40">
+          <DialogPanel className="bg-white w-[95%] md:w-[70%] lg:w-[44%] h-[auto] items-center rounded-[20px] overflow-y-auto max-h-full hide-scrollbar scroll-smooth px-5 md:px-12 py-6">
+            <p className="font-[500] text-[24px] mb-12 place-self-center">
+              Add Event
+            </p>
+            <form onSubmit={sendReport} className="flex flex-col" action="">
+              <label htmlFor="">Title</label>
+              <input
+                className="bg-[#EEEEEE]/30 placeholder:text px-3 py-4 rounded-[6px] mt-3 mb-4"
+                placeholder="Event title"
+                type="text"
+                value={title}
+                maxLength={18}
+                onChange={handleTitle}
+              />
+              <label htmlFor="">Title</label>
+              <textarea
+                className="bg-[#EEEEEE]/30 w-full h-40 placeholder:text px-3 py-3 rounded-[6px] mt-3 mb-4 resize-none"
+                placeholder="Event Details"
+                value={description || ""}
+                onChange={handleDescription}
+              ></textarea>
+              <div className="flex justify-between">
+                <div className="flex flex-col">
+                  <label htmlFor="">Date</label>
+                  <input
+                    className="bg-[#EEEEEE]/30 w-25 md:w-auto px-1 md:px-3 py-4 rounded-[6px] mt-3 mb-4"
+                    type="date"
+                    value={date}
+                    onChange={handleDate}
                   />
                 </div>
-              ))
-            ) : (
-              <div className="flex gap-4 flex-col justify-center items-center h-[50vh]">
-                <img src="/assets/event-image.svg" alt="" />
-                <p className="uppercase font-[600] text-[25px] md:text-[30px]">
-                  No upcoming Event
-                </p>
+                <div className="flex flex-col">
+                  <label htmlFor="">Event Time</label>
+                  <input
+                    className="bg-[#EEEEEE]/30 w-25 md:w-auto px-1 md:px-3 py-4 rounded-[6px] mt-3 mb-4"
+                    type="time"
+                    value={time}
+                    onChange={handleTime}
+                  />
+                </div>
               </div>
-            )}
-          </div>
-          {totalPages > 1 && event == 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          )}
+              <div className="flex gap-2 place-self-end">
+                <button
+                  onClick={() => {
+                    setIsAddEventOpen(false);
+                  }}
+                  type="button"
+                  className="text-[#959595] px-5 py-2 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={loading}
+                  type="submit"
+                  className={`${
+                    loading ? "bg-gray-400" : "bg-primary"
+                  } cursor-pointer text-white px-5 py-2 rounded-[10px]`}
+                >
+                  {loading ? (
+                    <div className="flex cursor-not-allowed justify-center items-center h-full">
+                      <Icon
+                        icon="svg-spinners:ring-resize"
+                        width="20"
+                        height="20"
+                        color="#ffffff"
+                      />
+                    </div>
+                  ) : (
+                    "Save"
+                  )}
+                </button>
+              </div>
+            </form>
+          </DialogPanel>
         </div>
-        <Dialog
-          open={isAddEventOpen}
-          onClose={() => setIsAddEventOpen(false)}
-          className="relative z-50"
-        >
-          <div className="fixed inset-0 flex w-screen items-center justify-center md:px-12 px-7 py-6 bg-black/40">
-            <DialogPanel className="bg-white w-[95%] md:w-[70%] lg:w-[44%] h-[auto] items-center rounded-[20px] overflow-y-auto max-h-full hide-scrollbar scroll-smooth px-5 md:px-12 py-6">
-              <p className="font-[500] text-[24px] mb-12 place-self-center">
-                Add Event
-              </p>
-              <form onSubmit={sendReport} className="flex flex-col" action="">
-                <label htmlFor="">Title</label>
-                <input
-                  className="bg-[#EEEEEE]/30 placeholder:text px-3 py-4 rounded-[6px] mt-3 mb-4"
-                  placeholder="Event title"
-                  type="text"
-                  value={title}
-                  maxLength={18}
-                  onChange={handleTitle}
-                />
-                <label htmlFor="">Title</label>
-                <textarea
-                  className="bg-[#EEEEEE]/30 w-full h-40 placeholder:text px-3 py-3 rounded-[6px] mt-3 mb-4 resize-none"
-                  placeholder="Event Details"
-                  value={description || ""}
-                  onChange={handleDescription}
-                ></textarea>
-                <div className="flex justify-between">
-                  <div className="flex flex-col">
-                    <label htmlFor="">Date</label>
-                    <input
-                      className="bg-[#EEEEEE]/30 w-25 md:w-auto px-1 md:px-3 py-4 rounded-[6px] mt-3 mb-4"
-                      type="date"
-                      value={date}
-                      onChange={handleDate}
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label htmlFor="">Event Time</label>
-                    <input
-                      className="bg-[#EEEEEE]/30 w-25 md:w-auto px-1 md:px-3 py-4 rounded-[6px] mt-3 mb-4"
-                      type="time"
-                      value={time}
-                      onChange={handleTime}
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-2 place-self-end">
-                  <button
-                    onClick={() => {
-                      setIsAddEventOpen(false);
-                    }}
-                    type="button"
-                    className="text-[#959595] px-5 py-2 cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    disabled={loading}
-                    type="submit"
-                    className={`${
-                      loading ? "bg-gray-400" : "bg-primary"
-                    } cursor-pointer text-white px-5 py-2 rounded-[10px]`}
-                  >
-                    {loading ? (
-                      <div className="flex cursor-not-allowed justify-center items-center h-full">
-                        <Icon
-                          icon="svg-spinners:ring-resize"
-                          width="20"
-                          height="20"
-                          color="#ffffff"
-                        />
-                      </div>
-                    ) : (
-                      "Save"
-                    )}
-                  </button>
-                </div>
-              </form>
-            </DialogPanel>
-          </div>
-        </Dialog>
-      </div>
+      </Dialog>
     </div>
   );
 };

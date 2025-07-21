@@ -34,7 +34,7 @@ const GroupCard = () => {
 
         <p className="text-[12px] font-[500] ">Redbiller Engineering Team</p>
       </div>
-      <button className="absolute w-full h-[39px] rounded-b-[20px] bottom-0 text-white bg-primary text-[22px] font-[500] ">
+      <button className=" cursor-pointer absolute w-full h-[39px] rounded-b-[20px] bottom-0 text-white bg-primary text-[22px] font-[500] ">
         {" "}
         Open
       </button>
