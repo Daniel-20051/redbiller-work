@@ -117,6 +117,9 @@ const WeeklyReport = () => {
     return userName.includes(searchQuery) || actionItems.includes(searchQuery);
   });
 
+  console.log(filteredReports);
+  console.log(mostRecentReports);
+
   return (
     <div className=" flex flex-1 w-full overflow-y-auto  h-[calc(100vh-55px)]  ">
       <div className=" flex flex-1 flex-col items-center justify-center ">

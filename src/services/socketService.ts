@@ -143,9 +143,18 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
   onLeaveChat(chatId: string): void {
     this.socket?.emit('leave_chat', { chatId }) 
+    console.log("leave_chat", chatId);
     this.socket?.off('message_delivered');
+
    ;
  
+  }
+
+  onLeftChat(callback: any): void {
+    this.socket?.on('left_chat', (data: any) => {
+      console.log("left_chat", data);
+      callback(data);
+    });
   }
 
 
