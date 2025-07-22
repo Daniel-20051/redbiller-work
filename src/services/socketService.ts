@@ -92,6 +92,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
   onUserGlobalStatus(callback: any): void {
     this.socket?.on('user_global_status', (data: any) => {
+      console.log("user_global_status", data);
       
       // Call the callback with the status data
       callback(data);
@@ -104,16 +105,16 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     this.socket?.on('new_message', (message: any) => { 
       callback(message);
        // Show browser notification if tab is not active
-       if (
-        "Notification" in window &&
-        Notification.permission === "granted" &&
-        document.visibilityState !== "visible"
-      ) {
-        new Notification("New Message", {
-          body: message.content,
-          icon: "/assets/chat-active.svg",
-        });
-      }
+      //  if (
+      //   "Notification" in window &&
+      //   Notification.permission === "granted" &&
+      //   document.visibilityState !== "visible"
+      // ) {
+      //   new Notification("New Message", {
+      //     body: message.content,
+      //     icon: "/assets/chat-active.svg",
+      //   });
+      // }
     });
   }
 
@@ -123,8 +124,8 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
   onOnlineUsersList(callback: any): void {
     this.socket?.on('online_users_list', (data: any) => {
+      console.log("online_users_list", data);
       callback(data);
-    
     });
   }
 
