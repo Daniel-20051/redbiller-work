@@ -170,9 +170,7 @@ const ChatTextArea = ({
 
   const handleLeaveChat = () => {
     socketService.onLeaveChat(chatId);
-    socketService.onLeftChat((data: any) => {
-      console.log("left_chat", data);
-    });
+
     setMessages([]);
   };
 

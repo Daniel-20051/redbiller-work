@@ -12,17 +12,17 @@ self.addEventListener("push", (event) => {
         icon: data.icon || "/icon-192x192.png",
         badge: data.badge || "/badge-72x72.png",
         data: data.data,
-        requireInteraction: true,
-        actions: [
-          {
-            action: "open",
-            title: "Open Chat",
-          },
-          {
-            action: "close",
-            title: "Close",
-          },
-        ],
+        requireInteraction: false,
+        // actions: [
+        //   {
+        //     action: "open",
+        //     title: "Open Chat",
+        //   },
+        //   {
+        //     action: "close",
+        //     title: "Close",
+        //   },
+        // ],
       };
   
       event.waitUntil(self.registration.showNotification(data.title, options));

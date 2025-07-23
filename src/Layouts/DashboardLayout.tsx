@@ -35,6 +35,13 @@ export default function DashboardLayout() {
       setOnlineUsers(data.map((user: any) => user.userId));
     });
 
+    socketService.onMessageRead((data: any) => {
+      console.log("message_read", data);
+    });
+    socketService.chatDetails((data: any) => {
+      console.log("chat_details", data);
+    });
+
     socketService.onUserGlobalStatus((data: any) => {
       const userId = data.userId;
       if (data.status === "online") {

@@ -54,6 +54,9 @@ const WeeklyReport = () => {
   // Add search state
   const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
+    // Only fetch if user role is available
+    if (!userDetails?.data?.user?.role) return;
+
     const fetchData = async () => {
       try {
         setIsLoading(true);
@@ -70,7 +73,7 @@ const WeeklyReport = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [userDetails]);
 
   // Sort and filter to get only the most recent report per user
   const sortedReports = Array.isArray(reports)
@@ -116,9 +119,6 @@ const WeeklyReport = () => {
       report.ActionItems?.[0]?.description.toLowerCase() || "";
     return userName.includes(searchQuery) || actionItems.includes(searchQuery);
   });
-
-  console.log(filteredReports);
-  console.log(mostRecentReports);
 
   return (
     <div className=" flex flex-1 w-full overflow-y-auto  h-[calc(100vh-55px)]  ">

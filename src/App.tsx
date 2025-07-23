@@ -64,7 +64,7 @@ async function subscribeUser() {
             auth,
           },
         });
-        console.log("Formatted Subscription", response);
+        
       } catch (err) {
         console.log("Error subscribing user", err);
       }

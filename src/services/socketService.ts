@@ -63,7 +63,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     // Remove any previous listener before adding a new one
     this.socket.off('joined_chat');
     this.socket.on('joined_chat', (data: any) => {
-      console.log('✅ Successfully joined chat:', data);
+      // console.log('✅ Successfully joined chat:', data);
     });
 
     this.socket.on('error', (error: any) => {
@@ -104,6 +104,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     
     this.socket?.on('new_message', (message: any) => { 
       callback(message);
+      
        // Show browser notification if tab is not active
       //  if (
       //   "Notification" in window &&
@@ -117,6 +118,8 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
       // }
     });
   }
+
+ 
 
   offNewMessage(callback: MessageCallback): void {
     this.socket?.off('new_message', callback);
@@ -132,18 +135,31 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
   onMessageDelivered(callback: DeliveryCallback): void {
     this.socket?.off('message_delivered');
     this.socket?.on('message_delivered', (data: any) => {
-      callback(data);
+      callback(data);  
     });
+    
   }
 
   offMessageDelivered(callback: DeliveryCallback): void {
     this.socket?.off('message_delivered', callback);
   }
 
+  onLastMessage(callback: any): void {
+    this.socket?.on('last_message', (data: any) => {
+      callback(data);
+      console.log("last_message", data);
+    });
+  }
+
+  chatDetails(callback: any): void {
+    this.socket?.on('chat_details', (data: any) => {
+      callback(data);
+      console.log("chat_details", data);
+    });
+  }
 
   onLeaveChat(chatId: string): void {
-    this.socket?.emit('leave_chat', { chatId }) 
-    console.log("leave_chat", chatId);
+    this.socket?.emit('leave_chat', { chatId })
     this.socket?.off('message_delivered');
 
    ;
