@@ -57,14 +57,13 @@ async function subscribeUser() {
 
     if (p256dh && auth) {
       try {
-        const response = await authApis.subscribeUser({
+        await authApis.subscribeUser({
           endpoint: subscription.endpoint,
           keys: {
             p256dh,
             auth,
           },
         });
-        
       } catch (err) {
         console.log("Error subscribing user", err);
       }

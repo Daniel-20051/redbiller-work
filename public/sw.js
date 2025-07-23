@@ -2,15 +2,15 @@
 
 
 self.addEventListener("push", (event) => {
-    console.log("Push event received:", event);
+    
   
     if (event.data) {
       const data = event.data.json();
   
       const options = {
         body: data.body,
-        icon: data.icon || "/icon-192x192.png",
-        badge: data.badge || "/badge-72x72.png",
+        icon: data.icon || "/assets/redbiller.png",
+        badge: data.badge || "/assets/redbiller.png",
         data: data.data,
         requireInteraction: false,
         // actions: [
@@ -30,7 +30,7 @@ self.addEventListener("push", (event) => {
   });
   
   self.addEventListener("notificationclick", (event) => {
-    console.log("Notification clicked:", event);
+    
     event.notification.close();
   
     if (event.action === "open" || !event.action) {

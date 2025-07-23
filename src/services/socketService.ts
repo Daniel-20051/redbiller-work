@@ -62,9 +62,9 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
     // Remove any previous listener before adding a new one
     this.socket.off('joined_chat');
-    this.socket.on('joined_chat', (data: any) => {
-      // console.log('✅ Successfully joined chat:', data);
-    });
+    // this.socket.on('joined_chat', (data: any) => {
+    //   // console.log('✅ Successfully joined chat:', data);
+    // });
 
     this.socket.on('error', (error: any) => {
       console.error('❌ Error joining chat:', error);
