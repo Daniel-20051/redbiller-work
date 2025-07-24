@@ -22,8 +22,13 @@ const FloatingChatButton = ({ onClick }: { onClick: () => void }) => (
 export default function DashboardLayout() {
   const { currentPage } = useCurrentPage();
   const [chatOpen, setChatOpen] = useState(false);
-  const { userDetails, setOnlineUsers, removeOnlineUser, addOnlineUser } =
-    use(UserDetailsContext);
+  const {
+    userDetails,
+    setOnlineUsers,
+    removeOnlineUser,
+    addOnlineUser,
+    updateLastMessageDetails,
+  } = use(UserDetailsContext);
   const { setSocketConnected } = use(UserDetailsContext);
 
   useEffect(() => {
@@ -44,8 +49,12 @@ export default function DashboardLayout() {
       }
     });
     socketService.onLastMessage((data: any) => {
-      console.log("last_message");
-      console.log(data.unreadCount);
+      // Populate the array with chatId, message content, and unreadCount
+      updateLastMessageDetails(
+        data.chatId,
+        data.message.content,
+        data.unreadCount
+      );
     });
   }, [userDetails]);
 

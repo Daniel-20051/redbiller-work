@@ -76,7 +76,8 @@ async function subscribeUser() {
 }
 
 const App = () => {
-  const { userDetails } = use(UserDetailsContext);
+  const { userDetails, updateLastMessageDetails, lastMessageDetails } =
+    use(UserDetailsContext);
   const isAdmin =
     userDetails?.data.user.role == "admin" ||
     userDetails?.data.user.role == "superadmin";
@@ -90,6 +91,17 @@ const App = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.addEventListener("message", (event) => {
+        if (event.data && event.data.type === "PUSH_CHAT_UPDATE") {
+          const { chatId, message, unreadCount } = event.data;
+          updateLastMessageDetails(chatId, message, unreadCount);
+          console.log("Upserted lastMessageDetails for chatId:", chatId);
+        }
+      });
+    }
+  }, [updateLastMessageDetails]);
   useEffect(() => {
     if ("Notification" in window && Notification.permission !== "granted") {
       Notification.requestPermission();

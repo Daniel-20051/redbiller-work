@@ -295,7 +295,7 @@ const ChatTextArea = ({
               setIsChatTextAreaOpen(false);
               handleLeaveChat();
               setMessages([]);
-              handleChats(); // Fetch previous chats again on close
+              // handleChats(); // Fetch previous chats again on close
             }}
           />
           <ProfileName name={name} online={isUserOnline(recipientId)} />

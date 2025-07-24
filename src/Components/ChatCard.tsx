@@ -8,6 +8,7 @@ interface Props {
   onClick?: () => void;
   online?: boolean;
   unreadCount?: number;
+  lastMessage?: string;
 }
 
 const ChatCard = ({
@@ -17,6 +18,7 @@ const ChatCard = ({
   onClick,
   online,
   unreadCount,
+  lastMessage,
 }: Props) => {
   return (
     <div
@@ -29,6 +31,7 @@ const ChatCard = ({
         <div className="flex flex-col gap-[2px]">
           <p className="font-semibold text-[16px]">{name}</p>
           <p className="text-[15px] text-gray-300 font-medium">{email}</p>
+          <p className="text-[13px] text-gray-500 font-light">{lastMessage}</p>
         </div>
       </div>
       {typeof unreadCount === "number" && unreadCount > 0 && (

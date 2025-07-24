@@ -13,7 +13,7 @@ interface ChatDialogProps {
 }
 
 const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
-  const { userDetails, socketConnected, isUserOnline } =
+  const { userDetails, socketConnected, isUserOnline, lastMessageDetails } =
     use(UserDetailsContext);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -108,13 +108,6 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     handleUsers();
     handleChats();
   }, []);
-
-  // Fetch chats every time the dialog is opened
-  useEffect(() => {
-    if (open) {
-      handleChats();
-    }
-  }, [open]);
 
   return (
     <div
@@ -280,22 +273,24 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                   ) : chatNumber !== 0 ? (
                     <div className="flex flex-col overflow-y-auto gap-3">
                       {previousChats.map((chat: any, index: number) => {
-                        // Find the participant object for the current user
-                        const myParticipant = chat.participants?.find(
-                          (p: any) =>
-                            String(p.userId) ===
-                            String(userDetails?.data.user.id)
+                        // Find last message details for this chat
+                        const lastMsgDetail = lastMessageDetails.find(
+                          (d) => d.chatId === chat._id
                         );
-                        const myUnreadCount = myParticipant
-                          ? myParticipant.unreadCount
-                          : 0;
+                        const messageContent = lastMsgDetail
+                          ? lastMsgDetail.message
+                          : undefined;
+                        const unreadCount = lastMsgDetail
+                          ? lastMsgDetail.unreadCount
+                          : undefined;
                         return (
                           <ChatCard
                             key={index}
                             isChat={false}
                             name={capitalizeName(chat.metadata.recipientName)}
                             online={isUserOnline(chat.metadata.recipientId)}
-                            unreadCount={myUnreadCount}
+                            unreadCount={unreadCount}
+                            lastMessage={messageContent}
                             onClick={async () => {
                               if (!socketConnected) {
                                 return; // Don't open chat if socket is not connected

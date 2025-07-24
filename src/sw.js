@@ -1,11 +1,19 @@
 // public/sw.js
 
 
+
 self.addEventListener("push", (event) => {
     
   
     if (event.data) {
       const data = event.data.json();
+      
+      console.log("Push notification received:", event);
+      console.log("body:", data.body);
+      console.log("unreadCount:", data.unreadCount);
+      console.log("chatId:", data.chatId);
+
+      
   
       const options = {
         body: data.body,
@@ -13,7 +21,7 @@ self.addEventListener("push", (event) => {
         badge: "/assets/redbiller.png",
         data: data.data,
         requireInteraction: false,
-        
+
         // actions: [
         //   {
         //     action: "open",
