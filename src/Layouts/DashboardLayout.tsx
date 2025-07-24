@@ -44,7 +44,8 @@ export default function DashboardLayout() {
       }
     });
     socketService.onLastMessage((data: any) => {
-      console.log(data);
+      console.log("last_message");
+      console.log(data.unreadCount);
     });
   }, [userDetails]);
 

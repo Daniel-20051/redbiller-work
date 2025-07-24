@@ -92,6 +92,14 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     this.socket.emit('send_message', messageData);
   }
 
+  emitLastMessage(): void {
+    if (!this.isConnected || !this.socket) {
+      console.error('Socket not connected');
+      return;
+    }
+    this.socket.emit('last_message' );
+  }
+
   onUserGlobalStatus(callback: any): void {
     this.socket?.on('user_global_status', (data: any) => {
       
@@ -104,8 +112,10 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
   onNewMessage(callback: MessageCallback): void {
     this.socket?.off('new_message');
     
+    
     this.socket?.on('new_message', (message: any) => { 
       callback(message);
+      console.log("new_message", message);
       
        // Show browser notification if tab is not active
       //  if (

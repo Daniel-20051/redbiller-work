@@ -228,6 +228,7 @@ const ChatTextArea = ({
             // Clear newChatId since it's no longer needed
             setNewChatId("");
             // No need to fetch previous messages or set loading here, just update messages array
+            socketService.emitLastMessage();
           }
         } catch (error) {
           console.log(error);
