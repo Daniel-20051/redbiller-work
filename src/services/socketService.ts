@@ -122,17 +122,8 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
   }
 
   
-  getLastMessage(chatId: string): void {
-    this.socket?.emit('last_message', chatId);
-    console.log("last_message", chatId);
-  }
-
-  onLastMessage(callback: (message: any) => void): void {
-    this.socket?.on('last_message', (message: any) => {
-      callback(message);
-      console.log("last_message", message);
-    });
-  }
+  
+ 
 
  
 

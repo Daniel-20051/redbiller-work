@@ -84,7 +84,6 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     try {
       const response: any = await authApis.getUserAllChats();
       setPreviousChats(response.data.data.chats);
-      console.log(response.data.data.chats);
       setChatNumber(response.data.data.chats.length);
     } catch (error) {
     } finally {
