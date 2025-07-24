@@ -121,6 +121,13 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     });
   }
 
+
+
+onLastMessage(callback: any): void {
+  this.socket?.on('last_message', (data: any) => {
+    callback(data);
+  });
+}
   
   
  

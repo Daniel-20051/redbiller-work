@@ -43,6 +43,9 @@ export default function DashboardLayout() {
         removeOnlineUser(userId);
       }
     });
+    socketService.onLastMessage((data: any) => {
+      console.log(data);
+    });
   }, [userDetails]);
 
   return (

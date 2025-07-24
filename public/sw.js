@@ -9,8 +9,8 @@ self.addEventListener("push", (event) => {
   
       const options = {
         body: data.body,
-        icon: data.icon || "/assets/redbiller.png",
-        badge: data.badge || "/assets/redbiller.png",
+        icon: "/assets/redbiller.png",
+        badge: "/assets/redbiller.png",
         data: data.data,
         requireInteraction: false,
         // actions: [
