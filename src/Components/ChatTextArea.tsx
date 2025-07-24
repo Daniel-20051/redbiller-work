@@ -50,7 +50,6 @@ const ChatTextArea = ({
   isLoading,
   setIsLoading,
   recipientId,
-  handleChats,
 }: ChatTextAreaProps) => {
   const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);

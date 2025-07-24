@@ -76,8 +76,7 @@ async function subscribeUser() {
 }
 
 const App = () => {
-  const { userDetails, updateLastMessageDetails, lastMessageDetails } =
-    use(UserDetailsContext);
+  const { userDetails, updateLastMessageDetails } = use(UserDetailsContext);
   const isAdmin =
     userDetails?.data.user.role == "admin" ||
     userDetails?.data.user.role == "superadmin";
