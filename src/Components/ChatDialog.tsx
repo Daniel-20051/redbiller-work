@@ -110,6 +110,13 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     handleChats();
   }, []);
 
+  // Fetch chats every time the dialog is opened
+  useEffect(() => {
+    if (open) {
+      handleChats();
+    }
+  }, [open]);
+
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center px-5 md:px-10  pb-15 justify-end transition-all duration-300 ${
