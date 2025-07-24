@@ -84,6 +84,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     try {
       const response: any = await authApis.getUserAllChats();
       setPreviousChats(response.data.data.chats);
+      console.log(response.data.data.chats);
       setChatNumber(response.data.data.chats.length);
     } catch (error) {
     } finally {
@@ -272,32 +273,43 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                     ))
                   ) : chatNumber !== 0 ? (
                     <div className="flex flex-col overflow-y-auto gap-3">
-                      {previousChats.map((chat: any, index: number) => (
-                        <ChatCard
-                          key={index}
-                          isChat={false}
-                          name={capitalizeName(chat.metadata.recipientName)}
-                          online={isUserOnline(chat.metadata.recipientId)}
-                          onClick={async () => {
-                            if (!socketConnected) {
-                              return; // Don't open chat if socket is not connected
-                            }
-                            setIsChatTextAreaOpen(true);
-                            setChatId(chat._id);
-                            setName(
-                              capitalizeName(chat.metadata.recipientName)
-                            );
-                            setRecipientId(chat.metadata.recipientId);
-                            setIsNewChat(false);
-
-                            // Fetch messages for this chat
-                            const chatMessages = await handleGetMessages(
-                              chat._id
-                            );
-                            setMessages(chatMessages);
-                          }}
-                        />
-                      ))}
+                      {previousChats.map((chat: any, index: number) => {
+                        // Find the participant object for the current user
+                        const myParticipant = chat.participants?.find(
+                          (p: any) =>
+                            String(p.userId) ===
+                            String(userDetails?.data.user.id)
+                        );
+                        const myUnreadCount = myParticipant
+                          ? myParticipant.unreadCount
+                          : 0;
+                        return (
+                          <ChatCard
+                            key={index}
+                            isChat={false}
+                            name={capitalizeName(chat.metadata.recipientName)}
+                            online={isUserOnline(chat.metadata.recipientId)}
+                            unreadCount={myUnreadCount}
+                            onClick={async () => {
+                              if (!socketConnected) {
+                                return; // Don't open chat if socket is not connected
+                              }
+                              setIsChatTextAreaOpen(true);
+                              setChatId(chat._id);
+                              setName(
+                                capitalizeName(chat.metadata.recipientName)
+                              );
+                              setRecipientId(chat.metadata.recipientId);
+                              setIsNewChat(false);
+                              // Fetch messages for this chat
+                              const chatMessages = await handleGetMessages(
+                                chat._id
+                              );
+                              setMessages(chatMessages);
+                            }}
+                          />
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="text-center text-gray-500 py-4">
@@ -330,6 +342,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
             isLoading={isLoading}
             setIsLoading={setIsLoading}
             recipientId={recipientId}
+            handleChats={handleChats} // Pass handleChats as a prop
           />
         </div>
       </div>

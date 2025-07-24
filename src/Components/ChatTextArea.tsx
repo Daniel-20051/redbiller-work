@@ -13,6 +13,25 @@ interface Message {
   [key: string]: any;
 }
 
+interface ChatTextAreaProps {
+  chatId: string;
+  name: string;
+  messages: Message[];
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  isNewChat: boolean;
+  newChatId: string;
+  onChatCreated?: () => void;
+  setIsNewChat: (isNewChat: boolean) => void;
+  setNewChatId: (newChatId: string) => void;
+  setChatId: (chatId: string) => void;
+  setIsChatTextAreaOpen: (isChatTextAreaOpen: boolean) => void;
+  isChatTextAreaOpen: boolean;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+  recipientId: string;
+  handleChats: () => void;
+}
+
 const authApis = new AuthApis();
 
 const ChatTextArea = ({
@@ -31,23 +50,8 @@ const ChatTextArea = ({
   isLoading,
   setIsLoading,
   recipientId,
-}: {
-  chatId: string;
-  name: string;
-  messages: Message[];
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-  isNewChat: boolean;
-  newChatId: string;
-  onChatCreated?: () => void;
-  setIsNewChat: (isNewChat: boolean) => void;
-  setNewChatId: (newChatId: string) => void;
-  setChatId: (chatId: string) => void;
-  setIsChatTextAreaOpen: (isChatTextAreaOpen: boolean) => void;
-  isChatTextAreaOpen: boolean;
-  isLoading: boolean;
-  setIsLoading: (isLoading: boolean) => void;
-  recipientId: string;
-}) => {
+  handleChats,
+}: ChatTextAreaProps) => {
   const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);
   const [text, setText] = useState("");
@@ -173,6 +177,24 @@ const ChatTextArea = ({
 
     setMessages([]);
   };
+  useEffect(() => {
+    // Request the last message for this chat
+    socketService.getLastMessage(chatId);
+
+    // Handler for receiving the last message
+    const handleLastMessage = (message: any) => {
+      console.log("Last message received:", message);
+      // You can set state here to display the message in your UI
+    };
+
+    // Listen for the last_message event
+    socketService.onLastMessage(handleLastMessage);
+
+    // Cleanup listener on unmount or chatId change
+    return () => {
+      socketService.offLastMessage(handleLastMessage);
+    };
+  }, [chatId]);
 
   const handleSendMessage = async () => {
     if (text.trim()) {
@@ -275,6 +297,7 @@ const ChatTextArea = ({
               setIsChatTextAreaOpen(false);
               handleLeaveChat();
               setMessages([]);
+              handleChats(); // Fetch previous chats again on close
             }}
           />
           <ProfileName name={name} online={isUserOnline(recipientId)} />

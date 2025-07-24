@@ -62,15 +62,17 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
     // Remove any previous listener before adding a new one
     this.socket.off('joined_chat');
-    // this.socket.on('joined_chat', (data: any) => {
-    //   // console.log('✅ Successfully joined chat:', data);
-    // });
+    this.socket.on('joined_chat', (data: any) => {
+      console.log('✅ Successfully joined chat:', data);
+    });
 
     this.socket.on('error', (error: any) => {
       console.error('❌ Error joining chat:', error);
     });
     
   }
+
+ 
   
 
   sendMessage(chatId: string, content: string): void {
@@ -119,6 +121,19 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     });
   }
 
+  
+  getLastMessage(chatId: string): void {
+    this.socket?.emit('last_message', chatId);
+    console.log("last_message", chatId);
+  }
+
+  onLastMessage(callback: (message: any) => void): void {
+    this.socket?.on('last_message', (message: any) => {
+      callback(message);
+      console.log("last_message", message);
+    });
+  }
+
  
 
   offNewMessage(callback: MessageCallback): void {
@@ -130,6 +145,10 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
      
       callback(data);
     });
+  }
+
+  offLastMessage(callback: (message: any) => void): void {
+    this.socket?.off('last_message', callback);
   }
 
   onMessageDelivered(callback: DeliveryCallback): void {
@@ -144,12 +163,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     this.socket?.off('message_delivered', callback);
   }
 
-  onLastMessage(callback: any): void {
-    this.socket?.on('last_message', (data: any) => {
-      callback(data);
-      console.log("last_message", data);
-    });
-  }
+ 
 
   chatDetails(callback: any): void {
     this.socket?.on('chat_details', (data: any) => {
