@@ -178,17 +178,11 @@ const ChatTextArea = ({
     setMessages([]);
   };
   useEffect(() => {
-    // Request the last message for this chat
-    socketService.getLastMessage(chatId);
-
     // Handler for receiving the last message
     const handleLastMessage = (message: any) => {
       console.log("Last message received:", message);
       // You can set state here to display the message in your UI
     };
-
-    // Listen for the last_message event
-    socketService.onLastMessage(handleLastMessage);
 
     // Cleanup listener on unmount or chatId change
     return () => {
