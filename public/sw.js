@@ -13,6 +13,7 @@ self.addEventListener("push", (event) => {
         badge: "/assets/redbiller.png",
         data: data.data,
         requireInteraction: false,
+        
         // actions: [
         //   {
         //     action: "open",
