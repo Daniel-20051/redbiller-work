@@ -174,6 +174,7 @@ onLastMessage(callback: any): void {
   }
 
   onLeaveChat(chatId: string): void {
+    this.socket?.off('left_chat');
     this.socket?.emit('leave_chat', { chatId })
     
    ;
