@@ -205,6 +205,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                       ) : (
                         filteredUsers.map((user, index) => (
                           <ChatCard
+                            online={isUserOnline(user.id)}
                             key={index}
                             name={
                               capitalizeName(user.firstName) +
