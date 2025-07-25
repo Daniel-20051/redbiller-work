@@ -150,9 +150,7 @@ onLastMessage(callback: any): void {
     });
   }
 
-  offLastMessage(callback: (message: any) => void): void {
-    this.socket?.off('last_message', callback);
-  }
+  
 
   onMessageDelivered(callback: DeliveryCallback): void {
     this.socket?.off('message_delivered');
@@ -177,8 +175,7 @@ onLastMessage(callback: any): void {
 
   onLeaveChat(chatId: string): void {
     this.socket?.emit('leave_chat', { chatId })
-    this.socket?.off('message_delivered');
-
+    
    ;
  
   }

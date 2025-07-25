@@ -8,10 +8,6 @@ self.addEventListener("push", (event) => {
     if (event.data) {
       const data = event.data.json();
       
-      // console.log("Push notification received:", event);
-      // console.log("body:", data.body);
-      // console.log("unreadCount:", data.unreadCount);
-      // console.log("chatId:", data.chatId);
 
       
   

@@ -177,21 +177,12 @@ const ChatTextArea = ({
 
   const handleLeaveChat = () => {
     socketService.onLeaveChat(chatId);
+    socketService.onLeftChat((data: any) => {
+      console.log("left_chat", data);
+    });
 
     setMessages([]);
   };
-  useEffect(() => {
-    // Handler for receiving the last message
-    const handleLastMessage = (message: any) => {
-      console.log("Last message received:", message);
-      // You can set state here to display the message in your UI
-    };
-
-    // Cleanup listener on unmount or chatId change
-    return () => {
-      socketService.offLastMessage(handleLastMessage);
-    };
-  }, [chatId]);
 
   const handleSendMessage = async () => {
     if (text.trim()) {
@@ -298,6 +289,7 @@ const ChatTextArea = ({
               setIsChatTextAreaOpen(false);
               handleLeaveChat();
               setMessages([]);
+
               // handleChats(); // Fetch previous chats again on close
             }}
           />
