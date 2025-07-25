@@ -476,7 +476,10 @@ const ChatTextArea = ({
                                   style={{
                                     fontSize: 10,
                                     marginLeft: 4,
-                                    color: "#888",
+                                    color:
+                                      message.senderId === userId
+                                        ? "#888"
+                                        : "#f2f2f2",
                                   }}
                                 >
                                   edited
