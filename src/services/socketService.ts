@@ -92,6 +92,21 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     this.socket.emit('send_message', messageData);
   }
 
+  deleteMessage( messageId: string): void {
+    if (!this.isConnected || !this.socket) {
+      console.error('Socket not connected');
+      return;
+    }
+    this.socket.emit('delete_message', { messageId });
+  }
+
+  editMessage(messageId: string, content: string): void {
+    if (!this.isConnected || !this.socket) {
+      console.error('Socket not connected');
+      return;
+    }
+    this.socket.emit('edit_message', { messageId, content });
+  }
  
   onUserGlobalStatus(callback: any): void {
     this.socket?.on('user_global_status', (data: any) => {
@@ -128,7 +143,6 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
 onLastMessage(callback: any): void {
   this.socket?.on('last_message', (data: any) => {
-    console.log("last_message", data);
     callback(data);
   });
 
@@ -180,6 +194,8 @@ onLastMessage(callback: any): void {
    ;
  
   }
+
+  
 
   onLeftChat(callback: any): void {
     this.socket?.on('left_chat', (data: any) => {
@@ -239,4 +255,5 @@ onLastMessage(callback: any): void {
   }
 }
 
-export default new SocketService();
+const socketService = new SocketService();
+export default socketService;

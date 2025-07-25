@@ -6,6 +6,7 @@ import { UserDetailsContext } from "../context/AuthContext.js";
 import MessageSkeleton from "./MessageSkeleton";
 import { AuthApis } from "../api";
 import DateSeparator from "./DateSeparator";
+import ReactDOM from "react-dom";
 
 interface Message {
   content: string;
@@ -265,10 +266,100 @@ const ChatTextArea = ({
     .filter((msg) => msg.senderId === userId)
     .pop()?.idx;
 
+  const [contextMenu, setContextMenu] = useState<{
+    visible: boolean;
+    x: number;
+    y: number;
+    message: Message | null;
+  }>({ visible: false, x: 0, y: 0, message: null });
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [messageToDelete, setMessageToDelete] = useState<Message | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [messageToEdit, setMessageToEdit] = useState<Message | null>(null);
+  const [editText, setEditText] = useState("");
+
+  // Add this style block for animation
+  const contextMenuStyle = `
+    .custom-context-menu-anim {
+      opacity: 0;
+      transform: scale(0.95);
+      animation: fadeScaleIn 0.18s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    @keyframes fadeScaleIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .custom-context-menu-light {
+      background: #fff;
+      color: #23272a;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+      min-width: 180px;
+      padding: 8px 0;
+      font-size: 15px;
+      border: none;
+    }
+    .custom-context-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .custom-context-menu-item:hover {
+      background: #f2f2f2;
+    }
+    .custom-context-menu-icon {
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  `;
+
+  // Improved outside click handler for portal
+  useEffect(() => {
+    if (!contextMenu.visible) return;
+    const handleClick = (e: MouseEvent) => {
+      // Only close if click is outside the menu
+      const menu = document.getElementById("custom-context-menu");
+      if (menu && !menu.contains(e.target as Node)) {
+        setContextMenu((c) => ({ ...c, visible: false }));
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [contextMenu.visible]);
+
+  // Calculate menu position to prevent overflow
+  const menuWidth = 200; // px
+  const menuHeight = 100; // px (approximate, 2 items)
+  let menuX = contextMenu.x;
+  let menuY = contextMenu.y;
+  if (typeof window !== "undefined") {
+    if (menuX + menuWidth > window.innerWidth) {
+      menuX = window.innerWidth - menuWidth - 8;
+    }
+    if (menuY + menuHeight > window.innerHeight) {
+      menuY = window.innerHeight - menuHeight - 8;
+    }
+  }
+
   return (
     <div
       className={`w-full border-1 border-[#d2d2d2] items-center rounded-lg h-full flex flex-col max-h-[77vh]`}
     >
+      {/* Animation style for context menu */}
+      <style>{contextMenuStyle}</style>
       {/* Header */}
       <div className="h-[60px] w-[97%] border-b-1 border-[#d2d2d2] flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-2">
@@ -308,7 +399,7 @@ const ChatTextArea = ({
       {isLoading ? (
         <MessageSkeleton />
       ) : (
-        <div className="flex-1 w-full overflow-y-auto bg-white px-3 pt-3 mb-3">
+        <div className="flex-1 w-full overflow-y-auto z-250 bg-white px-3 pt-3 mb-3">
           <div className="flex flex-col gap-3 min-h-full">
             <>
               {messages.length === 0 ? (
@@ -358,6 +449,16 @@ const ChatTextArea = ({
                                 ? "bg-[#f2f2f2] text-gray-800 rounded-br-md"
                                 : "bg-primary text-white rounded-bl-md"
                             }`}
+                            onContextMenu={(e) => {
+                              if (message.senderId !== userId) return; // Only allow for own messages
+                              e.preventDefault();
+                              setContextMenu({
+                                visible: true,
+                                x: e.clientX,
+                                y: e.clientY,
+                                message,
+                              });
+                            }}
                           >
                             <p className="text-sm leading-relaxed break-words">
                               {message.content}
@@ -370,6 +471,17 @@ const ChatTextArea = ({
                               }`}
                             >
                               {formatTime(new Date(message.createdAt))}
+                              {message.isEdited && (
+                                <span
+                                  style={{
+                                    fontSize: 10,
+                                    marginLeft: 4,
+                                    color: "#888",
+                                  }}
+                                >
+                                  edited
+                                </span>
+                              )}
                               {message.senderId === userId &&
                                 index === lastUserMessageIndex &&
                                 (messageStatus === "sending" ? (
@@ -448,6 +560,235 @@ const ChatTextArea = ({
           />
         )}
       </div>
+      {/* Context Menu rendered via Portal */}
+      {contextMenu.visible &&
+        ReactDOM.createPortal(
+          <div
+            id="custom-context-menu"
+            className="custom-context-menu-anim custom-context-menu-light"
+            style={{
+              position: "fixed",
+              top: menuY,
+              left: menuX,
+              zIndex: 9999,
+              // Remove background, border, etc. (handled by class)
+              // Add transition for smoothness
+              transition:
+                "opacity 0.18s cubic-bezier(0.4,0,0.2,1), transform 0.18s cubic-bezier(0.4,0,0.2,1)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="custom-context-menu-item"
+              onClick={() => {
+                if (contextMenu.message?._id && contextMenu.message?.content) {
+                  setMessageToEdit(contextMenu.message);
+                  setEditText(contextMenu.message.content);
+                  setShowEditModal(false);
+                  setTimeout(() => setShowEditModal(true), 0);
+                }
+                setContextMenu((c) => ({ ...c, visible: false }));
+              }}
+            >
+              <span className="custom-context-menu-icon">
+                <Icon icon="mdi:pencil-outline" />
+              </span>
+              Edit message
+            </button>
+            <button
+              className="custom-context-menu-item"
+              onClick={() => {
+                setContextMenu((c) => ({ ...c, visible: false }));
+                setMessageToDelete(contextMenu.message);
+                setShowDeleteModal(true);
+              }}
+            >
+              <span className="custom-context-menu-icon">
+                <Icon icon="mdi:trash-can-outline" />
+              </span>
+              Delete
+            </button>
+          </div>,
+          document.body
+        )}
+      {/* Confirm Delete Modal */}
+      {showDeleteModal &&
+        ReactDOM.createPortal(
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              background: "rgba(0,0,0,0.25)",
+              zIndex: 10000,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                background: "#fff",
+                borderRadius: 12,
+                padding: 32,
+                minWidth: 300,
+                boxShadow: "0 4px 24px rgba(0,0,0,0.13)",
+                textAlign: "center",
+              }}
+            >
+              <p style={{ marginBottom: 24 }}>
+                Are you sure you want to delete this message?
+              </p>
+              <div
+                style={{ display: "flex", justifyContent: "center", gap: 16 }}
+              >
+                <button
+                  style={{
+                    padding: "8px 20px",
+                    borderRadius: 6,
+                    border: "none",
+                    background: "#f2f2f2",
+                    color: "#23272a",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setMessageToDelete(null);
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  style={{
+                    padding: "8px 20px",
+                    borderRadius: 6,
+                    border: "none",
+                    background: "#93221D",
+                    color: "#fff",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    if (messageToDelete?._id) {
+                      socketService.deleteMessage(messageToDelete._id);
+                      setMessages((prev) =>
+                        prev.filter((msg) => msg._id !== messageToDelete._id)
+                      );
+                    }
+                    setShowDeleteModal(false);
+                    setMessageToDelete(null);
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
+      {/* Edit Message Modal */}
+      {showEditModal &&
+        ReactDOM.createPortal(
+          <div
+            key={messageToEdit?._id}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              background: "rgba(0,0,0,0.25)",
+              zIndex: 10000,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                background: "#fff",
+                borderRadius: 12,
+                padding: 32,
+                minWidth: 300,
+                boxShadow: "0 4px 24px rgba(0,0,0,0.13)",
+                textAlign: "center",
+              }}
+            >
+              <p style={{ marginBottom: 16 }}>Edit your message:</p>
+              <input
+                style={{
+                  width: "100%",
+                  padding: 10,
+                  borderRadius: 6,
+                  border: "1px solid #ccc",
+                  marginBottom: 24,
+                  fontSize: 15,
+                }}
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                autoFocus
+              />
+              <div
+                style={{ display: "flex", justifyContent: "center", gap: 16 }}
+              >
+                <button
+                  style={{
+                    padding: "8px 20px",
+                    borderRadius: 6,
+                    border: "none",
+                    background: "#f2f2f2",
+                    color: "#23272a",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setMessageToEdit(null);
+                    setEditText("");
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  style={{
+                    padding: "8px 20px",
+                    borderRadius: 6,
+                    border: "none",
+                    background: "#93221D",
+                    color: "#fff",
+                    cursor: "pointer",
+                  }}
+                  disabled={!editText.trim()}
+                  onClick={async () => {
+                    if (messageToEdit?._id && editText.trim()) {
+                      try {
+                        await socketService.editMessage(
+                          messageToEdit._id,
+                          editText
+                        );
+                        setMessages((prev) =>
+                          prev.map((msg) =>
+                            msg._id === messageToEdit._id
+                              ? { ...msg, content: editText, isEdited: true }
+                              : msg
+                          )
+                        );
+                      } catch (e) {
+                        // Optionally show error
+                      }
+                    }
+                    setShowEditModal(false);
+                    setMessageToEdit(null);
+                    setEditText("");
+                  }}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
