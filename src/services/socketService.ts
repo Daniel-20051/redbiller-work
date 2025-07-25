@@ -92,14 +92,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     this.socket.emit('send_message', messageData);
   }
 
-  emitLastMessage(): void {
-    if (!this.isConnected || !this.socket) {
-      console.error('Socket not connected');
-      return;
-    }
-    this.socket.emit('last_message' );
-  }
-
+ 
   onUserGlobalStatus(callback: any): void {
     this.socket?.on('user_global_status', (data: any) => {
       
@@ -135,8 +128,10 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
 onLastMessage(callback: any): void {
   this.socket?.on('last_message', (data: any) => {
+    console.log("last_message", data);
     callback(data);
   });
+
 }
   
   

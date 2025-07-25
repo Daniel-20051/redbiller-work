@@ -146,6 +146,10 @@ const ChatTextArea = ({
 
       // Register handlers
       socketService.onNewMessage(handleNewMessage);
+      socketService.onLastMessage((data: any) => {
+        console.log("last_message");
+        console.log(data);
+      });
       socketService.onTyping(handleTyping);
       socketService.onMessageDelivered(handleDelivered);
 
