@@ -85,7 +85,6 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     try {
       const response: any = await authApis.getUserAllChats();
       setPreviousChats(response.data.data.chats);
-      console.log(response.data.data.chats);
       setChatNumber(response.data.data.chats.length);
     } catch (error) {
     } finally {
@@ -110,6 +109,13 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     handleUsers();
     handleChats();
   }, []);
+
+  // Fetch chats when dialog opens
+  useEffect(() => {
+    if (open) {
+      handleChats();
+    }
+  }, [open]);
 
   return (
     <div
