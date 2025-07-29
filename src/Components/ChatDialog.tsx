@@ -13,7 +13,7 @@ interface ChatDialogProps {
 }
 
 const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
-  const { userDetails, socketConnected, isUserOnline, lastMessageDetails } =
+  const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +23,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const [chatId, setChatId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [previousChats, setPreviousChats] = useState<any[]>([]);
+
   const [chatNumber, setChatNumber] = useState<number>(0);
   const [isPreviousChatLoading, setIsPreviousChatLoading] =
     useState<boolean>(false);
@@ -84,6 +85,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     try {
       const response: any = await authApis.getUserAllChats();
       setPreviousChats(response.data.data.chats);
+      console.log(response.data.data.chats);
       setChatNumber(response.data.data.chats.length);
     } catch (error) {
     } finally {
@@ -117,7 +119,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
       onClick={onClose}
     >
       <div
-        className={` flex-col place-self-end overflow-y-auto  relative p-2 bg-white rounded-2xl shadow-2xl w-full md:w-[400px] max-h-[84vh] md:max-h-[80vh] transform transition-all duration-300 ${
+        className={` flex-col place-self-end relative p-2 bg-white rounded-2xl shadow-2xl w-full md:w-[400px] max-h-[84vh] md:max-h-[80vh] transform transition-all duration-300 ${
           open ? "translate-y-0 scale-100" : "translate-y-10 scale-95"
         } `}
         onClick={(e) => e.stopPropagation()}
@@ -125,7 +127,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
         <div
           className={` flex-1 h-full  flex-col gap-3 ${
             isChatTextAreaOpen ? "hidden" : "flex"
-          }  overflow-y-auto `}
+          } overflow-y-auto max-h-[84vh] md:max-h-[80vh] scroll-smooth`}
         >
           {!socketConnected ? (
             <div className="flex flex-col items-center justify-center h-full gap-4">
@@ -192,7 +194,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                     </div>
                     <div
                       className="w-full flex flex-col gap-3 overflow-y-auto"
-                      style={{ maxHeight: "160px" }}
+                      style={{ maxHeight: "160px", minHeight: "0" }}
                     >
                       {isUserLoading ? (
                         Array.from({ length: 5 }).map((_, i) => (
@@ -264,50 +266,67 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                   />
                 </div>
                 <div
-                  className="w-full flex flex-col gap-3  overflow-y-auto flex-1"
-                  style={{ maxHeight: "230px" }}
+                  className="w-full flex flex-col gap-3 overflow-y-auto flex-1"
+                  style={{ maxHeight: "230px", minHeight: "0" }}
                 >
                   {isPreviousChatLoading ? (
                     Array.from({ length: 5 }).map((_, i) => (
                       <UserSkeleton key={i} />
                     ))
                   ) : chatNumber !== 0 ? (
-                    <div className="flex flex-col overflow-y-auto gap-3">
+                    <div className="flex flex-col gap-3">
                       {previousChats.map((chat: any, index: number) => {
-                        // Find last message details for this chat
-                        const lastMsgDetail = lastMessageDetails.find(
-                          (d) => d.chatId === chat._id
+                        // Get current user ID
+                        const currentUserId = userDetails?.data?.user?.id;
+
+                        // Find the participant entry for the current user to get their unread count
+                        const currentUserParticipant = chat.participants?.find(
+                          (participant: any) =>
+                            participant.userId === currentUserId
                         );
-                        const messageContent = lastMsgDetail
-                          ? lastMsgDetail.message
-                          : undefined;
-                        const unreadCount = lastMsgDetail
-                          ? lastMsgDetail.unreadCount
-                          : undefined;
+
+                        // Get unread count for current user
+                        const unreadCount =
+                          currentUserParticipant?.unreadCount || 0;
+
+                        // Determine the recipient name (the other person in the chat)
+                        const recipientName =
+                          chat.metadata?.recipientName ||
+                          (chat.metadata?.senderName &&
+                          chat.metadata?.senderId !== currentUserId
+                            ? chat.metadata.senderName
+                            : chat.metadata?.recipientName);
+
+                        // Determine the recipient ID
+                        const recipientId =
+                          chat.metadata?.recipientId ||
+                          (chat.metadata?.senderId !== currentUserId
+                            ? chat.metadata.senderId
+                            : chat.metadata?.recipientId);
+
                         return (
                           <ChatCard
                             key={index}
                             isChat={false}
-                            name={capitalizeName(chat.metadata.recipientName)}
-                            online={isUserOnline(chat.metadata.recipientId)}
+                            name={capitalizeName(recipientName)}
+                            online={isUserOnline(recipientId)}
                             unreadCount={unreadCount}
-                            lastMessage={messageContent}
+                            lastMessage={chat.lastMessageId}
                             onClick={async () => {
                               if (!socketConnected) {
                                 return; // Don't open chat if socket is not connected
                               }
                               setIsChatTextAreaOpen(true);
                               setChatId(chat._id);
-                              setName(
-                                capitalizeName(chat.metadata.recipientName)
-                              );
-                              setRecipientId(chat.metadata.recipientId);
+                              setName(capitalizeName(recipientName));
+                              setRecipientId(recipientId);
                               setIsNewChat(false);
                               // Fetch messages for this chat
                               const chatMessages = await handleGetMessages(
                                 chat._id
                               );
                               setMessages(chatMessages);
+                              handleChats();
                             }}
                           />
                         );

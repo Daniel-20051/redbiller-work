@@ -52,6 +52,7 @@ const ChatTextArea = ({
   isLoading,
   setIsLoading,
   recipientId,
+  handleChats,
 }: ChatTextAreaProps) => {
   const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);
@@ -409,8 +410,7 @@ const ChatTextArea = ({
               setIsChatTextAreaOpen(false);
               handleLeaveChat();
               setMessages([]);
-
-              // handleChats(); // Fetch previous chats again on close
+              handleChats();
             }}
           />
           <ProfileName name={name} online={isUserOnline(recipientId)} />
