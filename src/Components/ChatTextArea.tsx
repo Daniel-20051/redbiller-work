@@ -621,7 +621,7 @@ const ChatTextArea = ({
                   ? 320
                   : 350
               }
-              height={screenSize.width < 768 ? 300 : 350}
+              height={screenSize.width < 768 ? 400 : 350}
               searchDisabled={false}
               skinTonesDisabled={true}
             />
