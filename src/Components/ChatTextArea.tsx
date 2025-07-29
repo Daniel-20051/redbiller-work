@@ -7,6 +7,7 @@ import MessageSkeleton from "./MessageSkeleton";
 import { AuthApis } from "../api";
 import DateSeparator from "./DateSeparator";
 import ReactDOM from "react-dom";
+import EmojiPicker from "emoji-picker-react";
 
 interface Message {
   content: string;
@@ -55,6 +56,12 @@ const ChatTextArea = ({
   const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);
   const [text, setText] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+  const [screenSize, setScreenSize] = useState({
+    width: typeof window !== "undefined" ? window.innerWidth : 1024,
+    height: typeof window !== "undefined" ? window.innerHeight : 768,
+  });
 
   const [typingInfo, setTypingInfo] = useState<string | null>(null);
 
@@ -174,9 +181,6 @@ const ChatTextArea = ({
 
   const handleLeaveChat = () => {
     socketService.onLeaveChat(chatId);
-    socketService.onLeftChat((data: any) => {
-      console.log("left_chat", data);
-    });
 
     setMessages([]);
   };
@@ -254,6 +258,11 @@ const ChatTextArea = ({
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleEmojiClick = (emojiObject: any) => {
+    setText((prevText) => prevText + emojiObject.emoji);
+    setShowEmojiPicker(false);
   };
 
   const formatTime = (date: Date) => {
@@ -339,6 +348,34 @@ const ChatTextArea = ({
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [contextMenu.visible]);
+
+  // Handle clicking outside emoji picker
+  useEffect(() => {
+    if (!showEmojiPicker) return;
+    const handleClick = (e: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(e.target as Node)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showEmojiPicker]);
+
+  // Handle window resize for responsive emoji picker
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Calculate menu position to prevent overflow
   const menuWidth = 200; // px
@@ -444,7 +481,7 @@ const ChatTextArea = ({
                           } animate-fadeIn`}
                         >
                           <div
-                            className={`max-w-[70%] md:max-w-[60%]  lg:max-w-[50%] px-4 py-2 rounded-2xl shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.02] ${
+                            className={`max-w-[70%] md:max-w-[60%]  lg:max-w-[50%] px-2 py-1 rounded-2xl shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.02] ${
                               message.senderId === userId
                                 ? "bg-[#f2f2f2] text-gray-800 rounded-br-md"
                                 : "bg-primary text-white rounded-bl-md"
@@ -464,7 +501,7 @@ const ChatTextArea = ({
                               {message.content}
                             </p>
                             <p
-                              className={`flex justify-between items-center gap-1 text-xs mt-1 ${
+                              className={`flex justify-between items-center gap-1 text-[10.5px] mt-1 ${
                                 message.senderId === userId
                                   ? "text-gray-500 text-right"
                                   : "text-gray-200 text-left"
@@ -518,7 +555,7 @@ const ChatTextArea = ({
       )}
 
       {/* Input Area */}
-      <div className="w-full bg-[#F2F2F2] gap-5 flex items-center px-3 rounded-b-lg h-[60px] flex-shrink-0">
+      <div className="w-full bg-[#F2F2F2] gap-5 flex items-center px-3 rounded-b-lg h-[60px] flex-shrink-0 relative">
         <div className="flex gap-2 items-center">
           <Icon
             icon="mingcute:emoji-fill"
@@ -526,6 +563,7 @@ const ChatTextArea = ({
             width="25"
             height="25"
             style={{ color: "#808080" }}
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           />{" "}
           <Icon
             icon="material-symbols:image-rounded"
@@ -561,6 +599,33 @@ const ChatTextArea = ({
             height="24"
             style={{ color: "#93221D" }}
           />
+        )}
+
+        {/* Emoji Picker */}
+        {showEmojiPicker && (
+          <div
+            ref={emojiPickerRef}
+            style={{
+              position: "absolute",
+              bottom: "70px",
+              left: screenSize.width < 768 ? "5px" : "10px",
+              zIndex: 1000,
+            }}
+          >
+            <EmojiPicker
+              onEmojiClick={handleEmojiClick}
+              width={
+                screenSize.width < 768
+                  ? 280
+                  : screenSize.width < 1024
+                  ? 320
+                  : 350
+              }
+              height={screenSize.width < 768 ? 300 : 350}
+              searchDisabled={false}
+              skinTonesDisabled={true}
+            />
+          </div>
         )}
       </div>
       {/* Context Menu rendered via Portal */}
