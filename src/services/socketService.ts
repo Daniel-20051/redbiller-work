@@ -123,7 +123,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     
     this.socket?.on('new_message', (message: any) => { 
       callback(message);
-      console.log("new_message", message);
+      
       
        // Show browser notification if tab is not active
       //  if (

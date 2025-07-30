@@ -317,7 +317,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                             name={capitalizeName(recipientName)}
                             online={isUserOnline(recipientId)}
                             unreadCount={unreadCount}
-                            lastMessage={chat.lastMessageId}
+                            lastMessage={chat.lastMessage.content}
                             onClick={async () => {
                               if (!socketConnected) {
                                 return; // Don't open chat if socket is not connected
