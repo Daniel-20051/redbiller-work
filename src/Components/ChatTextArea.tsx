@@ -134,8 +134,13 @@ const ChatTextArea = ({
           setMessages((prev) => [
             ...prev,
             {
+              fileData: {
+                filename: message.fileData?.filename,
+                duration: message.fileData?.duration,
+              },
               content: message.content,
               createdAt: message.createdAt,
+              messageType: message.messageType,
               senderId: message.senderId,
               isSent: false,
             },
