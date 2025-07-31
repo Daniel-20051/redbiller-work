@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import socketService from "../services/socketService";
 
 interface CustomAudioPlayerProps {
-  src: string | null; // This will be the filePath now, can be null initially
+  src: string; // This will be the filePath now
   isOwnMessage: boolean;
   duration?: number;
 }
@@ -19,15 +19,8 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [signedUrl, setSignedUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [retryCount, setRetryCount] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const requestIdRef = useRef<string>(`${src}-${Date.now()}-${Math.random()}`);
-  const timeoutRef = useRef<number | null>(null);
-  const retryTimeoutRef = useRef<number | null>(null);
-
-  const MAX_RETRIES = 2;
-  const LOAD_TIMEOUT = 15000; // 15 seconds timeout
-  const RETRY_DELAY = 2000; // 2 seconds between retries
 
   // Update duration when prop changes
   useEffect(() => {
@@ -36,156 +29,76 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
     }
   }, [duration]);
 
-  // Clear timeouts on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
-      }
-      if (retryTimeoutRef.current) {
-        window.clearTimeout(retryTimeoutRef.current);
-      }
-    };
-  }, []);
-
   // Request signed URL when component mounts
   useEffect(() => {
     if (src) {
       setError(null);
       setIsLoading(true);
-      setRetryCount(0);
 
-      // Clear any existing timeouts
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
-      }
-      if (retryTimeoutRef.current) {
-        window.clearTimeout(retryTimeoutRef.current);
-      }
+      const handleVoiceNoteUrl = ({
+        filePath,
+        signedUrl,
+        requestId,
+      }: {
+        filePath: string;
+        signedUrl: string;
+        requestId?: string;
+      }) => {
+        // Only handle response for this specific request or if no requestId (backward compatibility)
+        if (
+          filePath === src &&
+          (!requestId || requestId === requestIdRef.current)
+        ) {
+          setSignedUrl(signedUrl);
+          setError(null);
+          setIsLoading(false);
+        }
+      };
 
-      // Check if src is a direct URL (blob URL or data URL)
-      const isDirectUrl =
-        src.startsWith("blob:") ||
-        src.startsWith("data:") ||
-        src.startsWith("http");
+      const handleVoiceNoteError = ({
+        filePath,
+        error: errorMsg,
+        requestId,
+      }: {
+        filePath: string;
+        error: string;
+        requestId?: string;
+      }) => {
+        // Only handle error for this specific request or if no requestId (backward compatibility)
+        if (
+          filePath === src &&
+          (!requestId || requestId === requestIdRef.current)
+        ) {
+          setError(errorMsg);
+          setIsLoading(false);
+        }
+      };
 
-      if (isDirectUrl) {
-        // Use the direct URL immediately
-        setSignedUrl(src);
-        setIsLoading(false);
-      } else {
-        // Request signed URL from server for file paths
-        const handleVoiceNoteUrl = ({
-          filePath,
-          signedUrl,
-          requestId,
-        }: {
-          filePath: string;
-          signedUrl: string;
-          requestId?: string;
-        }) => {
-          // Only handle response for this specific request or if no requestId (backward compatibility)
-          if (
-            filePath === src &&
-            (!requestId || requestId === requestIdRef.current)
-          ) {
-            if (timeoutRef.current) {
-              window.clearTimeout(timeoutRef.current);
-            }
-            setSignedUrl(signedUrl);
-            setError(null);
-            setIsLoading(false);
-          }
-        };
+      // Set up listeners
+      socketService.onVoiceNoteUrl(handleVoiceNoteUrl);
+      socketService.onVoiceNoteError(handleVoiceNoteError);
 
-        const handleVoiceNoteError = ({
-          filePath,
-          error: errorMsg,
-          requestId,
-        }: {
-          filePath: string;
-          error: string;
-          requestId?: string;
-        }) => {
-          // Only handle error for this specific request or if no requestId (backward compatibility)
-          if (
-            filePath === src &&
-            (!requestId || requestId === requestIdRef.current)
-          ) {
-            if (timeoutRef.current) {
-              window.clearTimeout(timeoutRef.current);
-            }
+      // Request the signed URL with unique request ID
+      socketService.requestVoiceNoteUrl(src, requestIdRef.current);
 
-            // Retry logic for iOS devices
-            if (retryCount < MAX_RETRIES) {
-              retryTimeoutRef.current = setTimeout(() => {
-                setRetryCount((prev) => prev + 1);
-                socketService.requestVoiceNoteUrl(src, requestIdRef.current);
-              }, RETRY_DELAY);
-            } else {
-              setError(errorMsg);
-              setIsLoading(false);
-            }
-          }
-        };
-
-        // Set up listeners
-        socketService.onVoiceNoteUrl(handleVoiceNoteUrl);
-        socketService.onVoiceNoteError(handleVoiceNoteError);
-
-        // Request the signed URL with unique request ID
-        socketService.requestVoiceNoteUrl(src, requestIdRef.current);
-
-        // Set timeout for loading
-        timeoutRef.current = setTimeout(() => {
-          if (retryCount < MAX_RETRIES) {
-            setRetryCount((prev) => prev + 1);
-            socketService.requestVoiceNoteUrl(src, requestIdRef.current);
-          } else {
-            setError("Failed to load audio - timeout");
-            setIsLoading(false);
-          }
-        }, LOAD_TIMEOUT);
-
-        // Cleanup function
-        return () => {
-          socketService.offVoiceNoteUrl(handleVoiceNoteUrl);
-          socketService.offVoiceNoteError(handleVoiceNoteError);
-          if (timeoutRef.current) {
-            window.clearTimeout(timeoutRef.current);
-          }
-          if (retryTimeoutRef.current) {
-            window.clearTimeout(retryTimeoutRef.current);
-          }
-        };
-      }
+      // Cleanup function
+      return () => {
+        socketService.offVoiceNoteUrl(handleVoiceNoteUrl);
+        socketService.offVoiceNoteError(handleVoiceNoteError);
+      };
     }
-  }, [src, retryCount]);
+  }, [src]);
 
   // Set up audio listeners when signed URL is available
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !signedUrl) return;
 
-    // iOS-specific audio setup
-    audio.preload = "metadata";
-    audio.crossOrigin = "anonymous";
-
-    // For iOS, we need to handle audio loading more carefully
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-    if (isIOS) {
-      // On iOS, we need to set the src after a small delay to ensure proper loading
-      setTimeout(() => {
-        audio.src = signedUrl;
-      }, 100);
-    } else {
-      audio.src = signedUrl;
-    }
+    audio.src = signedUrl;
 
     const updateTime = () => setCurrentTime(audio.currentTime);
-
     const handleLoadedMetadata = () => {
+      console.log("Audio loaded metadata - duration:", audio.duration);
       // Use duration prop if available, otherwise use audio metadata
       if (duration && duration > 0) {
         setAudioDuration(duration);
@@ -201,34 +114,15 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
       }
       setIsLoading(false);
     };
-
     const handleEnded = () => setIsPlaying(false);
-
     const handleError = (e: Event) => {
       console.error("Audio error:", e);
-
-      // iOS-specific error handling
-      if (isIOS && retryCount < MAX_RETRIES) {
-        setRetryCount((prev) => prev + 1);
-        // Retry loading the audio
-        setTimeout(() => {
-          if (audio) {
-            audio.src = signedUrl;
-          }
-        }, 1000);
-      } else {
-        setError("Failed to load audio");
-        setIsLoading(false);
-      }
+      setError("Failed to load audio");
+      setIsLoading(false);
     };
-
     const handleLoadStart = () => {
       setIsLoading(true);
       setError(null);
-    };
-
-    const handleCanPlay = () => {
-      setIsLoading(false);
     };
 
     audio.addEventListener("timeupdate", updateTime);
@@ -236,7 +130,6 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
     audio.addEventListener("ended", handleEnded);
     audio.addEventListener("error", handleError);
     audio.addEventListener("loadstart", handleLoadStart);
-    audio.addEventListener("canplay", handleCanPlay);
 
     return () => {
       audio.removeEventListener("timeupdate", updateTime);
@@ -244,9 +137,8 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
       audio.removeEventListener("loadstart", handleLoadStart);
-      audio.removeEventListener("canplay", handleCanPlay);
     };
-  }, [signedUrl, retryCount]);
+  }, [signedUrl]);
 
   const togglePlayPause = () => {
     const audio = audioRef.current;
@@ -255,7 +147,6 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
     if (isPlaying) {
       audio.pause();
     } else {
-      // iOS requires user interaction for audio playback
       audio.play().catch((err) => {
         console.error("Play error:", err);
         setError("Failed to play audio");
@@ -289,27 +180,6 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
 
   const progressPercentage =
     audioDuration > 0 ? (currentTime / audioDuration) * 100 : 0;
-
-  // Show loading state when src is not available yet
-  if (!src) {
-    return (
-      <div className="flex items-center gap-1.5 sm:gap-2 pr-1.5 sm:pr-2.5 min-w-[160px] sm:min-w-[200px] max-w-[240px] sm:max-w-[280px]">
-        <Icon
-          icon="svg-spinners:ring-resize"
-          width="16"
-          height="16"
-          color={isOwnMessage ? "#666" : "#fff"}
-        />
-        <span
-          className={`text-xs ${
-            isOwnMessage ? "text-gray-500" : "text-white/70"
-          }`}
-        >
-          Processing voice note...
-        </span>
-      </div>
-    );
-  }
 
   // Show error state
   if (error) {

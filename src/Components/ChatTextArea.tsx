@@ -134,13 +134,8 @@ const ChatTextArea = ({
           setMessages((prev) => [
             ...prev,
             {
-              fileData: {
-                filename: message.fileData?.filename,
-                duration: message.fileData?.duration,
-              },
               content: message.content,
               createdAt: message.createdAt,
-              messageType: message.messageType,
               senderId: message.senderId,
               isSent: false,
             },
@@ -425,21 +420,6 @@ const ChatTextArea = ({
 
   const handleSendVoiceNote = (audioData: string, duration: number) => {
     socketService.sendVoiceNote(chatId, audioData, duration);
-    setMessages((prev) => [
-      ...prev,
-      {
-        content: "🎤 Voice Note",
-        messageType: "voice",
-        fileData: {
-          filename: audioUrl,
-          duration: duration,
-        },
-        createdAt: new Date(),
-        senderId: userId,
-        src: audioUrl,
-        isSent: true,
-      },
-    ]);
   };
 
   const [isRecording, setIsRecording] = useState(false);
@@ -629,10 +609,9 @@ const ChatTextArea = ({
                               <CustomAudioPlayer
                                 src={message.fileData?.filename}
                                 isOwnMessage={message.senderId === userId}
-                                duration={
-                                  message.fileData?.duration ||
-                                  extractDurationFromContent(message.content)
-                                }
+                                duration={extractDurationFromContent(
+                                  message.content
+                                )}
                               />
                             ) : (
                               <p className="text-sm leading-relaxed break-words">
