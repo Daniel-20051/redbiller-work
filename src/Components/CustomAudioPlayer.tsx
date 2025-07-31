@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import socketService from "../services/socketService";
 
 interface CustomAudioPlayerProps {
-  src: string; // This will be the filePath now
+  src: string | null; // This will be the filePath now, can be null initially
   isOwnMessage: boolean;
   duration?: number;
 }
@@ -11,14 +11,23 @@ interface CustomAudioPlayerProps {
 const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
   src, // This is actually the filePath
   isOwnMessage,
+  duration,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [audioDuration, setAudioDuration] = useState(0);
+  const [audioDuration, setAudioDuration] = useState(duration || 0);
   const [isLoading, setIsLoading] = useState(false);
   const [signedUrl, setSignedUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const requestIdRef = useRef<string>(`${src}-${Date.now()}-${Math.random()}`);
+
+  // Update duration when prop changes
+  useEffect(() => {
+    if (duration && duration > 0) {
+      setAudioDuration(duration);
+    }
+  }, [duration]);
 
   // Request signed URL when component mounts
   useEffect(() => {
@@ -26,29 +35,70 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
       setError(null);
       setIsLoading(true);
 
-      const handleVoiceNoteUrl = ({
-        filePath,
-        signedUrl,
-      }: {
-        filePath: string;
-        signedUrl: string;
-      }) => {
-        if (filePath === src) {
-          console.log("Received signed URL:", signedUrl);
-          setSignedUrl(signedUrl);
-          setError(null);
-          setIsLoading(false);
-          // Remove this listener since we got our response
-        }
-      };
+      // Check if src is a direct URL (blob URL or data URL)
+      const isDirectUrl =
+        src.startsWith("blob:") ||
+        src.startsWith("data:") ||
+        src.startsWith("http");
 
-      // Request the signed URL
-      socketService.onVoiceNoteUrl(handleVoiceNoteUrl);
-      socketService.requestVoiceNoteUrl(src);
+      if (isDirectUrl) {
+        // Use the direct URL immediately
+        setSignedUrl(src);
+        setIsLoading(false);
+      } else {
+        // Request signed URL from server for file paths
+        const handleVoiceNoteUrl = ({
+          filePath,
+          signedUrl,
+          requestId,
+        }: {
+          filePath: string;
+          signedUrl: string;
+          requestId?: string;
+        }) => {
+          // Only handle response for this specific request or if no requestId (backward compatibility)
+          if (
+            filePath === src &&
+            (!requestId || requestId === requestIdRef.current)
+          ) {
+            setSignedUrl(signedUrl);
+            setError(null);
+            setIsLoading(false);
+          }
+        };
 
-      // Set up a one-time listener for this specific request
+        const handleVoiceNoteError = ({
+          filePath,
+          error: errorMsg,
+          requestId,
+        }: {
+          filePath: string;
+          error: string;
+          requestId?: string;
+        }) => {
+          // Only handle error for this specific request or if no requestId (backward compatibility)
+          if (
+            filePath === src &&
+            (!requestId || requestId === requestIdRef.current)
+          ) {
+            setError(errorMsg);
+            setIsLoading(false);
+          }
+        };
 
-      // Listen for the response
+        // Set up listeners
+        socketService.onVoiceNoteUrl(handleVoiceNoteUrl);
+        socketService.onVoiceNoteError(handleVoiceNoteError);
+
+        // Request the signed URL with unique request ID
+        socketService.requestVoiceNoteUrl(src, requestIdRef.current);
+
+        // Cleanup function
+        return () => {
+          socketService.offVoiceNoteUrl(handleVoiceNoteUrl);
+          socketService.offVoiceNoteError(handleVoiceNoteError);
+        };
+      }
     }
   }, [src]);
 
@@ -57,13 +107,23 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
     const audio = audioRef.current;
     if (!audio || !signedUrl) return;
 
-    console.log("Setting up audio with signed URL:", signedUrl);
     audio.src = signedUrl;
 
     const updateTime = () => setCurrentTime(audio.currentTime);
     const handleLoadedMetadata = () => {
-      console.log("Audio loaded metadata - duration:", audio.duration);
-      setAudioDuration(audio.duration);
+      // Use duration prop if available, otherwise use audio metadata
+      if (duration && duration > 0) {
+        setAudioDuration(duration);
+      } else if (
+        audio.duration &&
+        isFinite(audio.duration) &&
+        audio.duration > 0
+      ) {
+        setAudioDuration(audio.duration);
+      } else {
+        console.warn("Invalid audio duration:", audio.duration);
+        setAudioDuration(0);
+      }
       setIsLoading(false);
     };
     const handleEnded = () => setIsPlaying(false);
@@ -73,7 +133,6 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
       setIsLoading(false);
     };
     const handleLoadStart = () => {
-      console.log("Audio load started");
       setIsLoading(true);
       setError(null);
     };
@@ -121,6 +180,11 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
   };
 
   const formatTime = (time: number) => {
+    // Handle invalid time values
+    if (!time || !isFinite(time) || time < 0) {
+      return "0:00";
+    }
+
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
@@ -128,6 +192,27 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
 
   const progressPercentage =
     audioDuration > 0 ? (currentTime / audioDuration) * 100 : 0;
+
+  // Show loading state when src is not available yet
+  if (!src) {
+    return (
+      <div className="flex items-center gap-1.5 sm:gap-2 pr-1.5 sm:pr-2.5 min-w-[160px] sm:min-w-[200px] max-w-[240px] sm:max-w-[280px]">
+        <Icon
+          icon="svg-spinners:ring-resize"
+          width="16"
+          height="16"
+          color={isOwnMessage ? "#666" : "#fff"}
+        />
+        <span
+          className={`text-xs ${
+            isOwnMessage ? "text-gray-500" : "text-white/70"
+          }`}
+        >
+          Processing voice note...
+        </span>
+      </div>
+    );
+  }
 
   // Show error state
   if (error) {

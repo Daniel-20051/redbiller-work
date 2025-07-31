@@ -108,31 +108,32 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     this.socket.emit('send_voice_note', voiceNoteData);
   }
 
-  requestVoiceNoteUrl(filePath: string): void {
+  requestVoiceNoteUrl(filePath: string, requestId?: string): void {
     if (!this.isConnected || !this.socket) {
       console.error('Socket not connected');
       return;
     }
 
-    console.log('Emitting get_voice_note_url with filePath:', filePath);
-    this.socket.emit('get_voice_note_url', { filePath });
+    
+    this.socket.emit('get_voice_note_url', { filePath, requestId });
   }
 
-  onVoiceNoteUrl(callback: (data: { filePath: string; signedUrl: string }) => void): void {
+  onVoiceNoteUrl(callback: (data: { filePath: string; signedUrl: string; requestId?: string }) => void): void {
     if (!this.socket) {
       console.error('Socket not connected');
       return;
     }
-    console.log("I am turned on");
-    this.socket.off('voice_note_url');
     this.socket.on('voice_note_url', (data: any) => {
-      console.log("voice_note_url", data);
       callback(data);
     });
   }
-    
 
-  onVoiceNoteError(callback: (data: { error: string }) => void): void {
+  offVoiceNoteUrl(callback: (data: { filePath: string; signedUrl: string; requestId?: string }) => void): void {
+    if (!this.socket) return;
+    this.socket.off('voice_note_url', callback);
+  }
+    
+  onVoiceNoteError(callback: (data: { filePath: string; error: string; requestId?: string }) => void): void {
     if (!this.socket) {
       console.error('Socket not connected');
       return;
@@ -144,9 +145,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     });
   }
 
- 
-
-  offVoiceNoteError(callback: (data: { error: string }) => void): void {
+  offVoiceNoteError(callback: (data: { filePath: string; error: string; requestId?: string }) => void): void {
     if (!this.socket) return;
     this.socket.off('voice_note_error', callback);
   }

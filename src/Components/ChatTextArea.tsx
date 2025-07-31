@@ -271,6 +271,31 @@ const ChatTextArea = ({
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
+  const extractDurationFromContent = (content: string): number => {
+    // Match pattern like "(14s)" or "(1m 30s)" or "(2m)"
+    const durationMatch = content.match(/\((\d+m?\s*\d*s?)\)/);
+    if (durationMatch) {
+      const durationStr = durationMatch[1];
+      let totalSeconds = 0;
+
+      // Extract minutes
+      const minutesMatch = durationStr.match(/(\d+)m/);
+      if (minutesMatch) {
+        totalSeconds += parseInt(minutesMatch[1]) * 60;
+      }
+
+      // Extract seconds
+      const secondsMatch = durationStr.match(/(\d+)s/);
+      if (secondsMatch) {
+        totalSeconds += parseInt(secondsMatch[1]);
+      }
+
+      return totalSeconds;
+    }
+
+    return 0;
+  };
+
   // Find the last message sent by the current user
   const lastUserMessageIndex = messages
     .map((msg, idx) => ({ idx, senderId: msg.senderId }))
@@ -395,6 +420,21 @@ const ChatTextArea = ({
 
   const handleSendVoiceNote = (audioData: string, duration: number) => {
     socketService.sendVoiceNote(chatId, audioData, duration);
+    setMessages((prev) => [
+      ...prev,
+      {
+        content: "🎤 Voice Note",
+        messageType: "voice",
+        fileData: {
+          filename: audioUrl,
+          duration: duration,
+        },
+        createdAt: new Date(),
+        senderId: userId,
+        src: audioUrl,
+        isSent: true,
+      },
+    ]);
   };
 
   const [isRecording, setIsRecording] = useState(false);
@@ -584,7 +624,10 @@ const ChatTextArea = ({
                               <CustomAudioPlayer
                                 src={message.fileData?.filename}
                                 isOwnMessage={message.senderId === userId}
-                                duration={message.fileData?.duration}
+                                duration={
+                                  message.fileData?.duration ||
+                                  extractDurationFromContent(message.content)
+                                }
                               />
                             ) : (
                               <p className="text-sm leading-relaxed break-words">
