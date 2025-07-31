@@ -43,14 +43,6 @@ export default function DashboardLayout() {
         removeOnlineUser(userId);
       }
     });
-    // socketService.onLastMessage((data: any) => {
-    //   // Populate the array with chatId, message content, and unreadCount
-    //   updateLastMessageDetails(
-    //     data.chatId,
-    //     data.message.content,
-    //     data.unreadCount
-    //   );
-    // });
   }, [userDetails]);
 
   return (

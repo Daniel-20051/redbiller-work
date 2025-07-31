@@ -8,6 +8,7 @@ import { AuthApis } from "../api";
 import DateSeparator from "./DateSeparator";
 import ReactDOM from "react-dom";
 import EmojiPicker from "emoji-picker-react";
+import CustomAudioPlayer from "./CustomAudioPlayer";
 
 interface Message {
   content: string;
@@ -392,6 +393,88 @@ const ChatTextArea = ({
     }
   }
 
+  const handleSendVoiceNote = (audioData: string, duration: number) => {
+    socketService.sendVoiceNote(chatId, audioData, duration);
+  };
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
+    null
+  );
+  const [audioBase64, setAudioBase64] = useState<string | null>(null);
+  const [audioDuration, setAudioDuration] = useState<number | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [recordingStartTime, setRecordingStartTime] = useState<number | null>(
+    null
+  );
+
+  // Send voice note when both audioBase64 and audioDuration are available
+  useEffect(() => {
+    if (audioBase64 && audioDuration !== null) {
+      handleSendVoiceNote(audioBase64, audioDuration);
+      // Reset states after sending
+      setAudioBase64(null);
+      setAudioDuration(null);
+      setAudioUrl(null);
+    }
+    socketService.onNewVoiceNote((data: any) => {
+      console.log(data, "data");
+    });
+  }, [audioBase64, audioDuration]);
+
+  const handleRecordClick = async () => {
+    if (isRecording) {
+      // Stop recording
+      mediaRecorder?.stop();
+      setIsRecording(false);
+      // Send voice note if base64 is available
+
+      // Calculate duration from start time
+      if (recordingStartTime) {
+        const duration = (Date.now() - recordingStartTime) / 1000; // Convert to seconds
+        setAudioDuration(duration);
+        setRecordingStartTime(null);
+      }
+
+      return;
+    }
+
+    // Start recording
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+      setRecordingStartTime(Date.now()); // Record start time
+
+      let chunks: BlobPart[] = [];
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+        }
+      };
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/ogg" });
+        setAudioUrl(URL.createObjectURL(blob));
+        // Convert to base64
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64String = reader.result?.toString().split(",")[1] || null;
+          setAudioBase64(base64String);
+        };
+        reader.readAsDataURL(blob);
+        // Stop all tracks
+        stream.getTracks().forEach((track) => track.stop());
+        chunks = [];
+      };
+      recorder.start();
+    } catch (err) {
+      setIsRecording(false);
+      setRecordingStartTime(null);
+      // Optionally show error
+    }
+  };
+
   return (
     <div
       className={`w-full border-1 border-[#d2d2d2] items-center rounded-lg h-full flex flex-col max-h-[77vh]`}
@@ -497,9 +580,17 @@ const ChatTextArea = ({
                               });
                             }}
                           >
-                            <p className="text-sm leading-relaxed break-words">
-                              {message.content}
-                            </p>
+                            {message.messageType === "voice" ? (
+                              <CustomAudioPlayer
+                                src={message.fileData?.filename}
+                                isOwnMessage={message.senderId === userId}
+                                duration={message.fileData?.duration}
+                              />
+                            ) : (
+                              <p className="text-sm leading-relaxed break-words">
+                                {message.content}
+                              </p>
+                            )}
                             <p
                               className={`flex justify-between items-center gap-1 text-[10.5px] mt-1 ${
                                 message.senderId === userId
@@ -593,11 +684,14 @@ const ChatTextArea = ({
           />
         ) : (
           <Icon
-            className="cursor-pointer transition-transform duration-200 hover:scale-110"
+            className={`cursor-pointer transition-transform duration-200 hover:scale-110 ${
+              isRecording ? "animate-pulse" : ""
+            }`}
             icon="ic:baseline-mic"
             width="24"
             height="24"
-            style={{ color: "#93221D" }}
+            style={{ color: isRecording ? "#d32f2f" : "#93221D" }}
+            onClick={handleRecordClick}
           />
         )}
 

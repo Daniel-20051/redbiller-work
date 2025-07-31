@@ -92,6 +92,72 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     this.socket.emit('send_message', messageData);
   }
 
+  sendVoiceNote(chatId: string, audioData: string, duration: number): void {
+    if (!this.isConnected || !this.socket) {
+      console.error('Socket not connected');
+      return;
+    }
+
+    const voiceNoteData = {
+      chatId,
+      audioData,
+      duration,
+      tempId: Date.now(),
+    };
+
+    this.socket.emit('send_voice_note', voiceNoteData);
+  }
+
+  requestVoiceNoteUrl(filePath: string): void {
+    if (!this.isConnected || !this.socket) {
+      console.error('Socket not connected');
+      return;
+    }
+
+    console.log('Emitting get_voice_note_url with filePath:', filePath);
+    this.socket.emit('get_voice_note_url', { filePath });
+  }
+
+  onVoiceNoteUrl(callback: (data: { filePath: string; signedUrl: string }) => void): void {
+    if (!this.socket) {
+      console.error('Socket not connected');
+      return;
+    }
+    console.log("I am turned on");
+    this.socket.off('voice_note_url');
+    this.socket.on('voice_note_url', (data: any) => {
+      console.log("voice_note_url", data);
+      callback(data);
+    });
+  }
+    
+
+  onVoiceNoteError(callback: (data: { error: string }) => void): void {
+    if (!this.socket) {
+      console.error('Socket not connected');
+      return;
+    }
+
+    this.socket.on('voice_note_error', (data: any) => {
+      console.log("voice_note_error", data);
+      callback(data);
+    });
+  }
+
+ 
+
+  offVoiceNoteError(callback: (data: { error: string }) => void): void {
+    if (!this.socket) return;
+    this.socket.off('voice_note_error', callback);
+  }
+
+  onNewVoiceNote(callback: any): void {
+    this.socket?.off('voice_note_delivered');
+    this.socket?.on('voice_note_delivered', (data: any) => {
+      callback(data);
+    });
+  }
+
   deleteMessage( messageId: string): void {
     if (!this.isConnected || !this.socket) {
       console.error('Socket not connected');
@@ -117,6 +183,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     });
   }
 
+  
   onNewMessage(callback: MessageCallback): void {
     this.socket?.off('new_message');
     
