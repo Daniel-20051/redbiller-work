@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import socketService from "../services/socketService";
 
 interface CustomAudioPlayerProps {
-  src: string; // This will be the filePath now
+  src: string | null; // This will be the filePath now, can be null initially
   isOwnMessage: boolean;
   duration?: number;
 }
@@ -35,57 +35,70 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
       setError(null);
       setIsLoading(true);
 
-      const handleVoiceNoteUrl = ({
-        filePath,
-        signedUrl,
-        requestId,
-      }: {
-        filePath: string;
-        signedUrl: string;
-        requestId?: string;
-      }) => {
-        // Only handle response for this specific request or if no requestId (backward compatibility)
-        if (
-          filePath === src &&
-          (!requestId || requestId === requestIdRef.current)
-        ) {
-          setSignedUrl(signedUrl);
-          setError(null);
-          setIsLoading(false);
-        }
-      };
+      // Check if src is a direct URL (blob URL or data URL)
+      const isDirectUrl =
+        src.startsWith("blob:") ||
+        src.startsWith("data:") ||
+        src.startsWith("http");
 
-      const handleVoiceNoteError = ({
-        filePath,
-        error: errorMsg,
-        requestId,
-      }: {
-        filePath: string;
-        error: string;
-        requestId?: string;
-      }) => {
-        // Only handle error for this specific request or if no requestId (backward compatibility)
-        if (
-          filePath === src &&
-          (!requestId || requestId === requestIdRef.current)
-        ) {
-          setError(errorMsg);
-          setIsLoading(false);
-        }
-      };
+      if (isDirectUrl) {
+        // Use the direct URL immediately
+        setSignedUrl(src);
+        setIsLoading(false);
+      } else {
+        // Request signed URL from server for file paths
+        const handleVoiceNoteUrl = ({
+          filePath,
+          signedUrl,
+          requestId,
+        }: {
+          filePath: string;
+          signedUrl: string;
+          requestId?: string;
+        }) => {
+          // Only handle response for this specific request or if no requestId (backward compatibility)
+          if (
+            filePath === src &&
+            (!requestId || requestId === requestIdRef.current)
+          ) {
+            setSignedUrl(signedUrl);
+            setError(null);
+            setIsLoading(false);
+          }
+        };
 
-      // Set up listeners
-      socketService.onVoiceNoteUrl(handleVoiceNoteUrl);
-      socketService.onVoiceNoteError(handleVoiceNoteError);
+        const handleVoiceNoteError = ({
+          filePath,
+          error: errorMsg,
+          requestId,
+        }: {
+          filePath: string;
+          error: string;
+          requestId?: string;
+        }) => {
+          // Only handle error for this specific request or if no requestId (backward compatibility)
+          if (
+            filePath === src &&
+            (!requestId || requestId === requestIdRef.current)
+          ) {
+            setError(errorMsg);
+            setIsLoading(false);
+          }
+        };
 
-      // Request the signed URL with unique request ID
-      socketService.requestVoiceNoteUrl(src, requestIdRef.current);
+        // Set up listeners
+        socketService.onVoiceNoteUrl(handleVoiceNoteUrl);
+        socketService.onVoiceNoteError(handleVoiceNoteError);
 
-      // Cleanup function
-      return () => {
-        socketService.offVoiceNoteUrl(handleVoiceNoteUrl);
-        socketService.offVoiceNoteError(handleVoiceNoteError);
-      };
+        // Request the signed URL with unique request ID
+        socketService.requestVoiceNoteUrl(src, requestIdRef.current);
+
+        // Cleanup function
+        return () => {
+          socketService.offVoiceNoteUrl(handleVoiceNoteUrl);
+          socketService.offVoiceNoteError(handleVoiceNoteError);
+        };
+      }
     }
   }, [src]);
 
@@ -98,7 +111,6 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
 
     const updateTime = () => setCurrentTime(audio.currentTime);
     const handleLoadedMetadata = () => {
-      console.log("Audio loaded metadata - duration:", audio.duration);
       // Use duration prop if available, otherwise use audio metadata
       if (duration && duration > 0) {
         setAudioDuration(duration);
