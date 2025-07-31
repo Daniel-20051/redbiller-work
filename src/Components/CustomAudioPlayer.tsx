@@ -20,15 +20,14 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
   const [signedUrl, setSignedUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
-  const [showRetryButton, setShowRetryButton] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const requestIdRef = useRef<string>(`${src}-${Date.now()}-${Math.random()}`);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timeoutRef = useRef<number | null>(null);
+  const retryTimeoutRef = useRef<number | null>(null);
 
-  const MAX_RETRIES = 3;
-  const SOCKET_TIMEOUT = 10000; // 10 seconds
-  const AUDIO_LOAD_TIMEOUT = 15000; // 15 seconds
+  const MAX_RETRIES = 2;
+  const LOAD_TIMEOUT = 15000; // 15 seconds timeout
+  const RETRY_DELAY = 2000; // 2 seconds between retries
 
   // Update duration when prop changes
   useEffect(() => {
@@ -41,10 +40,10 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+        window.clearTimeout(timeoutRef.current);
       }
       if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
+        window.clearTimeout(retryTimeoutRef.current);
       }
     };
   }, []);
@@ -54,11 +53,14 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
     if (src) {
       setError(null);
       setIsLoading(true);
-      setShowRetryButton(false);
+      setRetryCount(0);
 
       // Clear any existing timeouts
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+        window.clearTimeout(timeoutRef.current);
+      }
+      if (retryTimeoutRef.current) {
+        window.clearTimeout(retryTimeoutRef.current);
       }
 
       // Check if src is a direct URL (blob URL or data URL)
@@ -88,12 +90,11 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
             (!requestId || requestId === requestIdRef.current)
           ) {
             if (timeoutRef.current) {
-              clearTimeout(timeoutRef.current);
+              window.clearTimeout(timeoutRef.current);
             }
             setSignedUrl(signedUrl);
             setError(null);
             setIsLoading(false);
-            setRetryCount(0);
           }
         };
 
@@ -112,9 +113,19 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
             (!requestId || requestId === requestIdRef.current)
           ) {
             if (timeoutRef.current) {
-              clearTimeout(timeoutRef.current);
+              window.clearTimeout(timeoutRef.current);
             }
-            handleLoadError(errorMsg);
+
+            // Retry logic for iOS devices
+            if (retryCount < MAX_RETRIES) {
+              retryTimeoutRef.current = setTimeout(() => {
+                setRetryCount((prev) => prev + 1);
+                socketService.requestVoiceNoteUrl(src, requestIdRef.current);
+              }, RETRY_DELAY);
+            } else {
+              setError(errorMsg);
+              setIsLoading(false);
+            }
           }
         };
 
@@ -125,58 +136,56 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
         // Request the signed URL with unique request ID
         socketService.requestVoiceNoteUrl(src, requestIdRef.current);
 
-        // Set timeout for socket request
+        // Set timeout for loading
         timeoutRef.current = setTimeout(() => {
-          handleLoadError("Request timeout - please check your connection");
-        }, SOCKET_TIMEOUT);
+          if (retryCount < MAX_RETRIES) {
+            setRetryCount((prev) => prev + 1);
+            socketService.requestVoiceNoteUrl(src, requestIdRef.current);
+          } else {
+            setError("Failed to load audio - timeout");
+            setIsLoading(false);
+          }
+        }, LOAD_TIMEOUT);
 
         // Cleanup function
         return () => {
           socketService.offVoiceNoteUrl(handleVoiceNoteUrl);
           socketService.offVoiceNoteError(handleVoiceNoteError);
           if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
+            window.clearTimeout(timeoutRef.current);
+          }
+          if (retryTimeoutRef.current) {
+            window.clearTimeout(retryTimeoutRef.current);
           }
         };
       }
     }
   }, [src, retryCount]);
 
-  const handleLoadError = (errorMsg: string) => {
-    setError(errorMsg);
-    setIsLoading(false);
-
-    if (retryCount < MAX_RETRIES) {
-      setShowRetryButton(true);
-    } else {
-      setShowRetryButton(false);
-      setError("Failed to load audio after multiple attempts");
-    }
-  };
-
-  const handleRetry = () => {
-    if (retryCount < MAX_RETRIES) {
-      setRetryCount((prev) => prev + 1);
-      setError(null);
-      setShowRetryButton(false);
-      setSignedUrl(null);
-    }
-  };
-
   // Set up audio listeners when signed URL is available
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !signedUrl) return;
 
-    audio.src = signedUrl;
+    // iOS-specific audio setup
+    audio.preload = "metadata";
+    audio.crossOrigin = "anonymous";
+
+    // For iOS, we need to handle audio loading more carefully
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    if (isIOS) {
+      // On iOS, we need to set the src after a small delay to ensure proper loading
+      setTimeout(() => {
+        audio.src = signedUrl;
+      }, 100);
+    } else {
+      audio.src = signedUrl;
+    }
 
     const updateTime = () => setCurrentTime(audio.currentTime);
-    const handleLoadedMetadata = () => {
-      // Clear audio load timeout
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
-      }
 
+    const handleLoadedMetadata = () => {
       // Use duration prop if available, otherwise use audio metadata
       if (duration && duration > 0) {
         setAudioDuration(duration);
@@ -192,22 +201,34 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
       }
       setIsLoading(false);
     };
+
     const handleEnded = () => setIsPlaying(false);
+
     const handleError = (e: Event) => {
       console.error("Audio error:", e);
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
+
+      // iOS-specific error handling
+      if (isIOS && retryCount < MAX_RETRIES) {
+        setRetryCount((prev) => prev + 1);
+        // Retry loading the audio
+        setTimeout(() => {
+          if (audio) {
+            audio.src = signedUrl;
+          }
+        }, 1000);
+      } else {
+        setError("Failed to load audio");
+        setIsLoading(false);
       }
-      handleLoadError("Failed to load audio");
     };
+
     const handleLoadStart = () => {
       setIsLoading(true);
       setError(null);
+    };
 
-      // Set timeout for audio loading
-      retryTimeoutRef.current = setTimeout(() => {
-        handleLoadError("Audio loading timeout - please check your connection");
-      }, AUDIO_LOAD_TIMEOUT);
+    const handleCanPlay = () => {
+      setIsLoading(false);
     };
 
     audio.addEventListener("timeupdate", updateTime);
@@ -215,6 +236,7 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
     audio.addEventListener("ended", handleEnded);
     audio.addEventListener("error", handleError);
     audio.addEventListener("loadstart", handleLoadStart);
+    audio.addEventListener("canplay", handleCanPlay);
 
     return () => {
       audio.removeEventListener("timeupdate", updateTime);
@@ -222,11 +244,9 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
       audio.removeEventListener("loadstart", handleLoadStart);
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
-      }
+      audio.removeEventListener("canplay", handleCanPlay);
     };
-  }, [signedUrl]);
+  }, [signedUrl, retryCount]);
 
   const togglePlayPause = () => {
     const audio = audioRef.current;
@@ -235,6 +255,7 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
     if (isPlaying) {
       audio.pause();
     } else {
+      // iOS requires user interaction for audio playback
       audio.play().catch((err) => {
         console.error("Play error:", err);
         setError("Failed to play audio");
@@ -307,18 +328,6 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({
         >
           {error}
         </span>
-        {showRetryButton && (
-          <button
-            onClick={handleRetry}
-            className={`ml-2 px-2 py-1 text-xs rounded ${
-              isOwnMessage
-                ? "bg-gray-200 hover:bg-gray-300 text-gray-700"
-                : "bg-white/20 hover:bg-white/30 text-white"
-            } transition-colors`}
-          >
-            Retry
-          </button>
-        )}
       </div>
     );
   }
