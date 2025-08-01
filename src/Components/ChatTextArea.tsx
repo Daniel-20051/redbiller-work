@@ -420,6 +420,27 @@ const ChatTextArea = ({
 
   const handleSendVoiceNote = (audioData: string, duration: number) => {
     socketService.sendVoiceNote(chatId, audioData, duration);
+
+    // Use duration if it exists, otherwise extract from content
+    let finalDuration = duration;
+    if (!duration || duration <= 0) {
+      finalDuration = extractDurationFromContent("Voice note");
+    }
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        fileData: {
+          filename: audioUrl || "",
+          duration: finalDuration,
+        },
+        content: "Voice note",
+        messageType: "voice",
+        createdAt: new Date(),
+        senderId: userId,
+        isSent: true,
+      },
+    ]);
   };
 
   const [isRecording, setIsRecording] = useState(false);
@@ -609,9 +630,10 @@ const ChatTextArea = ({
                               <CustomAudioPlayer
                                 src={message.fileData?.filename}
                                 isOwnMessage={message.senderId === userId}
-                                duration={extractDurationFromContent(
-                                  message.content
-                                )}
+                                duration={
+                                  message.fileData?.duration ||
+                                  extractDurationFromContent(message.content)
+                                }
                               />
                             ) : (
                               <p className="text-sm leading-relaxed break-words">
