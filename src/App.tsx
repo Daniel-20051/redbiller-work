@@ -12,6 +12,7 @@ import WeeklyCreate from "./Pages/WeeklyCreate";
 import Profile from "./Pages/Profile";
 import User from "./Pages/Users";
 import ProtectedRoute from "./routes/protectedRoute";
+import Tasks from "./Pages/Tasks";
 import { UserDetailsContext } from "./context/AuthContext.tsx";
 
 import IncidentView from "./Pages/IncidentView";
@@ -241,6 +242,7 @@ const App = () => {
               <Route path="/weekly-report/:id" element={<WeeklyView />} />
               <Route path="/weekly-report/create" element={<WeeklyCreate />} />
               <Route path="/incident-report" element={<IncidentReport />} />
+              <Route path="/tasks" element={<Tasks />} />
               {isAdmin && (
                 <Route path="/incident-report/:id" element={<IncidentView />} />
               )}

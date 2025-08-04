@@ -176,9 +176,9 @@ const SideBar = ({ children }: Props) => {
         </Link>
 
         <Link
-          to="/home"
+          to="/tasks"
           onClick={() => {
-            handleCurrentPage("home");
+            handleCurrentPage("tasks");
             handleMobileCollapse();
           }}
           className={
@@ -191,7 +191,7 @@ const SideBar = ({ children }: Props) => {
             className="w-[16px] h-[16px] ml-[30px] text-black "
             src={
               children === "tasks"
-                ? "/assets/task-logo.svg"
+                ? "/assets/task-white-logo.png"
                 : "/assets/task-logo.svg"
             }
             alt=""

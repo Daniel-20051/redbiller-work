@@ -46,23 +46,20 @@ export default function DashboardLayout() {
   }, [userDetails]);
 
   return (
-    <div>
-      <div className="flex flex-col  h-screen">
-        <NavBar></NavBar>
-        <div className=" flex flex-1 w-full relative max-h-[calc(100vh-55px)]">
-          <SideBar>{currentPage}</SideBar>
-
-          <div className=" w-full h-full ">
-            <Outlet />
-          </div>
+    <div className="h-screen flex flex-col">
+      <NavBar />
+      <div className="flex flex-1 overflow-hidden">
+        <SideBar>{currentPage}</SideBar>
+        <div className="flex-1 overflow-y-auto">
+          <Outlet />
         </div>
-        <FloatingChatButton
-          onClick={() => {
-            setChatOpen(true);
-          }}
-        />
-        <ChatDialog open={chatOpen} onClose={() => setChatOpen(false)} />
       </div>
+      <FloatingChatButton
+        onClick={() => {
+          setChatOpen(true);
+        }}
+      />
+      <ChatDialog open={chatOpen} onClose={() => setChatOpen(false)} />
     </div>
   );
 }
