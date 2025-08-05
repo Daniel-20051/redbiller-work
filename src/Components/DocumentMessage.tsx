@@ -18,7 +18,6 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({
   const fileData = message?.fileData;
   const fileName = fileData?.originalName || message?.content || "Unknown File";
   const fileType = fileData?.mimeType || "";
-  const fileSize = fileData?.size || 0;
   const fileUrl = fileData?.url || "";
   const getFileIcon = (type: string) => {
     if (type.startsWith("image/")) return "mdi:image";

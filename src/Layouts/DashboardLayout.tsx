@@ -24,7 +24,7 @@ export default function DashboardLayout() {
   const [chatOpen, setChatOpen] = useState(false);
   const { userDetails, setOnlineUsers, removeOnlineUser, addOnlineUser } =
     use(UserDetailsContext);
-  const { setSocketConnected, setLastMessageDetails } = use(UserDetailsContext);
+  const { setSocketConnected } = use(UserDetailsContext);
 
   useEffect(() => {
     if (userDetails?.data.user.id) {

@@ -319,7 +319,6 @@ const ChatTextArea = ({
   const [messageToDelete, setMessageToDelete] = useState<Message | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [messageToEdit, setMessageToEdit] = useState<Message | null>(null);
-  const [editText, setEditText] = useState("");
 
   // Add this style block for animation
   const contextMenuStyle = `
@@ -853,7 +852,6 @@ const ChatTextArea = ({
         message={contextMenu.message}
         onEdit={(message) => {
           setMessageToEdit(message);
-          setEditText(message.content);
           setShowEditModal(false);
           setTimeout(() => setShowEditModal(true), 0);
         }}
