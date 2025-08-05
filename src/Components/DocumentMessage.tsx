@@ -80,7 +80,7 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({
   const renderDocumentContent = () => {
     if (!fileUrl)
       return (
-        <div className="text-center text-gray-500">No document available</div>
+        <div className="text-center text-white">No document available</div>
       );
 
     if (fileType.startsWith("image/")) {
@@ -135,16 +135,16 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({
             icon={getFileIcon(fileType)}
             width="40"
             height="40"
-            className="text-gray-400"
+            className="text-primary"
           />
         </div>
         <div className="text-center">
-          <h3 className="text-lg font-medium text-gray-900">{fileName}</h3>
-          <p className="text-sm text-gray-500">{getFileTypeName(fileType)}</p>
+          <h3 className="text-lg font-medium text-white">{fileName}</h3>
+          <p className="text-sm text-[#c4c7c5]">{getFileTypeName(fileType)}</p>
         </div>
         <button
           onClick={handleDownload}
-          className="px-4 py-2 bg-[#93221d] text-white rounded-lg hover:bg-[#7a1d1a] transition-colors"
+          className="px-4 py-2 cursor-pointer bg-[#93221d] text-white rounded-lg hover:bg-[#93221d]/80 transition-colors"
         >
           Download File
         </button>
