@@ -118,7 +118,7 @@ const Home = () => {
   return (
     <div>
       {!userDetails ? (
-        <div className="w-full h-screen flex justify-center items-center bg-opacity-10">
+        <div className="w-full h-[calc(100vh-55px)] flex justify-center items-center bg-opacity-10">
           <SmallSpiner />
         </div>
       ) : (

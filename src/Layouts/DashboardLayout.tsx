@@ -24,17 +24,18 @@ export default function DashboardLayout() {
   const [chatOpen, setChatOpen] = useState(false);
   const { userDetails, setOnlineUsers, removeOnlineUser, addOnlineUser } =
     use(UserDetailsContext);
-  const { setSocketConnected } = use(UserDetailsContext);
+  const { setSocketConnected, setLastMessageDetails } = use(UserDetailsContext);
 
   useEffect(() => {
     if (userDetails?.data.user.id) {
-      socketService.connect(userDetails?.data.user.id);
-      setSocketConnected(true);
+      socketService.connect(userDetails?.data.user.id, () => {
+        setSocketConnected(true);
+        socketService.subscribeToLastMessage();
+      });
     }
     socketService.onOnlineUsersList((data: any) => {
       setOnlineUsers(data.map((user: any) => user.userId));
     });
-
     socketService.onUserGlobalStatus((data: any) => {
       const userId = data.userId;
       if (data.status === "online") {
@@ -42,6 +43,16 @@ export default function DashboardLayout() {
       } else if (data.status === "offline") {
         removeOnlineUser(userId);
       }
+    });
+    // socketService.onLastMessageUpdate((data: any) => {
+    //   console.log("last_message_update", data);
+    //   setLastMessageDetails(data);
+    // });
+    socketService.onMedia_Error((data: any) => {
+      console.log("media_error", data);
+    });
+    socketService.onMedia_Delivered((data: any) => {
+      console.log("media_delivered", data);
     });
   }, [userDetails]);
 

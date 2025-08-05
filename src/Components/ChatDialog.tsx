@@ -110,13 +110,6 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     handleChats();
   }, []);
 
-  // Fetch chats when dialog opens
-  useEffect(() => {
-    if (open) {
-      handleChats();
-    }
-  }, [open]);
-
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center px-5 md:px-10  pb-15 justify-end transition-all duration-300 ${
@@ -332,7 +325,6 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                                 chat._id
                               );
                               setMessages(chatMessages);
-                              handleChats();
                             }}
                           />
                         );
@@ -369,7 +361,6 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
             isLoading={isLoading}
             setIsLoading={setIsLoading}
             recipientId={recipientId}
-            handleChats={handleChats} // Pass handleChats as a prop
           />
         </div>
       </div>

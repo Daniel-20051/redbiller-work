@@ -22,21 +22,8 @@ type UserDetailsContextType = {
   addOnlineUser: (userId: string) => void;
   removeOnlineUser: (userId: string) => void;
   isUserOnline: (userId: string) => boolean;
-  lastMessageDetails: {
-    chatId: string;
-    message: string;
-    unreadCount: number;
-  }[];
-  setLastMessageDetails: React.Dispatch<
-    React.SetStateAction<
-      { chatId: string; message: string; unreadCount: number }[]
-    >
-  >;
-  updateLastMessageDetails: (
-    chatId: string,
-    message: string,
-    unreadCount: number
-  ) => void;
+  lastMessageDetails: any[];
+  setLastMessageDetails: (lastMessageDetails: any[]) => void;
 };
 
 const authApis = new AuthApis();
@@ -64,7 +51,6 @@ export const UserDetailsContext = createContext<UserDetailsContextType>({
   isUserOnline: () => false,
   lastMessageDetails: [],
   setLastMessageDetails: () => {},
-  updateLastMessageDetails: () => {},
 });
 
 function AuthContext({ children }: { children: React.ReactNode }) {
@@ -75,20 +61,7 @@ function AuthContext({ children }: { children: React.ReactNode }) {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [socketConnected, setSocketConnected] = useState<boolean>(false);
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
-  const [lastMessageDetails, setLastMessageDetails] = useState<
-    { chatId: string; message: string; unreadCount: number }[]
-  >([]);
-
-  const updateLastMessageDetails = (
-    chatId: string,
-    message: string,
-    unreadCount: number
-  ) => {
-    setLastMessageDetails((prev) => {
-      const filtered = prev.filter((item) => item.chatId !== chatId);
-      return [...filtered, { chatId, message, unreadCount }];
-    });
-  };
+  const [lastMessageDetails, setLastMessageDetails] = useState<any[]>([]);
 
   const fetchUserDetails = async () => {
     try {
@@ -175,7 +148,6 @@ function AuthContext({ children }: { children: React.ReactNode }) {
         isUserOnline,
         lastMessageDetails,
         setLastMessageDetails,
-        updateLastMessageDetails,
       }}
     >
       {children}

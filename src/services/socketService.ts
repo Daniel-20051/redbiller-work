@@ -21,7 +21,7 @@ class SocketService {
   private isConnected = false;
   private userId: string | null = null;
 
-connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"): void {
+connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-report-v1.onrender.com"): void {
     this.userId = userId;
 
     console.log('Connecting to socket server...');
@@ -38,6 +38,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
       const authData: AuthenticationData = { userId: this.userId! };
       this.socket?.emit('authenticate', authData);
       console.log('🔐 Authentication sent');
+      if (onConnect) onConnect();
     });
 
     this.socket.on('connect_error', (error: any) => {
@@ -70,6 +71,21 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
       console.error('❌ Error joining chat:', error);
     });
     
+  }
+
+  subscribeToLastMessage(): void {
+    if (!this.isConnected || !this.socket) {
+      console.error('Socket not connected');
+      return;
+    }
+    console.log("subscribing to last messages");
+    this.socket.emit('subscribe_to_last_messages');
+  }
+
+  onLastMessageUpdate(callback: any): void {
+    this.socket?.on('last_message_update', (data: any) => {
+      callback(data);
+    });
   }
 
  
@@ -106,6 +122,38 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
     };
 
     this.socket.emit('send_voice_note', voiceNoteData);
+  }
+
+  sendDocument(chatId: string, documentData: any): void {
+    if (!this.isConnected || !this.socket) {
+      console.error('Socket not connected');
+      return;
+    }
+     const MediaData = {
+      chatId: chatId,
+      fileData: documentData,
+      fileName: documentData.name,
+      mimeType: documentData.type,
+      fileSize: documentData.size,
+      duration: 0,
+      tempId: Date.now(),
+     }
+     console.log("MediaData", MediaData);
+
+      this.socket.emit("send_media", MediaData);
+    
+  }
+
+  onMedia_Error(callback: any): void {
+    this.socket?.on('media_error', (data: any) => {
+      callback(data);
+    });
+  }
+
+  onMedia_Delivered(callback: any): void {
+    this.socket?.on('media_delivered', (data: any) => {
+      callback(data);
+    });
   }
 
   requestVoiceNoteUrl(filePath: string, requestId?: string): void {
@@ -207,12 +255,7 @@ connect(userId: string, serverUrl: string = "https://r-report-v1.onrender.com"):
 
 
 
-onLastMessage(callback: any): void {
-  this.socket?.on('last_message', (data: any) => {
-    callback(data);
-  });
 
-}
   
   
  
@@ -310,6 +353,10 @@ onLastMessage(callback: any): void {
 
   offTyping(callback: any): void {
     this.socket?.off('user_typing', callback);
+  }
+
+  isSocketConnected(): boolean {
+    return this.isConnected && this.socket !== null;
   }
 
   disconnect(): void {

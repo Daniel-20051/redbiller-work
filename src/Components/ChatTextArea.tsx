@@ -6,9 +6,12 @@ import { UserDetailsContext } from "../context/AuthContext.js";
 import MessageSkeleton from "./MessageSkeleton";
 import { AuthApis } from "../api";
 import DateSeparator from "./DateSeparator";
-import ReactDOM from "react-dom";
-import EmojiPicker from "emoji-picker-react";
 import CustomAudioPlayer from "./CustomAudioPlayer";
+import DocumentMessage from "./DocumentMessage";
+import ContextMenu from "./ContextMenu";
+import EmojiSelector from "./EmojiSelector";
+import DeleteModal from "./DeleteModal";
+import EditModal from "./EditModal";
 
 interface Message {
   content: string;
@@ -32,7 +35,6 @@ interface ChatTextAreaProps {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
   recipientId: string;
-  handleChats: () => void;
 }
 
 const authApis = new AuthApis();
@@ -53,7 +55,6 @@ const ChatTextArea = ({
   isLoading,
   setIsLoading,
   recipientId,
-  handleChats,
 }: ChatTextAreaProps) => {
   const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);
@@ -70,6 +71,10 @@ const ChatTextArea = ({
   const [messageStatus, setMessageStatus] = useState<string | null>(
     "delivered"
   );
+
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const userId = userDetails?.data.user.id;
 
@@ -242,6 +247,7 @@ const ChatTextArea = ({
             isSent: true,
           },
         ]);
+        socketService.subscribeToLastMessage();
         setMessageStatus("sending");
         setText("");
       }
@@ -521,6 +527,71 @@ const ChatTextArea = ({
     }
   };
 
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (limit to 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert("File size must be less than 10MB");
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      // For now, we'll just send the file name as a message
+      // You can implement actual file upload to your server later
+      const fileMessage = {
+        content: `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`,
+        messageType: "file",
+        fileData: {
+          originalName: file.name,
+          mimeType: file.type,
+          size: file.size,
+          url: "", // Will be populated when file is actually uploaded
+          duration: 0,
+          timestamp: Date.now(),
+        },
+        createdAt: new Date(),
+        senderId: userId,
+        _id: Date.now().toString(), // Temporary ID
+      };
+
+      setMessages((prev) => [...prev, fileMessage]);
+
+      // Send document to socket
+      socketService.sendDocument(chatId, file);
+
+      // Simulate realistic upload progress
+      let progress = 0;
+      const uploadInterval = setInterval(() => {
+        progress += Math.random() * 15 + 5; // Random progress between 5-20%
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(uploadInterval);
+          // Keep the progress bar visible at 100% for a moment
+          setTimeout(() => {
+            setIsUploading(false);
+            setUploadProgress(0);
+          }, 1000);
+        }
+        setUploadProgress(progress);
+      }, 300);
+    } catch (error) {
+      console.error("Error handling file:", error);
+      alert("Failed to process file. Please try again.");
+    } finally {
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
   return (
     <div
       className={`w-full border-1 border-[#d2d2d2] items-center rounded-lg h-full flex flex-col max-h-[77vh]`}
@@ -539,7 +610,7 @@ const ChatTextArea = ({
               setIsChatTextAreaOpen(false);
               handleLeaveChat();
               setMessages([]);
-              handleChats();
+              socketService.subscribeToLastMessage();
             }}
           />
           <ProfileName name={name} online={isUserOnline(recipientId)} />
@@ -635,6 +706,18 @@ const ChatTextArea = ({
                                   extractDurationFromContent(message.content)
                                 }
                               />
+                            ) : message.messageType === "file" ||
+                              message.messageType === "photo" ? (
+                              <DocumentMessage
+                                message={message}
+                                isOwnMessage={message.senderId === userId}
+                                isUploading={
+                                  isUploading &&
+                                  message._id ===
+                                    messages[messages.length - 1]?._id
+                                }
+                                uploadProgress={uploadProgress}
+                              />
                             ) : (
                               <p className="text-sm leading-relaxed break-words">
                                 {message.content}
@@ -706,11 +789,21 @@ const ChatTextArea = ({
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           />{" "}
           <Icon
-            icon="material-symbols:image-rounded"
-            className="cursor-pointer"
+            icon={"fluent:attach-12-filled"}
             width="25"
             height="25"
             style={{ color: "#808080" }}
+            className="cursor-pointer"
+            onClick={
+              isUploading ? undefined : () => fileInputRef.current?.click()
+            }
+          />
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept="image/*,.pdf,.doc,.docx,.txt,.mp4,.mp3"
+            onChange={handleFileUpload}
           />
         </div>
         <input
@@ -744,262 +837,77 @@ const ChatTextArea = ({
           />
         )}
 
-        {/* Emoji Picker */}
-        {showEmojiPicker && (
-          <div
-            ref={emojiPickerRef}
-            style={{
-              position: "absolute",
-              bottom: "70px",
-              left: screenSize.width < 768 ? "5px" : "10px",
-              zIndex: 1000,
-            }}
-          >
-            <EmojiPicker
-              onEmojiClick={handleEmojiClick}
-              width={
-                screenSize.width < 768
-                  ? 280
-                  : screenSize.width < 1024
-                  ? 320
-                  : 350
-              }
-              height={screenSize.width < 768 ? 400 : 350}
-              searchDisabled={false}
-              skinTonesDisabled={true}
-            />
-          </div>
-        )}
+        {/* Emoji Selector */}
+        <EmojiSelector
+          visible={showEmojiPicker}
+          onEmojiClick={handleEmojiClick}
+          onClose={() => setShowEmojiPicker(false)}
+          screenSize={screenSize}
+        />
       </div>
-      {/* Context Menu rendered via Portal */}
-      {contextMenu.visible &&
-        ReactDOM.createPortal(
-          <div
-            id="custom-context-menu"
-            className="custom-context-menu-anim custom-context-menu-light"
-            style={{
-              position: "fixed",
-              top: menuY,
-              left: menuX,
-              zIndex: 9999,
-              // Remove background, border, etc. (handled by class)
-              // Add transition for smoothness
-              transition:
-                "opacity 0.18s cubic-bezier(0.4,0,0.2,1), transform 0.18s cubic-bezier(0.4,0,0.2,1)",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="custom-context-menu-item"
-              onClick={() => {
-                if (contextMenu.message?._id && contextMenu.message?.content) {
-                  setMessageToEdit(contextMenu.message);
-                  setEditText(contextMenu.message.content);
-                  setShowEditModal(false);
-                  setTimeout(() => setShowEditModal(true), 0);
-                }
-                setContextMenu((c) => ({ ...c, visible: false }));
-              }}
-            >
-              <span className="custom-context-menu-icon">
-                <Icon icon="mdi:pencil-outline" />
-              </span>
-              Edit message
-            </button>
-            <button
-              className="custom-context-menu-item"
-              onClick={() => {
-                setContextMenu((c) => ({ ...c, visible: false }));
-                setMessageToDelete(contextMenu.message);
-                setShowDeleteModal(true);
-              }}
-            >
-              <span className="custom-context-menu-icon">
-                <Icon icon="mdi:trash-can-outline" />
-              </span>
-              Delete
-            </button>
-          </div>,
-          document.body
-        )}
-      {/* Confirm Delete Modal */}
-      {showDeleteModal &&
-        ReactDOM.createPortal(
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100vw",
-              height: "100vh",
-              background: "rgba(0,0,0,0.25)",
-              zIndex: 10000,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              style={{
-                background: "#fff",
-                borderRadius: 12,
-                padding: 32,
-                minWidth: 300,
-                boxShadow: "0 4px 24px rgba(0,0,0,0.13)",
-                textAlign: "center",
-              }}
-            >
-              <p style={{ marginBottom: 24 }}>
-                Are you sure you want to delete this message?
-              </p>
-              <div
-                style={{ display: "flex", justifyContent: "center", gap: 16 }}
-              >
-                <button
-                  style={{
-                    padding: "8px 20px",
-                    borderRadius: 6,
-                    border: "none",
-                    background: "#f2f2f2",
-                    color: "#23272a",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    setShowDeleteModal(false);
-                    setMessageToDelete(null);
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  style={{
-                    padding: "8px 20px",
-                    borderRadius: 6,
-                    border: "none",
-                    background: "#93221D",
-                    color: "#fff",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    if (messageToDelete?._id) {
-                      socketService.deleteMessage(messageToDelete._id);
-                      setMessages((prev) =>
-                        prev.filter((msg) => msg._id !== messageToDelete._id)
-                      );
-                    }
-                    setShowDeleteModal(false);
-                    setMessageToDelete(null);
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
-      {/* Edit Message Modal */}
-      {showEditModal &&
-        ReactDOM.createPortal(
-          <div
-            key={messageToEdit?._id}
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100vw",
-              height: "100vh",
-              background: "rgba(0,0,0,0.25)",
-              zIndex: 10000,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              style={{
-                background: "#fff",
-                borderRadius: 12,
-                padding: 32,
-                minWidth: 300,
-                boxShadow: "0 4px 24px rgba(0,0,0,0.13)",
-                textAlign: "center",
-              }}
-            >
-              <p style={{ marginBottom: 16 }}>Edit your message:</p>
-              <input
-                style={{
-                  width: "100%",
-                  padding: 10,
-                  borderRadius: 6,
-                  border: "1px solid #ccc",
-                  marginBottom: 24,
-                  fontSize: 15,
-                }}
-                value={editText}
-                onChange={(e) => setEditText(e.target.value)}
-                autoFocus
-              />
-              <div
-                style={{ display: "flex", justifyContent: "center", gap: 16 }}
-              >
-                <button
-                  style={{
-                    padding: "8px 20px",
-                    borderRadius: 6,
-                    border: "none",
-                    background: "#f2f2f2",
-                    color: "#23272a",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    setShowEditModal(false);
-                    setMessageToEdit(null);
-                    setEditText("");
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  style={{
-                    padding: "8px 20px",
-                    borderRadius: 6,
-                    border: "none",
-                    background: "#93221D",
-                    color: "#fff",
-                    cursor: "pointer",
-                  }}
-                  disabled={!editText.trim()}
-                  onClick={async () => {
-                    if (messageToEdit?._id && editText.trim()) {
-                      try {
-                        await socketService.editMessage(
-                          messageToEdit._id,
-                          editText
-                        );
-                        setMessages((prev) =>
-                          prev.map((msg) =>
-                            msg._id === messageToEdit._id
-                              ? { ...msg, content: editText, isEdited: true }
-                              : msg
-                          )
-                        );
-                      } catch (e) {
-                        // Optionally show error
-                      }
-                    }
-                    setShowEditModal(false);
-                    setMessageToEdit(null);
-                    setEditText("");
-                  }}
-                >
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
+      {/* Context Menu */}
+      <ContextMenu
+        visible={contextMenu.visible}
+        x={menuX}
+        y={menuY}
+        message={contextMenu.message}
+        onEdit={(message) => {
+          setMessageToEdit(message);
+          setEditText(message.content);
+          setShowEditModal(false);
+          setTimeout(() => setShowEditModal(true), 0);
+        }}
+        onDelete={(message) => {
+          setMessageToDelete(message);
+          setShowDeleteModal(true);
+        }}
+        onClose={() => setContextMenu((c) => ({ ...c, visible: false }))}
+      />
+      {/* Delete Modal */}
+      <DeleteModal
+        visible={showDeleteModal}
+        onConfirm={() => {
+          if (messageToDelete?._id) {
+            socketService.deleteMessage(messageToDelete._id);
+            setMessages((prev) =>
+              prev.filter((msg) => msg._id !== messageToDelete._id)
+            );
+          }
+          setShowDeleteModal(false);
+          setMessageToDelete(null);
+        }}
+        onCancel={() => {
+          setShowDeleteModal(false);
+          setMessageToDelete(null);
+        }}
+      />
+      {/* Edit Modal */}
+      <EditModal
+        visible={showEditModal}
+        message={messageToEdit}
+        onSave={async (messageId, newContent) => {
+          if (newContent.trim()) {
+            try {
+              await socketService.editMessage(messageId, newContent);
+              setMessages((prev) =>
+                prev.map((msg) =>
+                  msg._id === messageId
+                    ? { ...msg, content: newContent, isEdited: true }
+                    : msg
+                )
+              );
+            } catch (e) {
+              // Optionally show error
+            }
+          }
+          setShowEditModal(false);
+          setMessageToEdit(null);
+        }}
+        onCancel={() => {
+          setShowEditModal(false);
+          setMessageToEdit(null);
+        }}
+      />
     </div>
   );
 };
