@@ -268,14 +268,14 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={handleDownload}
-                className="p-2 text-[#c4c7c5] hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 cursor-pointer text-[#c4c7c5] hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 title="Download"
               >
                 <Icon icon="mdi:download" width="20" height="20" />
               </button>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-2 text-[#c4c7c5] hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 cursor-pointer text-[#c4c7c5] hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 title="Close"
               >
                 <Icon icon="mdi:close" width="20" height="20" />
