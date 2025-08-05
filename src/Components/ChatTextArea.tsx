@@ -135,6 +135,7 @@ const ChatTextArea = ({
 
       // Define handlers
       const handleNewMessage = (message: any) => {
+        console.log("handleNewMessage", message);
         if (message.senderId !== userId) {
           setMessages((prev) => [
             ...prev,

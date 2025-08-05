@@ -232,10 +232,12 @@ connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-r
 
   
   onNewMessage(callback: MessageCallback): void {
+
     this.socket?.off('new_message');
     
     
     this.socket?.on('new_message', (message: any) => { 
+      console.log("new_message", message);
       callback(message);
       
       
