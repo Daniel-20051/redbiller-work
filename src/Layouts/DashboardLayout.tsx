@@ -51,9 +51,6 @@ export default function DashboardLayout() {
     socketService.onMedia_Error((data: any) => {
       console.log("media_error", data);
     });
-    socketService.onMedia_Delivered((data: any) => {
-      console.log("media_delivered", data);
-    });
   }, [userDetails]);
 
   return (

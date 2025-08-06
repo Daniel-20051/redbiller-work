@@ -367,6 +367,7 @@ export class AuthApis {
         }
       }
     )
+    console.log("response", response);
     return response
   }
     catch(err){
@@ -418,6 +419,47 @@ export class AuthApis {
     return response
   }
     catch(err){
+      return err
+    }
+  }
+
+  async uploadFile(file: File, chatId: string) {
+    try {
+      console.log('🔧 API: Starting uploadFile method');
+      console.log('🔧 API: File details:', { name: file.name, size: file.size, type: file.type });
+      console.log('🔧 API: ChatId:', chatId);
+      
+      const token = localStorage.getItem("authToken")
+      console.log('🔧 API: Token exists:', !!token);
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('chatId', chatId);
+      
+      console.log('🔧 API: FormData created, making POST request to:', `${BASE_URL}/api/v1/chat/upload-file`);
+
+      const response = await axios.post(`${BASE_URL}/api/v1/chat/upload-file`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              console.log('📊 Upload progress:', percentCompleted);
+            }
+          },
+        }
+      )
+      
+     
+      
+      return response
+    }
+    catch(err){
+     
       return err
     }
   }

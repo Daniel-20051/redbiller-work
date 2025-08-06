@@ -139,7 +139,10 @@ const ChatTextArea = ({
           setMessages((prev) => [
             ...prev,
             {
-              fileData: message.fileData,
+              fileData: {
+                ...message.fileData,
+                url: message.fileData?.url || message.fileData?.fileUrl || "", // Ensure URL is included
+              },
               content: message.content,
               messageType: message.messageType,
               createdAt: message.createdAt,
@@ -161,10 +164,27 @@ const ChatTextArea = ({
         setMessageStatus("delivered");
       };
 
+      // Handle media upload completion
+      const handleMediaDelivered = () => {
+        setIsUploading(false);
+        setUploadProgress(100);
+        setTimeout(() => setUploadProgress(0), 1000);
+      };
+
+      // Handle media upload errors
+      const handleMediaError = (data: any) => {
+        console.error("Media upload error:", data);
+        setIsUploading(false);
+        setUploadProgress(0);
+        alert(`Failed to upload ${data.fileName}: ${data.error}`);
+      };
+
       // Register handlers
       socketService.onNewMessage(handleNewMessage);
       socketService.onTyping(handleTyping);
       socketService.onMessageDelivered(handleDelivered);
+      socketService.onMedia_Delivered(handleMediaDelivered);
+      socketService.onMedia_Error(handleMediaError);
 
       // If no messages are received within 3 seconds, stop loading
       const timeout = setTimeout(() => {
@@ -544,10 +564,10 @@ const ChatTextArea = ({
     setUploadProgress(0);
 
     try {
-      // For now, we'll just send the file name as a message
-      // You can implement actual file upload to your server later
+      // Create a temporary message to show in the chat
+      const tempMessageId = Date.now().toString();
       const fileMessage = {
-        content: `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`,
+        content: `${file.name} `,
         messageType: "file",
         fileData: {
           originalName: file.name,
@@ -559,32 +579,39 @@ const ChatTextArea = ({
         },
         createdAt: new Date(),
         senderId: userId,
-        _id: Date.now().toString(), // Temporary ID
+        _id: tempMessageId,
       };
 
       setMessages((prev) => [...prev, fileMessage]);
 
-      // Send document to socket
+      // Send document to socket (this will handle upload for large files)
       socketService.sendDocument(chatId, file);
 
-      // Simulate realistic upload progress
-      let progress = 0;
-      const uploadInterval = setInterval(() => {
-        progress += Math.random() * 15 + 5; // Random progress between 5-20%
-        if (progress >= 100) {
-          progress = 100;
-          clearInterval(uploadInterval);
-          // Keep the progress bar visible at 100% for a moment
-          setTimeout(() => {
-            setIsUploading(false);
-            setUploadProgress(0);
-          }, 1000);
-        }
-        setUploadProgress(progress);
-      }, 300);
+      // For large files, show realistic upload progress
+      if (file.size > 1024 * 1024) {
+        let progress = 0;
+        const uploadInterval = setInterval(() => {
+          progress += Math.random() * 4 + 1; // Slower progress for large files
+          if (progress >= 85) {
+            // Stop at 90% until we get confirmation
+            progress = 90;
+            clearInterval(uploadInterval);
+          }
+          setUploadProgress(progress);
+        }, 300);
+      } else {
+        // For small files, show quick progress
+        setUploadProgress(100);
+        setTimeout(() => {
+          setIsUploading(false);
+          setUploadProgress(0);
+        }, 2000);
+      }
     } catch (error) {
       console.error("Error handling file:", error);
       alert("Failed to process file. Please try again.");
+      setIsUploading(false);
+      setUploadProgress(0);
     } finally {
       // Clear the file input
       if (fileInputRef.current) {

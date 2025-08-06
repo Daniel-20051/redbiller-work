@@ -1,4 +1,5 @@
 import io, { Socket } from 'socket.io-client';
+import { AuthApis } from '../api';
 
 interface MessageData {
   chatId: string;
@@ -20,6 +21,7 @@ class SocketService {
   private socket: Socket | null = null;
   private isConnected = false;
   private userId: string | null = null;
+  private authApis = new AuthApis();
 
 connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-report-v1.onrender.com"): void {
     this.userId = userId;
@@ -29,6 +31,7 @@ connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-r
     this.socket = io(serverUrl, {
       timeout: 10000,
       transports: ['websocket', 'polling'],
+      forceNew: true,
     });
 
     this.socket.on('connect', () => {
@@ -129,29 +132,85 @@ connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-r
       console.error('Socket not connected');
       return;
     }
-     const MediaData = {
-      chatId: chatId,
-      fileData: documentData,
-      fileName: documentData.name,
-      mimeType: documentData.type,
-      fileSize: documentData.size,
-      duration: 0,
-      tempId: Date.now(),
-     }
-     console.log("MediaData", MediaData);
 
-      this.socket.emit("send_media", MediaData);
-    
+    // Always upload via endpoint for all files
+    this.uploadFileAndSendMetadata(chatId, documentData);
+  }
+
+  private async uploadFileAndSendMetadata(chatId: string, file: File): Promise<void> {
+    try {
+     
+      
+      // Upload file using the API service
+      const response = await this.authApis.uploadFile(file, chatId);
+      
+      
+      
+      if (
+        response &&
+        typeof response === 'object' &&
+        'data' in response &&
+        response.data &&
+        typeof response.data === 'object' &&
+        'data' in response.data
+      ) {
+        const uploadResult = response.data.data as any;
+        
+        
+        // Send only the file metadata through socket
+        const MediaData = {
+          chatId: chatId,
+          fileData: uploadResult.fileData || {
+            originalName: file.name,
+            mimeType: file.type,
+            size: file.size,
+            url: uploadResult.fileUrl || uploadResult.url || '', // URL from server
+            duration: 0,
+            timestamp: Date.now(),
+          },
+          messageContent: uploadResult.messageContent || file.name,
+          messageType:'file',
+          
+        };
+
+        
+        this.socket?.emit("send_uploaded_media", MediaData);
+      } else {
+        console.error('❌ Invalid response structure:', response);
+        throw new Error('File upload failed - invalid response structure');
+      }
+
+    } catch (error) {
+      console.error('❌ Error uploading file:', error);
+      console.error('❌ Error details:', {
+        name: error instanceof Error ? error.name : 'Unknown',
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : 'No stack trace'
+      });
+      
+      // Emit error event that the UI can handle
+      this.socket?.emit('media_upload_error', {
+        chatId,
+        fileName: file.name,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
   }
 
   onMedia_Error(callback: any): void {
     this.socket?.on('media_error', (data: any) => {
       callback(data);
     });
+    this.socket?.on('media_upload_error', (data: any) => {
+      callback(data);
+    });
   }
 
   onMedia_Delivered(callback: any): void {
     this.socket?.on('media_delivered', (data: any) => {
+      callback(data);
+    });
+    this.socket?.on('media_upload_success', (data: any) => {
       callback(data);
     });
   }
