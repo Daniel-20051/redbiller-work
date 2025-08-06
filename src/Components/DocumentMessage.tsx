@@ -54,6 +54,7 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({
   };
 
   const handleDocumentClick = () => {
+    console.log("Document clicked:", { fileData, fileUrl, fileName, fileType });
     if (fileUrl) {
       setIsModalOpen(true);
     } else {

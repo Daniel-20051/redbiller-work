@@ -165,10 +165,28 @@ const ChatTextArea = ({
       };
 
       // Handle media upload completion
-      const handleMediaDelivered = () => {
+      const handleMediaDelivered = (data: any) => {
+        console.log("Media delivered:", data);
         setIsUploading(false);
         setUploadProgress(100);
         setTimeout(() => setUploadProgress(0), 1000);
+
+        // Update the message with the file URL if available
+        if (data && data.fileData && data.fileData.url) {
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg._id === data.tempId || msg._id === data._id
+                ? {
+                    ...msg,
+                    fileData: {
+                      ...msg.fileData,
+                      url: data.fileData.url,
+                    },
+                  }
+                : msg
+            )
+          );
+        }
       };
 
       // Handle media upload errors
@@ -588,25 +606,17 @@ const ChatTextArea = ({
       socketService.sendDocument(chatId, file);
 
       // For large files, show realistic upload progress
-      if (file.size > 1024 * 1024) {
-        let progress = 0;
-        const uploadInterval = setInterval(() => {
-          progress += Math.random() * 4 + 1; // Slower progress for large files
-          if (progress >= 85) {
-            // Stop at 90% until we get confirmation
-            progress = 90;
-            clearInterval(uploadInterval);
-          }
-          setUploadProgress(progress);
-        }, 300);
-      } else {
-        // For small files, show quick progress
-        setUploadProgress(100);
-        setTimeout(() => {
-          setIsUploading(false);
-          setUploadProgress(0);
-        }, 2000);
-      }
+
+      let progress = 0;
+      const uploadInterval = setInterval(() => {
+        progress += Math.random() * 4 + 1; // Slower progress for large files
+        if (progress >= 85) {
+          // Stop at 90% until we get confirmation
+          progress = 90;
+          clearInterval(uploadInterval);
+        }
+        setUploadProgress(progress);
+      }, 300);
     } catch (error) {
       console.error("Error handling file:", error);
       alert("Failed to process file. Please try again.");
