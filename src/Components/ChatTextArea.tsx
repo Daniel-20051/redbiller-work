@@ -664,7 +664,7 @@ const ChatTextArea = ({
             ) : isUserOnline(recipientId) ? (
               <p className="text-[10px] font-[400] text-[#808080] ">online</p>
             ) : (
-              ""
+              <p className="text-[10px] font-[400] text-[#808080] ">offline</p>
             )}
           </div>
         </div>
