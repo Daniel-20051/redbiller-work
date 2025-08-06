@@ -198,6 +198,8 @@ connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-r
   }
 
   onMedia_Error(callback: any): void {
+    this.socket?.off('media_error');
+    this.socket?.off('media_upload_error');
     this.socket?.on('media_error', (data: any) => {
       callback(data);
     });
@@ -207,6 +209,8 @@ connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-r
   }
 
   onMedia_Delivered(callback: any): void {
+    this.socket?.off('media_delivered');
+    this.socket?.off('media_upload_success');
     this.socket?.on('media_delivered', (data: any) => {
       callback(data);
     });
@@ -296,7 +300,7 @@ connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-r
     
     
     this.socket?.on('new_message', (message: any) => { 
-      console.log("new_message", message);
+    
       callback(message);
       
       

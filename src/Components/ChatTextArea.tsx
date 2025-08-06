@@ -166,7 +166,6 @@ const ChatTextArea = ({
 
       // Handle media upload completion
       const handleMediaDelivered = (data: any) => {
-        console.log("Media delivered:", data);
         setIsUploading(false);
         setUploadProgress(100);
         setTimeout(() => setUploadProgress(0), 1000);
@@ -174,8 +173,13 @@ const ChatTextArea = ({
         // Update the message with the file URL if available
         if (data && data.fileData && data.fileData.url) {
           setMessages((prev) =>
-            prev.map((msg) =>
-              msg._id === data.tempId || msg._id === data._id
+            prev.map((msg) => {
+              // Clean up temporary URL if it exists
+              if (msg.fileData?.url && msg.fileData.url.startsWith("blob:")) {
+                URL.revokeObjectURL(msg.fileData.url);
+              }
+
+              return msg._id === data.tempId || msg._id === data._id
                 ? {
                     ...msg,
                     fileData: {
@@ -183,8 +187,8 @@ const ChatTextArea = ({
                       url: data.fileData.url,
                     },
                   }
-                : msg
-            )
+                : msg;
+            })
           );
         }
       };
@@ -584,6 +588,7 @@ const ChatTextArea = ({
     try {
       // Create a temporary message to show in the chat
       const tempMessageId = Date.now().toString();
+      const fileUrl = URL.createObjectURL(file); // Create temporary URL for immediate preview
       const fileMessage = {
         content: `${file.name} `,
         messageType: "file",
@@ -591,7 +596,7 @@ const ChatTextArea = ({
           originalName: file.name,
           mimeType: file.type,
           size: file.size,
-          url: "", // Will be populated when file is actually uploaded
+          url: fileUrl, // Use temporary URL for immediate preview
           duration: 0,
           timestamp: Date.now(),
         },
@@ -605,11 +610,9 @@ const ChatTextArea = ({
       // Send document to socket (this will handle upload for large files)
       socketService.sendDocument(chatId, file);
 
-      // For large files, show realistic upload progress
-
       let progress = 0;
       const uploadInterval = setInterval(() => {
-        progress += Math.random() * 4 + 1; // Slower progress for large files
+        progress += Math.random() * 6 + 3; // Slower progress for large files
         if (progress >= 85) {
           // Stop at 90% until we get confirmation
           progress = 90;
