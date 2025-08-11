@@ -73,7 +73,8 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
         user.email.toLowerCase().includes(search.toLowerCase()))
   );
 
-  function capitalizeName(name: string) {
+  function capitalizeName(name?: string | null) {
+    if (!name || typeof name !== "string") return "";
     return name
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
@@ -296,7 +297,8 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                           (chat.metadata?.senderName &&
                           chat.metadata?.senderId !== currentUserId
                             ? chat.metadata.senderName
-                            : chat.metadata?.recipientName);
+                            : chat.metadata?.recipientName) ||
+                          "";
 
                         // Determine the recipient ID
                         const recipientId =
@@ -312,7 +314,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                             name={capitalizeName(recipientName)}
                             online={isUserOnline(recipientId)}
                             unreadCount={unreadCount}
-                            lastMessage={chat.lastMessage.content}
+                            lastMessage={chat?.lastMessage?.content ?? ""}
                             isMetaLoading={isPreviousChatLoading}
                             onClick={async () => {
                               if (!socketConnected) {
