@@ -300,6 +300,7 @@ connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-r
     
     
     this.socket?.on('new_message', (message: any) => { 
+      
     
       callback(message);
       
@@ -315,6 +316,14 @@ connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-r
       //     icon: "/assets/chat-active.svg",
       //   });
       // }
+    });
+  }
+
+  onDeleteMessage(callback: any): void {
+    this.socket?.off('message_deleted');
+    this.socket?.on('message_deleted', (data: any) => {
+      console.log("message_deleted", data);
+      callback(data);
     });
   }
 
@@ -343,6 +352,7 @@ connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-r
   onMessageDelivered(callback: DeliveryCallback): void {
     this.socket?.off('message_delivered');
     this.socket?.on('message_delivered', (data: any) => {
+      console.log("message_delivered", data);
       callback(data);  
     });
     

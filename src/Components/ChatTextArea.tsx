@@ -35,6 +35,7 @@ interface ChatTextAreaProps {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
   recipientId: string;
+  refetchChats?: () => void;
 }
 
 const authApis = new AuthApis();
@@ -55,6 +56,7 @@ const ChatTextArea = ({
   isLoading,
   setIsLoading,
   recipientId,
+  refetchChats,
 }: ChatTextAreaProps) => {
   const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);
@@ -160,8 +162,17 @@ const ChatTextArea = ({
           setTimeout(() => setTypingInfo(null), 2000);
         }
       };
-      const handleDelivered = () => {
+      const handleDelivered = (data: any) => {
         setMessageStatus("delivered");
+        if (data && data.tempId && data._id) {
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg._id === data.tempId
+                ? { ...msg, _id: data._id, isSent: true }
+                : msg
+            )
+          );
+        }
       };
 
       // Handle media upload completion
@@ -207,6 +218,9 @@ const ChatTextArea = ({
       socketService.onMessageDelivered(handleDelivered);
       socketService.onMedia_Delivered(handleMediaDelivered);
       socketService.onMedia_Error(handleMediaError);
+      socketService.onDeleteMessage((data: any) => {
+        console.log("message_deleted", data);
+      });
 
       // If no messages are received within 3 seconds, stop loading
       const timeout = setTimeout(() => {
@@ -652,6 +666,9 @@ const ChatTextArea = ({
               handleLeaveChat();
               setMessages([]);
               socketService.subscribeToLastMessage();
+              if (typeof refetchChats === "function") {
+                refetchChats();
+              }
             }}
           />
           <ProfileName name={name} online={isUserOnline(recipientId)} />

@@ -9,6 +9,7 @@ interface Props {
   online?: boolean;
   unreadCount?: number;
   lastMessage?: string;
+  isMetaLoading?: boolean;
 }
 
 const ChatCard = ({
@@ -19,6 +20,7 @@ const ChatCard = ({
   online,
   unreadCount,
   lastMessage,
+  isMetaLoading = false,
 }: Props) => {
   return (
     <div
@@ -31,14 +33,35 @@ const ChatCard = ({
         <div className="flex flex-col gap-[2px]">
           <p className="font-semibold text-[16px]">{name}</p>
           <p className="text-[15px] text-gray-300 font-medium">{email}</p>
-          <p className="text-[13px] text-gray-500 font-light">{lastMessage}</p>
+          <p className="text-[13px] text-gray-500 font-light min-h-[16px]">
+            {isMetaLoading ? (
+              <span className="inline-flex items-center gap-1 text-gray-400">
+                <Icon icon="svg-spinners:3-dots-scale" width="18" height="18" />
+                Updating…
+              </span>
+            ) : (
+              lastMessage
+            )}
+          </p>
         </div>
       </div>
-      {typeof unreadCount === "number" && unreadCount > 0 && (
-        <div className="bg-primary  text-white px-2 py-1 rounded-full text-xs">
-          {unreadCount}
-        </div>
-      )}
+      <div className="min-w-[28px] flex items-center justify-end">
+        {isMetaLoading ? (
+          <Icon
+            icon="eos-icons:loading"
+            width="18"
+            height="18"
+            className="text-primary"
+          />
+        ) : (
+          typeof unreadCount === "number" &&
+          unreadCount > 0 && (
+            <div className="bg-primary  text-white px-2 py-1 rounded-full text-xs">
+              {unreadCount}
+            </div>
+          )
+        )}
+      </div>
       {isChat && <Icon icon="ep:arrow-right" width="24" height="24" />}
     </div>
   );

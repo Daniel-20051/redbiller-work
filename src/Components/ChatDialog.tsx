@@ -24,7 +24,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const [name, setName] = useState<string>("");
   const [previousChats, setPreviousChats] = useState<any[]>([]);
 
-  const [chatNumber, setChatNumber] = useState<number>(0);
+  // chatNumber removed; rely on previousChats.length instead
   const [isPreviousChatLoading, setIsPreviousChatLoading] =
     useState<boolean>(false);
   const [messages, setMessages] = useState<any[]>([]);
@@ -85,7 +85,6 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     try {
       const response: any = await authApis.getUserAllChats();
       setPreviousChats(response.data.data.chats);
-      setChatNumber(response.data.data.chats.length);
     } catch (error) {
     } finally {
       setIsPreviousChatLoading(false);
@@ -109,6 +108,13 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     handleUsers();
     handleChats();
   }, []);
+
+  // Refetch previous chats whenever the dialog is opened
+  useEffect(() => {
+    if (open) {
+      handleChats();
+    }
+  }, [open]);
 
   return (
     <div
@@ -268,11 +274,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                   className="w-full flex flex-col gap-3 overflow-y-auto flex-1"
                   style={{ maxHeight: "230px", minHeight: "0" }}
                 >
-                  {isPreviousChatLoading ? (
-                    Array.from({ length: 5 }).map((_, i) => (
-                      <UserSkeleton key={i} />
-                    ))
-                  ) : chatNumber !== 0 ? (
+                  {previousChats.length > 0 ? (
                     <div className="flex flex-col gap-3">
                       {previousChats.map((chat: any, index: number) => {
                         // Get current user ID
@@ -311,6 +313,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                             online={isUserOnline(recipientId)}
                             unreadCount={unreadCount}
                             lastMessage={chat.lastMessage.content}
+                            isMetaLoading={isPreviousChatLoading}
                             onClick={async () => {
                               if (!socketConnected) {
                                 return; // Don't open chat if socket is not connected
@@ -361,6 +364,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
             isLoading={isLoading}
             setIsLoading={setIsLoading}
             recipientId={recipientId}
+            refetchChats={handleChats}
           />
         </div>
       </div>

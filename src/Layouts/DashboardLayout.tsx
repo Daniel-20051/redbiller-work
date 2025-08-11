@@ -1,6 +1,6 @@
 import NavBar from "../Components/NavBar";
 import SideBar from "../Components/SideBar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { useCurrentPage } from "../context/SidebarContext";
 import { useEffect, useState } from "react";
 import ChatDialog from "../Components/ChatDialog";
@@ -20,11 +20,50 @@ const FloatingChatButton = ({ onClick }: { onClick: () => void }) => (
 );
 
 export default function DashboardLayout() {
-  const { currentPage } = useCurrentPage();
+  const { currentPage, setCurrentPage } = useCurrentPage();
   const [chatOpen, setChatOpen] = useState(false);
   const { userDetails, setOnlineUsers, removeOnlineUser, addOnlineUser } =
     use(UserDetailsContext);
   const { setSocketConnected } = use(UserDetailsContext);
+  const location = useLocation();
+
+  // Sync currentPage with URL pathname on mount and route changes
+  useEffect(() => {
+    const pathname = location.pathname;
+
+    // Map URL paths to sidebar page names
+    const pathToPageMap: { [key: string]: string } = {
+      "/home": "home",
+      "/users": "users",
+      "/events": "event",
+      "/incident-report": "incident-report",
+      "/weekly-report": "weekly-report",
+      "/tasks": "tasks",
+    };
+
+    // Find the matching page for the current path
+    const matchingPage = pathToPageMap[pathname];
+
+    // For dynamic routes, check if the path starts with known patterns
+    if (!matchingPage) {
+      if (pathname.startsWith("/events/")) {
+        setCurrentPage("event");
+      } else if (pathname.startsWith("/incident-report/")) {
+        setCurrentPage("incident-report");
+      } else if (pathname.startsWith("/weekly-report/")) {
+        setCurrentPage("weekly-report");
+      } else if (pathname === "/profile") {
+        // Profile is not in sidebar, so keep current page
+        // Don't change the currentPage state
+        return;
+      } else {
+        // Default to home if no match found
+        setCurrentPage("home");
+      }
+    } else {
+      setCurrentPage(matchingPage);
+    }
+  }, [location.pathname, setCurrentPage]);
 
   useEffect(() => {
     if (userDetails?.data.user.id) {
