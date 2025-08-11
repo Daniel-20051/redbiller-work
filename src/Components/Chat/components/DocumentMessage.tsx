@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
-import Modal from "./Modal";
+import Modal from "../../../Components/Modal";
 
 interface DocumentMessageProps {
   message: any; // The full message object containing fileData

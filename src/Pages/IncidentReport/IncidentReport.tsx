@@ -1,8 +1,8 @@
 import { useState } from "react";
-import IncidentItem from "../Components/IncidentItem";
+import IncidentItem from "./componets/IncidentItem";
 import { Link } from "react-router-dom";
 import { use } from "react";
-import { UserDetailsContext } from "../context/AuthContext.js";
+import { UserDetailsContext } from "../../context/AuthContext.tsx";
 
 const IncidentReport = () => {
   const [searchTerm, setSearchTerm] = useState("");

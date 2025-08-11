@@ -1,6 +1,6 @@
 import { useEffect, useState, use } from "react";
-import { AuthApis } from "../api";
-import { UserDetailsContext } from "../context/AuthContext";
+import { AuthApis } from "../../../api";
+import { UserDetailsContext } from "../../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { Icon } from "@iconify/react";
 

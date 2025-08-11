@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
-import { AuthApis } from "../api";
-import Modal from "../Components/Modal";
-import { SuccessCard } from "../messageAlert/SuccessCard";
+import { AuthApis } from "../../../api";
+import Modal from "../../../Components/Modal";
+import { SuccessCard } from "../../../messageAlert/SuccessCard";
 
 const authApis = new AuthApis();
 

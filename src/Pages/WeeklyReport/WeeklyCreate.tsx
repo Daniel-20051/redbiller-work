@@ -1,10 +1,10 @@
-import ReportCard from "../Components/ReportCard";
-import AlertCard from "../messageAlert/AlertCardProps";
+import ReportCard from "../../Components/ReportCard";
+import AlertCard from "../../messageAlert/AlertCardProps";
 import { Icon } from "@iconify/react";
-import { SuccessCard } from "../messageAlert/SuccessCard";
+import { SuccessCard } from "../../messageAlert/SuccessCard";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { AuthApis } from "../api";
+import { AuthApis } from "../../api";
 const authApis = new AuthApis();
 
 const WeeklyCreate = () => {

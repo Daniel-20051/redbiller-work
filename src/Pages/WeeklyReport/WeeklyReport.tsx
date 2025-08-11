@@ -1,9 +1,9 @@
-import WeekItem from "../Components/WeekItem";
-import WeeklyCard from "../Components/WeeklyCard";
+import WeekItem from "./components/WeekItem.tsx";
+import WeeklyCard from "./components/WeeklyCard.tsx";
 import { Link } from "react-router-dom";
 import { use, useEffect, useState } from "react";
-import { UserDetailsContext } from "../context/AuthContext.js";
-import { AuthApis } from "../api";
+import { UserDetailsContext } from "../../context/AuthContext.tsx";
+import { AuthApis } from "../../api";
 import { Icon } from "@iconify/react";
 const authApis = new AuthApis();
 

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import socketService from "../services/socketService";
+import socketService from "../../../services/socketService";
 
 interface CustomAudioPlayerProps {
   src: string | null; // This will be the filePath now, can be null initially

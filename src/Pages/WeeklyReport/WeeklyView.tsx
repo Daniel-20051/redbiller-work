@@ -1,6 +1,6 @@
-import WeeklyTable from "../Components/WeeklyTable";
+import WeeklyTable from "./components/WeeklyTable";
 import { useState, use, useEffect } from "react";
-import { UserDetailsContext } from "../context/AuthContext";
+import { UserDetailsContext } from "../../context/AuthContext";
 import { useParams } from "react-router-dom";
 
 const WeeklyView = () => {

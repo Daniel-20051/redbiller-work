@@ -1,6 +1,6 @@
 import { use, useState } from "react";
 import { Link } from "react-router-dom";
-import { UserDetailsContext } from "../context/AuthContext.js";
+import { UserDetailsContext } from "../../context/AuthContext.js";
 
 const IncidentView = () => {
   const { incidentDetails } = use(UserDetailsContext);

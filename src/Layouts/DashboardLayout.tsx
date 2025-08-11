@@ -3,7 +3,7 @@ import SideBar from "../Components/SideBar";
 import { Outlet, useLocation } from "react-router-dom";
 import { useCurrentPage } from "../context/SidebarContext";
 import { useEffect, useState } from "react";
-import ChatDialog from "../Components/ChatDialog";
+import ChatDialog from "../Components/Chat/components/ChatDialog";
 import { Icon } from "@iconify/react";
 import socketService from "../services/socketService";
 import { use } from "react";

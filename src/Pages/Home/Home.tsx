@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { UserDetailsContext } from "../context/AuthContext";
+import { UserDetailsContext } from "../../context/AuthContext.tsx";
 import { use } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import SmallSpiner from "../Components/smallSpiner";
-import { AuthApis } from "../api";
+import SmallSpiner from "../../Components/smallSpiner.tsx";
+import { AuthApis } from "../../api";
 import { Icon } from "@iconify/react";
 
 const authApi = new AuthApis();

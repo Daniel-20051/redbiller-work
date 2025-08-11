@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Inputfeild from "../Components/Inputfeild";
+import Inputfeild from "../../Components/Inputfeild";
 const currentYear = new Date().getFullYear();
-import { AuthApis } from "../api";
-import AlertCard from "../messageAlert/AlertCardProps";
+import { AuthApis } from "../../api";
+import AlertCard from "../../messageAlert/AlertCardProps";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");

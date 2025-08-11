@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { AuthApis } from "../api";
-import { SuccessCard } from "../messageAlert/SuccessCard";
-import AlertCard from "../messageAlert/AlertCardProps";
+import { AuthApis } from "../../../api";
+import { SuccessCard } from "../../../messageAlert/SuccessCard";
+import AlertCard from "../../../messageAlert/AlertCardProps";
 
-import Modal from "./Modal";
+import Modal from "../../../Components/Modal";
 
 interface Props {
   name: string;

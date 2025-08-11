@@ -1,13 +1,13 @@
-import NavBar from "../Components/NavBar";
-import SideBar from "../Components/SideBar";
+import NavBar from "../../Components/NavBar.tsx";
+import SideBar from "../../Components/SideBar.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import { use } from "react";
-import { UserDetailsContext } from "../context/AuthContext.js";
+import { UserDetailsContext } from "../../context/AuthContext.tsx";
 import { google, outlook, yahoo, CalendarEvent } from "calendar-link";
 import { useState, useRef, useEffect } from "react";
-import Modal from "../Components/Modal.js";
-import { AuthApis } from "../api";
-import { SuccessCard } from "../messageAlert/SuccessCard";
+import Modal from "../../Components/Modal.tsx";
+import { AuthApis } from "../../api";
+import { SuccessCard } from "../../messageAlert/SuccessCard";
 
 const formatDate = (dateStr: string) => {
   if (!dateStr) return "";

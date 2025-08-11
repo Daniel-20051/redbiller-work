@@ -1,10 +1,10 @@
 import { Icon } from "@iconify/react";
 import { useEffect, useState, use } from "react";
-import ChatCard from "../Components/ChatCard";
-import { AuthApis } from "../api";
-import UserSkeleton from "../Components/UserSkeleton";
-import ChatTextArea from "../Components/ChatTextArea";
-import { UserDetailsContext } from "../context/AuthContext.js";
+import ChatCard from "./ChatCard.js";
+import { AuthApis } from "../../../api/index.js";
+import UserSkeleton from "./UserSkeleton.js";
+import ChatTextArea from "./ChatTextArea.js";
+import { UserDetailsContext } from "../../../context/AuthContext.js";
 const authApis = new AuthApis();
 
 interface ChatDialogProps {

@@ -1,21 +1,21 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect, use, useCallback } from "react";
-import Login from "./Pages/Login";
-import Home from "./Pages/Home";
-import EventInfo from "./Pages/EventInfo";
-import Event from "./Pages/Event";
-import WeeklyReport from "./Pages/WeeklyReport";
-import IncidentReport from "./Pages/IncidentReport";
-import WeeklyView from "./Pages/WeeklyView";
-import IncidentCreate from "./Pages/IncidentCreate";
-import WeeklyCreate from "./Pages/WeeklyCreate";
-import Profile from "./Pages/Profile";
-import User from "./Pages/Users";
+import Login from "./Pages/Login/Login.tsx";
+import Home from "./Pages/Home/Home.tsx";
+import EventInfo from "./Pages/Event/EventInfo.tsx";
+import Event from "./Pages/Event/Event.tsx";
+import WeeklyReport from "./Pages/WeeklyReport/WeeklyReport.tsx";
+import IncidentReport from "./Pages/IncidentReport/IncidentReport.tsx";
+import WeeklyView from "./Pages/WeeklyReport/WeeklyView.tsx";
+import IncidentCreate from "./Pages/IncidentReport/IncidentCreate.tsx";
+import WeeklyCreate from "./Pages/WeeklyReport/WeeklyCreate.tsx";
+import Profile from "./Pages/Profile/Profile.tsx";
+import User from "./Pages/Users/Users.tsx";
 import ProtectedRoute from "./routes/protectedRoute";
-import Tasks from "./Pages/Tasks";
+import Tasks from "./Pages/Tasks/Tasks.tsx";
 import { UserDetailsContext } from "./context/AuthContext.tsx";
 
-import IncidentView from "./Pages/IncidentView";
+import IncidentView from "./Pages/IncidentReport/IncidentView.tsx";
 import DashboardLayout from "./Layouts/DashboardLayout.tsx";
 import { AuthApis } from "./api";
 // Only import useContext and useEffect once from react

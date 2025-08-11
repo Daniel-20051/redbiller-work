@@ -1,9 +1,9 @@
 import { use, useState } from "react";
-import UserInfo from "../Components/UserInfo";
-import SmallSpiner from "../Components/smallSpiner";
-import { UserDetailsContext } from "../context/AuthContext";
-import { AuthApis } from "../api";
-import AlertCard from "../messageAlert/AlertCardProps";
+import UserInfo from "./components/UserInfo";
+import SmallSpiner from "../../Components/smallSpiner";
+import { UserDetailsContext } from "../../context/AuthContext";
+import { AuthApis } from "../../api";
+import AlertCard from "../../messageAlert/AlertCardProps";
 
 const User = () => {
   const { allUser, spiner, fetchAllUser } = use(UserDetailsContext);

@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import ProfileName from "./ProfileName";
+import ProfileName from "../../ProfileName";
 
 interface Props {
   name: string;

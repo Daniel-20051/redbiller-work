@@ -1,9 +1,9 @@
 import { Icon } from "@iconify/react";
 const currentDate = new Date();
 import { useRef, useState, useEffect } from "react";
-import AlertCard from "../messageAlert/AlertCardProps";
-import { SuccessCard } from "../messageAlert/SuccessCard";
-import { AuthApis } from "../api";
+import AlertCard from "../../messageAlert/AlertCardProps";
+import { SuccessCard } from "../../messageAlert/SuccessCard";
+import { AuthApis } from "../../api";
 const authApis = new AuthApis();
 
 const IncidentCreate = () => {

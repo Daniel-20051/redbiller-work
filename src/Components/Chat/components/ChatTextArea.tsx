@@ -1,17 +1,17 @@
 import React, { useState, useRef, useEffect, use } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import ProfileName from "./ProfileName";
-import socketService from "../services/socketService";
-import { UserDetailsContext } from "../context/AuthContext.js";
-import MessageSkeleton from "./MessageSkeleton";
-import { AuthApis } from "../api";
-import DateSeparator from "./DateSeparator";
-import CustomAudioPlayer from "./CustomAudioPlayer";
-import DocumentMessage from "./DocumentMessage";
-import ContextMenu from "./ContextMenu";
-import EmojiSelector from "./EmojiSelector";
-import DeleteModal from "./DeleteModal";
-import EditModal from "./EditModal";
+import ProfileName from "../../ProfileName.tsx";
+import socketService from "../../../services/socketService.ts";
+import { UserDetailsContext } from "../../../context/AuthContext";
+import MessageSkeleton from "../../MessageSkeleton.tsx";
+import { AuthApis } from "../../../api/index.ts";
+import DateSeparator from "./DateSeparator.tsx";
+import CustomAudioPlayer from "./CustomAudioPlayer.tsx";
+import DocumentMessage from "./DocumentMessage.tsx";
+import ContextMenu from "./ContextMenu.tsx";
+import EmojiSelector from "./EmojiSelector.tsx";
+import DeleteModal from "./DeleteModal.tsx";
+import EditModal from "./EditModal.tsx";
 
 interface Message {
   content: string;

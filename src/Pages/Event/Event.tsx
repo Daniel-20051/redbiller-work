@@ -1,14 +1,14 @@
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
-import EventItem from "../Components/EventItem";
+import EventItem from "./components/EventItem";
 import { use } from "react";
-import { UserDetailsContext } from "../context/AuthContext";
-import AlertCard from "../messageAlert/AlertCardProps";
-import { SuccessCard } from "../messageAlert/SuccessCard";
-import { AuthApis } from "../api";
+import { UserDetailsContext } from "../../context/AuthContext";
+import AlertCard from "../../messageAlert/AlertCardProps";
+import { SuccessCard } from "../../messageAlert/SuccessCard";
+import { AuthApis } from "../../api";
 
-import Pagination from "../Components/Pagination";
+import Pagination from "./components/Pagination";
 const authApis = new AuthApis();
 
 const Event = () => {
