@@ -8,24 +8,64 @@ import { Icon } from "@iconify/react";
 import socketService from "../services/socketService";
 import { use } from "react";
 import { UserDetailsContext } from "../context/AuthContext";
+import { AuthApis } from "../api";
 
-const FloatingChatButton = ({ onClick }: { onClick: () => void }) => (
-  <button
-    onClick={onClick}
-    className="fixed bottom-6 right-6 z-50 bg-primary cursor-pointer shadow-lg rounded-full p-4 hover:scale-110 transition-transform"
-    aria-label="Open chat"
-  >
-    <Icon icon="mdi:chat" width="36" height="36" color="white" />
-  </button>
+const FloatingChatButton = ({
+  onClick,
+  unreadCount,
+}: {
+  onClick: () => void;
+  unreadCount?: number;
+}) => (
+  <div className="fixed bottom-6 right-6 z-50">
+    <button
+      onClick={onClick}
+      className="bg-primary cursor-pointer shadow-lg rounded-full p-4 hover:scale-110 transition-transform relative"
+      aria-label="Open chat"
+    >
+      <Icon icon="mdi:chat" width="36" height="36" color="white" />
+      {unreadCount !== undefined && unreadCount > 0 && (
+        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center min-w-[24px]">
+          {unreadCount > 99 ? "99+" : unreadCount}
+        </span>
+      )}
+    </button>
+  </div>
 );
 
 export default function DashboardLayout() {
   const { currentPage, setCurrentPage } = useCurrentPage();
   const [chatOpen, setChatOpen] = useState(false);
+  const [totalUnreadCount, setTotalUnreadCount] = useState<number>(0);
   const { userDetails, setOnlineUsers, removeOnlineUser, addOnlineUser } =
     use(UserDetailsContext);
   const { setSocketConnected } = use(UserDetailsContext);
   const location = useLocation();
+  const authApis = new AuthApis();
+
+  const calculateTotalUnreadCount = async () => {
+    try {
+      const response: any = await authApis.getUserAllChats();
+      if (response.status === 200) {
+        const chats = response.data.data.chats;
+        let totalUnread = 0;
+
+        chats.forEach((chat: any) => {
+          const currentUserParticipant = chat.participants.find(
+            (participant: any) =>
+              participant.userId === userDetails?.data.user.id
+          );
+          if (currentUserParticipant?.unreadCount) {
+            totalUnread += currentUserParticipant.unreadCount;
+          }
+        });
+
+        setTotalUnreadCount(totalUnread);
+      }
+    } catch (error) {
+      console.error("Error calculating unread count:", error);
+    }
+  };
 
   // Sync currentPage with URL pathname on mount and route changes
   useEffect(() => {
@@ -70,6 +110,7 @@ export default function DashboardLayout() {
       socketService.connect(userDetails?.data.user.id, () => {
         setSocketConnected(true);
         socketService.subscribeToLastMessage();
+        calculateTotalUnreadCount(); // Calculate unread count on socket connection
       });
     }
     socketService.onOnlineUsersList((data: any) => {
@@ -83,14 +124,23 @@ export default function DashboardLayout() {
         removeOnlineUser(userId);
       }
     });
-    // socketService.onLastMessageUpdate((data: any) => {
-    //   console.log("last_message_update", data);
-    //   setLastMessageDetails(data);
-    // });
+    socketService.onLastMessageUpdate((data: any) => {
+      console.log("last_message_update", data);
+      // Recalculate unread count when last message updates
+      calculateTotalUnreadCount();
+    });
     socketService.onMedia_Error((data: any) => {
       console.log("media_error", data);
     });
-  }, [userDetails]);
+
+    // Listen for new messages to update unread count
+    socketService.onNewMessage((message: any) => {
+      // Only update if the message is not from the current user and chat is not open
+      if (message.senderId !== userDetails?.data.user.id && !chatOpen) {
+        calculateTotalUnreadCount();
+      }
+    });
+  }, [userDetails, chatOpen]);
 
   return (
     <div className="h-screen flex flex-col">
@@ -104,9 +154,16 @@ export default function DashboardLayout() {
       <FloatingChatButton
         onClick={() => {
           setChatOpen(true);
+          // Recalculate unread count when chat is opened
+          setTimeout(() => calculateTotalUnreadCount(), 500);
         }}
+        unreadCount={totalUnreadCount}
       />
-      <ChatDialog open={chatOpen} onClose={() => setChatOpen(false)} />
+      <ChatDialog
+        open={chatOpen}
+        onClose={() => setChatOpen(false)}
+        unreadCount={totalUnreadCount}
+      />
     </div>
   );
 }

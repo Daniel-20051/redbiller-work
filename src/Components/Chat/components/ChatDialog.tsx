@@ -10,6 +10,7 @@ const authApis = new AuthApis();
 interface ChatDialogProps {
   open: boolean;
   onClose: () => void;
+  unreadCount?: number;
 }
 
 const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
