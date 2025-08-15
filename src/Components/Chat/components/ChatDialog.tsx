@@ -26,6 +26,7 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
   const [users, setUsers] = useState<any[]>([]);
   const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
   const [search, setSearch] = useState("");
+  const [chatSearch, setChatSearch] = useState("");
   const [chatId, setChatId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [previousChats, setPreviousChats] = useState<any[]>([]);
@@ -97,6 +98,24 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
         .includes(search.toLowerCase()) ||
         user.email.toLowerCase().includes(search.toLowerCase()))
   );
+
+  // Filter previous chats based on search
+  const filteredPreviousChats = previousChats.filter((chat: any) => {
+    const currentUserId = userDetails?.data?.user?.id;
+    const recipientName =
+      chat.metadata?.recipientName ||
+      (chat.metadata?.senderName && chat.metadata?.senderId !== currentUserId
+        ? chat.metadata.senderName
+        : chat.metadata.senderName) ||
+      "";
+
+    const lastMessage = chat?.lastMessage?.content || "";
+
+    return (
+      recipientName.toLowerCase().includes(chatSearch.toLowerCase()) ||
+      lastMessage.toLowerCase().includes(chatSearch.toLowerCase())
+    );
+  });
 
   function capitalizeName(name?: string | null) {
     if (!name || typeof name !== "string") return "";
@@ -218,6 +237,7 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
   useEffect(() => {
     if (open) {
       handleChats();
+      setChatSearch(""); // Reset chat search when dialog opens
     }
   }, [open]);
 
@@ -368,14 +388,16 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
                   />
                   <input
                     type="text"
-                    placeholder="Search"
+                    placeholder="Search chats..."
+                    value={chatSearch}
+                    onChange={(e) => setChatSearch(e.target.value)}
                     className="w-full h-[35px] text-[16px] rounded-md border-1 border-[#d2d2d2] outline-0 p-2 pl-10"
                   />
                 </div>
                 <div className="w-full flex flex-col gap-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex-1 min-h-0">
-                  {previousChats.length > 0 ? (
+                  {filteredPreviousChats.length > 0 ? (
                     <div className="flex flex-col gap-3">
-                      {previousChats.map((chat: any, index: number) => {
+                      {filteredPreviousChats.map((chat: any, index: number) => {
                         // Get current user ID
                         const currentUserId = userDetails?.data?.user?.id;
 
@@ -426,7 +448,9 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
                     </div>
                   ) : (
                     <div className="text-center text-gray-500 py-4">
-                      No previous chats found.
+                      {chatSearch
+                        ? "No chats found matching your search."
+                        : "No previous chats found."}
                     </div>
                   )}
                 </div>
