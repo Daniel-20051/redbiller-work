@@ -29,8 +29,6 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const [isPreviousChatLoading, setIsPreviousChatLoading] =
     useState<boolean>(false);
   const [messages, setMessages] = useState<any[]>([]);
-  const [isNewChat, setIsNewChat] = useState<boolean>(false);
-  const [newChatId, setNewChatId] = useState<string>("");
   const [isChatTextAreaOpen, setIsChatTextAreaOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [recipientId, setRecipientId] = useState<string>("");
@@ -49,19 +47,38 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
     }
   };
 
-  const handleSubmitDirectMessage = async (recipientId: string) => {
+  // Find existing chat with a user or create new one
+  const findOrCreateChat = async (userId: string): Promise<string | null> => {
+    // First check if we already have a chat with this user
+    const existingChat = previousChats.find((chat) => {
+      const otherUserId =
+        chat.metadata?.recipientId === userDetails?.data?.user?.id
+          ? chat.metadata?.senderId
+          : chat.metadata?.recipientId;
+      return otherUserId === userId;
+    });
+
+    if (existingChat) {
+      // Return existing chat ID - this will load previous messages
+      return existingChat._id;
+    }
+
+    // Create new chat if none exists
     try {
       const response: any = await authApis.submitDirectMessage({
-        recipientId: recipientId,
+        recipientId: userId,
       });
 
       if (response?.data?.data?.chat?._id) {
-        setNewChatId(response.data.data.chat._id);
+        // Refresh the chats list to include the new chat
+        await handleChats();
+        return response.data.data.chat._id;
       }
     } catch (error) {
-      console.log(error);
-      return null;
+      console.error("Error creating new chat:", error);
     }
+
+    return null;
   };
 
   const filteredUsers = users.filter(
@@ -106,6 +123,38 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
       return [];
     }
   };
+
+  // Unified function to open chat with any user
+  const openChatWithUser = async (userId: string, userName: string) => {
+    if (!socketConnected) {
+      return;
+    }
+
+    // Smooth transition: first show the loading state
+    setIsChatTextAreaOpen(true);
+    setName(userName);
+    setRecipientId(userId);
+    setMessages([]);
+    setIsLoading(true);
+
+    try {
+      // Find or create chat
+      const foundChatId = await findOrCreateChat(userId);
+
+      if (foundChatId) {
+        setChatId(foundChatId);
+        // Load existing messages with nice transition
+        const chatMessages = await handleGetMessages(foundChatId);
+        setMessages(chatMessages || []);
+      } else {
+        setIsLoading(false);
+        console.error("Failed to find or create chat");
+      }
+    } catch (error) {
+      console.error("Error opening chat:", error);
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
     handleUsers();
     handleChats();
@@ -126,15 +175,15 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
       onClick={onClose}
     >
       <div
-        className={` flex-col place-self-end relative p-2 bg-white rounded-2xl shadow-2xl w-full md:w-[400px] max-h-[84vh] md:max-h-[80vh] transform transition-all duration-300 ${
+        className={` flex flex-col place-self-end relative p-2 bg-white rounded-2xl shadow-2xl w-full md:w-[400px] max-h-[80vh] md:max-h-[82vh] transform transition-all duration-300 overflow-hidden ${
           open ? "translate-y-0 scale-100" : "translate-y-10 scale-95"
         } `}
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className={` flex-1 h-full  flex-col gap-3 ${
+          className={` flex-1 h-full flex-col gap-3 ${
             isChatTextAreaOpen ? "hidden" : "flex"
-          } overflow-y-auto max-h-[84vh] md:max-h-[80vh] scroll-smooth`}
+          } overflow-hidden`}
         >
           {!socketConnected ? (
             <div className="flex flex-col items-center justify-center h-full gap-4">
@@ -200,7 +249,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                       />
                     </div>
                     <div
-                      className="w-full flex flex-col gap-3 overflow-y-auto"
+                      className="w-full flex flex-col gap-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
                       style={{ maxHeight: "160px", minHeight: "0" }}
                     >
                       {isUserLoading ? (
@@ -223,21 +272,12 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                             }
                             email={user.email}
                             isChat={true}
-                            onClick={async () => {
-                              if (!socketConnected) {
-                                return; // Don't open chat if socket is not connected
-                              }
-                              setIsChatTextAreaOpen(true);
-                              setName(
+                            onClick={() => {
+                              const fullName =
                                 capitalizeName(user.firstName) +
-                                  " " +
-                                  capitalizeName(user.lastName)
-                              );
-                              setRecipientId(String(user.id));
-                              setMessages([]);
-                              setIsNewChat(true);
-                              setChatId(""); // Clear any previous chatId
-                              await handleSubmitDirectMessage(String(user.id));
+                                " " +
+                                capitalizeName(user.lastName);
+                              openChatWithUser(String(user.id), fullName);
                             }}
                           />
                         ))
@@ -252,8 +292,8 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                 </div>
               </div>
               <div
-                className={`flex-1  flex flex-col items-center p-3  gap-3 rounded-lg border-1 border-[#d2d2d2] transition-all duration-300 ${
-                  isOpen ? "h-[43%]" : "h-[40%]"
+                className={`flex flex-col items-center p-3 gap-3 rounded-lg border-1 border-[#d2d2d2] transition-all duration-300 min-h-0 ${
+                  isOpen ? "flex-1" : "flex-[2]"
                 }`}
               >
                 <div className="w-full flex place-self-start gap-2 items-center">
@@ -272,10 +312,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                     className="w-full h-[35px] text-[16px] rounded-md border-1 border-[#d2d2d2] outline-0 p-2 pl-10"
                   />
                 </div>
-                <div
-                  className="w-full flex flex-col gap-3 overflow-y-auto flex-1"
-                  style={{ maxHeight: "230px", minHeight: "0" }}
-                >
+                <div className="w-full flex flex-col gap-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex-1 min-h-0">
                   {previousChats.length > 0 ? (
                     <div className="flex flex-col gap-3">
                       {previousChats.map((chat: any, index: number) => {
@@ -317,20 +354,11 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                             unreadCount={unreadCount}
                             lastMessage={chat?.lastMessage?.content ?? ""}
                             isMetaLoading={isPreviousChatLoading}
-                            onClick={async () => {
-                              if (!socketConnected) {
-                                return; // Don't open chat if socket is not connected
-                              }
-                              setIsChatTextAreaOpen(true);
-                              setChatId(chat._id);
-                              setName(capitalizeName(recipientName));
-                              setRecipientId(recipientId);
-                              setIsNewChat(false);
-                              // Fetch messages for this chat
-                              const chatMessages = await handleGetMessages(
-                                chat._id
+                            onClick={() => {
+                              openChatWithUser(
+                                recipientId,
+                                capitalizeName(recipientName)
                               );
-                              setMessages(chatMessages);
                             }}
                           />
                         );
@@ -347,7 +375,7 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
           )}
         </div>
         <div
-          className={`flex h-auto  max-h-[80vh] flex-col ${
+          className={`flex-1 flex flex-col min-h-0 ${
             isChatTextAreaOpen ? "flex" : "hidden"
           }`}
         >
@@ -356,12 +384,6 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
             name={name}
             messages={messages}
             setMessages={setMessages}
-            isNewChat={isNewChat}
-            newChatId={newChatId}
-            onChatCreated={handleChats}
-            setIsNewChat={setIsNewChat}
-            setNewChatId={setNewChatId}
-            setChatId={setChatId}
             setIsChatTextAreaOpen={setIsChatTextAreaOpen}
             isChatTextAreaOpen={isChatTextAreaOpen}
             isLoading={isLoading}

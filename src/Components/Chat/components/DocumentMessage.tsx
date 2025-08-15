@@ -61,19 +61,73 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({
     }
   };
 
-  const handleDownload = (e: React.MouseEvent) => {
+  const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (fileUrl) {
-      // Create a temporary anchor element to trigger download
+    if (!fileUrl) {
+      alert("No file URL available for download");
+      return;
+    }
+
+    try {
+      // Always fetch the file as blob to force download
+      const response = await fetch(fileUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/octet-stream",
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch file");
+
+      const blob = await response.blob();
+
+      // Create blob URL
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      // Create download link
       const link = document.createElement("a");
-      link.href = fileUrl;
-      link.download = fileName;
-      link.target = "_blank";
+      link.href = blobUrl;
+      link.download = fileName || "download";
+      link.style.display = "none";
+
+      // Add to DOM, click, and remove
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    } else {
-      console.log("No file URL available for download");
+
+      // Clean up the blob URL
+      setTimeout(() => {
+        window.URL.revokeObjectURL(blobUrl);
+      }, 100);
+    } catch (error) {
+      console.error("Download failed:", error);
+
+      // Alternative method: try using fetch with different approach
+      try {
+        const link = document.createElement("a");
+        link.href = fileUrl;
+        link.download = fileName || "download";
+        link.setAttribute("download", fileName || "download");
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (fallbackError) {
+        console.error("Fallback download also failed:", fallbackError);
+        // Last resort: copy URL to clipboard and notify user
+        navigator.clipboard
+          .writeText(fileUrl)
+          .then(() => {
+            alert(
+              "Download failed. File URL copied to clipboard. You can paste it in a new tab to download manually."
+            );
+          })
+          .catch(() => {
+            alert(
+              'Download failed. Please right-click the file and select "Save as..." to download manually.'
+            );
+          });
+      }
     }
   };
 
@@ -85,11 +139,11 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({
 
     if (fileType.startsWith("image/")) {
       return (
-        <div className="flex items-center justify-center h-full">
+        <div className="flex items-center justify-center h-full  max-h-[80vh]">
           <img
             src={fileUrl}
             alt={fileName}
-            className="max-w-full max-h-full object-contain"
+            className="max-w-full max-h-full object-contain rounded-lg"
           />
         </div>
       );
@@ -109,8 +163,12 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({
 
     if (fileType.includes("video")) {
       return (
-        <div className="flex items-center justify-center h-full">
-          <video controls className="max-w-full max-h-full" src={fileUrl}>
+        <div className="flex items-center justify-center h-full max-h-[70vh]">
+          <video
+            controls
+            className="max-w-full max-h-full rounded-lg"
+            src={fileUrl}
+          >
             Your browser does not support the video tag.
           </video>
         </div>
@@ -244,9 +302,9 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({
 
       {/* Document Viewer Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div className="bg-[#313131]/50 w-full h-full flex flex-col">
+        <div className="bg-[#313131] w-[95vw] h-[90vh] max-w-6xl max-h-screen flex flex-col overflow-hidden rounded-xl shadow-2xl border border-white/10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           {/* Modal Header */}
-          <div className="flex items-center justify-between p-4 ">
+          <div className="flex items-center justify-between p-4 flex-shrink-0 border-b border-white/10">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
                 <Icon
@@ -284,7 +342,7 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({
           </div>
 
           {/* Modal Content */}
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-hidden min-h-0">
             {renderDocumentContent()}
           </div>
         </div>

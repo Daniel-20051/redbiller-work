@@ -4,7 +4,7 @@ import ProfileName from "../../ProfileName.tsx";
 import socketService from "../../../services/socketService.ts";
 import { UserDetailsContext } from "../../../context/AuthContext";
 import MessageSkeleton from "../../MessageSkeleton.tsx";
-import { AuthApis } from "../../../api/index.ts";
+// import { AuthApis } from "../../../api/index.ts"; // Removed - chat logic moved to ChatDialog
 import DateSeparator from "./DateSeparator.tsx";
 import CustomAudioPlayer from "./CustomAudioPlayer.tsx";
 import DocumentMessage from "./DocumentMessage.tsx";
@@ -19,17 +19,11 @@ interface Message {
   [key: string]: any;
 }
 
-interface ChatTextAreaProps {
+export interface ChatTextAreaProps {
   chatId: string;
   name: string;
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-  isNewChat: boolean;
-  newChatId: string;
-  onChatCreated?: () => void;
-  setIsNewChat: (isNewChat: boolean) => void;
-  setNewChatId: (newChatId: string) => void;
-  setChatId: (chatId: string) => void;
   setIsChatTextAreaOpen: (isChatTextAreaOpen: boolean) => void;
   isChatTextAreaOpen: boolean;
   isLoading: boolean;
@@ -38,19 +32,13 @@ interface ChatTextAreaProps {
   refetchChats?: () => void;
 }
 
-const authApis = new AuthApis();
+// const authApis = new AuthApis(); // Removed since we're now handling chat creation in ChatDialog
 
 const ChatTextArea = ({
   chatId,
   name,
   messages,
   setMessages,
-  isNewChat,
-  newChatId,
-  onChatCreated,
-  setIsNewChat,
-  setNewChatId,
-  setChatId,
   setIsChatTextAreaOpen,
   isChatTextAreaOpen,
   isLoading,
@@ -90,48 +78,15 @@ const ChatTextArea = ({
     scrollToBottom();
   }, [messages]);
 
-  // Handle new chat state changes
+  // Reset text when opening a new chat
   useEffect(() => {
-    if (isNewChat) {
-      // Show skeleton while creating chat
-      setIsLoading(true);
-      setMessages([]);
-      setText(""); // Clear any existing text input
-      setTypingInfo(null);
-    }
-  }, [isNewChat]);
-
-  // Fetch previous messages for new chatId as soon as it's available
-  useEffect(() => {
-    if (isNewChat && newChatId) {
-      (async () => {
-        setIsLoading(true);
-        try {
-          const prevMessagesResponse = await authApis.getAllMessages(newChatId);
-          if (
-            prevMessagesResponse &&
-            typeof prevMessagesResponse === "object" &&
-            "data" in prevMessagesResponse &&
-            prevMessagesResponse.data &&
-            typeof prevMessagesResponse.data === "object" &&
-            "data" in prevMessagesResponse.data &&
-            prevMessagesResponse.data.data &&
-            typeof prevMessagesResponse.data.data === "object" &&
-            "messages" in prevMessagesResponse.data.data
-          ) {
-            setMessages(prevMessagesResponse.data.data.messages as Message[]);
-          }
-        } catch (err) {
-          // Optionally handle error
-        }
-        setIsLoading(false);
-      })();
-    }
-  }, [isNewChat, newChatId]);
+    setText("");
+    setTypingInfo(null);
+  }, [chatId]);
 
   // Handle socket connection
   useEffect(() => {
-    if (socketConnected && isChatTextAreaOpen && !isNewChat) {
+    if (socketConnected && isChatTextAreaOpen && chatId) {
       socketService.joinChat(chatId);
       setIsLoading(true);
 
@@ -235,14 +190,7 @@ const ChatTextArea = ({
         socketService.offMessageDelivered(handleDelivered);
       };
     }
-  }, [
-    socketConnected,
-    isChatTextAreaOpen,
-    chatId,
-    userId,
-    setMessages,
-    isNewChat,
-  ]);
+  }, [socketConnected, isChatTextAreaOpen, chatId, userId, setMessages]);
 
   const handleLeaveChat = () => {
     socketService.onLeaveChat(chatId);
@@ -251,70 +199,32 @@ const ChatTextArea = ({
   };
 
   const handleSendMessage = async () => {
-    if (text.trim()) {
-      if (isNewChat || !chatId) {
-        // Don't send if newChatId is not available yet
-        if (!newChatId) {
-          console.log("Chat ID not available yet, please wait...");
-          return;
-        }
+    if (text.trim() && chatId && socketConnected) {
+      // Send message via socket
+      socketService.sendMessage(chatId, text);
+      setMessages((prev) => [
+        ...prev,
+        {
+          content: text,
+          createdAt: new Date(),
+          senderId: userId,
+          isSent: true,
+        },
+      ]);
+      socketService.subscribeToLastMessage();
+      setMessageStatus("sending");
+      setText("");
 
-        try {
-          const response: any = await authApis.sendMessage(newChatId, {
-            content: text,
-          });
-
-          if (response.status === 201) {
-            setText("");
-            setMessages((prev) => [
-              ...prev,
-              {
-                content: text,
-                createdAt: new Date(),
-                senderId: userId,
-                isSent: true,
-              },
-            ]);
-
-            // Call the callback to reload chats list after first message is sent
-            if (onChatCreated) {
-              onChatCreated();
-            }
-
-            // Reset new chat state after first message is sent
-            setIsNewChat(false);
-            // Set the chatId to the newChatId so the chat becomes an existing chat
-            setChatId(newChatId);
-            // Clear newChatId since it's no longer needed
-            setNewChatId("");
-            // No need to fetch previous messages or set loading here, just update messages array
-          }
-        } catch (error) {
-          console.log(error);
-          return [];
-        }
-      } else if (socketConnected) {
-        // Send message via socket for existing chats
-        socketService.sendMessage(chatId, text);
-        setMessages((prev) => [
-          ...prev,
-          {
-            content: text,
-            createdAt: new Date(),
-            senderId: userId,
-            isSent: true,
-          },
-        ]);
-        socketService.subscribeToLastMessage();
-        setMessageStatus("sending");
-        setText("");
+      // Refresh chat list to update last message
+      if (refetchChats) {
+        refetchChats();
       }
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
-    if (socketConnected && socketService["socket"] && !isNewChat) {
+    if (socketConnected && socketService["socket"] && chatId) {
       socketService["socket"].emit("typing_start", { chatId, user: userId });
     }
   };
@@ -378,7 +288,7 @@ const ChatTextArea = ({
   const [showEditModal, setShowEditModal] = useState(false);
   const [messageToEdit, setMessageToEdit] = useState<Message | null>(null);
 
-  // Add this style block for animation
+  // Add this style block for animation and scrollbar
   const contextMenuStyle = `
     .custom-context-menu-anim {
       opacity: 0;
@@ -422,6 +332,25 @@ const ChatTextArea = ({
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    /* Custom scrollbar styles */
+    .messages-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .messages-scroll::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+    .messages-scroll::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+    }
+    .messages-scroll::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+    /* Simplified scroll styles */
+    .messages-scroll {
+      background-color: white;
     }
   `;
 
@@ -649,12 +578,13 @@ const ChatTextArea = ({
 
   return (
     <div
-      className={`w-full border-1 border-[#d2d2d2] items-center rounded-lg h-full flex flex-col max-h-[77vh]`}
+      className={`w-full border-1 border-[#d2d2d2] rounded-lg flex flex-col`}
+      style={{ height: "80vh", maxHeight: "600px" }}
     >
       {/* Animation style for context menu */}
       <style>{contextMenuStyle}</style>
       {/* Header */}
-      <div className="h-[60px] w-[97%] border-b-1 border-[#d2d2d2] flex items-center justify-between flex-shrink-0">
+      <div className="h-[60px] w-full border-b-1 border-[#d2d2d2] flex items-center justify-between px-3 bg-white flex-shrink-0 rounded-t-lg">
         <div className="flex items-center gap-2">
           <Icon
             icon="ic:round-arrow-back"
@@ -690,16 +620,16 @@ const ChatTextArea = ({
         </div>
       </div>
 
-      {/* Chat Messages Area */}
-      {isLoading ? (
-        <MessageSkeleton />
-      ) : (
-        <div className="flex-1 w-full overflow-y-auto z-250 bg-white px-3 pt-3 mb-3">
-          <div className="flex flex-col gap-3 min-h-full">
+      {/* Chat Messages Area - Scrollable */}
+      <div className="flex-1 bg-white px-3 pt-3 scroll-smooth messages-scroll overflow-y-auto min-h-0">
+        {isLoading ? (
+          <MessageSkeleton />
+        ) : (
+          <div className="flex flex-col gap-3 pb-6">
             <>
               {messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center min-h-[30vh] text-gray-400 text-base font-medium py-10">
-                  Start a conversation
+                <div className="flex flex-col items-center justify-center min-h-[150px] text-gray-400 text-base font-medium py-8">
+                  {isLoading ? "Loading messages..." : "Start a conversation"}
                 </div>
               ) : (
                 (() => {
@@ -832,11 +762,11 @@ const ChatTextArea = ({
 
             <div ref={messagesEndRef} />
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Input Area */}
-      <div className="w-full bg-[#F2F2F2] gap-5 flex items-center px-3 rounded-b-lg h-[60px] flex-shrink-0 relative">
+      <div className="bg-[#F2F2F2] gap-5 flex items-center px-3 rounded-b-lg h-[60px] border-t-1 border-[#e5e5e5] flex-shrink-0">
         <div className="flex gap-2 items-center">
           <Icon
             icon="mingcute:emoji-fill"
@@ -866,9 +796,7 @@ const ChatTextArea = ({
         </div>
         <input
           className="flex-1 outline-0 resize-none px-2 h-full py-2"
-          placeholder={
-            isNewChat && !newChatId ? "Creating chat..." : "Type a message"
-          }
+          placeholder={!chatId ? "Loading chat..." : "Type a message"}
           value={text}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
