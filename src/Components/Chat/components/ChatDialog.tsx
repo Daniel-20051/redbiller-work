@@ -4,6 +4,7 @@ import ChatCard from "./ChatCard.js";
 import { AuthApis } from "../../../api/index.js";
 import UserSkeleton from "./UserSkeleton.js";
 import ChatTextArea from "./ChatTextArea.js";
+import GroupChatModal from "./GroupChatModal.js";
 import { UserDetailsContext } from "../../../context/AuthContext.js";
 const authApis = new AuthApis();
 
@@ -11,9 +12,13 @@ interface ChatDialogProps {
   open: boolean;
   onClose: () => void;
   unreadCount?: number;
+  showAlertMessage?: (
+    message: string,
+    type: "success" | "error" | "info" | "warning"
+  ) => void;
 }
 
-const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
+const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
   const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);
 
@@ -32,6 +37,8 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
   const [isChatTextAreaOpen, setIsChatTextAreaOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [recipientId, setRecipientId] = useState<string>("");
+  const [isGroupModalOpen, setIsGroupModalOpen] = useState<boolean>(false);
+  const [isCreatingGroup, setIsCreatingGroup] = useState<boolean>(false);
 
   const handleUsers = async () => {
     setIsUserLoading(true);
@@ -155,6 +162,53 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
       setIsLoading(false);
     }
   };
+
+  // Handle group creation
+  const handleCreateGroup = async (selectedUsers: any[], groupName: string) => {
+    setIsCreatingGroup(true);
+
+    try {
+      // Step 1: Create the group chat with participants
+      const participantIds = selectedUsers.map((user) => user.id);
+
+      const groupResponse: any = await authApis.createGroupChat({
+        participantIds: participantIds,
+        groupName: groupName,
+      });
+
+      if (groupResponse?.status === 200 || groupResponse?.status === 201) {
+        const chatId =
+          groupResponse.data?.data?.chat?._id || groupResponse.data?.chatId;
+
+        if (chatId) {
+          // Close modal and show success
+          setIsGroupModalOpen(false);
+          showAlertMessage?.(
+            `Group "${groupName}" created successfully with ${selectedUsers.length} members!`,
+            "success"
+          );
+
+          // Refresh chats to show new group
+          await handleChats();
+        } else {
+          throw new Error("No chat ID returned from group creation");
+        }
+      } else {
+        throw new Error(
+          groupResponse?.data?.message || "Failed to create group"
+        );
+      }
+    } catch (error: any) {
+      console.error("Error creating group:", error);
+      showAlertMessage?.(
+        error?.response?.data?.message ||
+          "Failed to create group. Please try again.",
+        "error"
+      );
+    } finally {
+      setIsCreatingGroup(false);
+    }
+  };
   useEffect(() => {
     handleUsers();
     handleChats();
@@ -249,8 +303,8 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                       />
                     </div>
                     <div
-                      className="w-full flex flex-col gap-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
-                      style={{ maxHeight: "160px", minHeight: "0" }}
+                      className="w-full flex flex-col gap-3 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pb-3"
+                      style={{ maxHeight: "120px", minHeight: "0" }}
                     >
                       {isUserLoading ? (
                         Array.from({ length: 5 }).map((_, i) => (
@@ -284,10 +338,16 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
                       )}
                     </div>
 
-                    <button className="flex cursor-pointer font-medium items-center justify-center gap-2 bg-primary  w-[97%] text-white px-3 py-2 rounded-md ">
-                      <Icon icon="ic:round-plus" width="24" height="24" />
-                      Create Group
-                    </button>
+                    <div className="relative z-20 w-full">
+                      <div className="absolute inset-0 backdrop-blur-lg bg-gradient-to-t from-white/90 to-white/60 rounded-b-lg"></div>
+                      <button
+                        onClick={() => setIsGroupModalOpen(true)}
+                        className="relative z-10 flex cursor-pointer font-medium items-center justify-center gap-2 bg-primary w-full text-white px-3 py-2 rounded-md transition-colors shadow-lg hover:shadow-xl"
+                      >
+                        <Icon icon="ic:round-plus" width="24" height="24" />
+                        Create Group
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -393,6 +453,16 @@ const ChatDialog = ({ open, onClose }: ChatDialogProps) => {
           />
         </div>
       </div>
+
+      {/* Group Chat Modal - Rendered outside the main dialog */}
+      <GroupChatModal
+        isOpen={isGroupModalOpen}
+        onClose={() => setIsGroupModalOpen(false)}
+        users={users}
+        currentUserId={userDetails?.data?.user?.id || ""}
+        onCreateGroup={handleCreateGroup}
+        isLoading={isCreatingGroup}
+      />
     </div>
   );
 };

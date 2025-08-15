@@ -31,9 +31,9 @@ const ChatCard = ({
         <ProfileName name={name} online={online} />
 
         <div className="flex flex-col gap-[2px]">
-          <p className="font-semibold text-[16px]">{name}</p>
+          <p className="font-semibold text-[16px] truncate">{name}</p>
           <p className="text-[15px] text-gray-300 font-medium">{email}</p>
-          <p className="text-[13px] text-gray-500 font-light min-h-[16px]">
+          <p className="text-[13px] text-gray-500 font-light min-h-[16px]  clamp-responsive-1">
             {isMetaLoading ? (
               <span className="inline-flex items-center gap-1 text-gray-400">
                 <Icon icon="svg-spinners:3-dots-scale" width="18" height="18" />

@@ -4,6 +4,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { useCurrentPage } from "../context/SidebarContext";
 import { useEffect, useState } from "react";
 import ChatDialog from "../Components/Chat/components/ChatDialog";
+import AlertCard from "../messageAlert/AlertCardProps";
 import { Icon } from "@iconify/react";
 import socketService from "../services/socketService";
 import { use } from "react";
@@ -42,6 +43,26 @@ export default function DashboardLayout() {
   const { setSocketConnected } = use(UserDetailsContext);
   const location = useLocation();
   const authApis = new AuthApis();
+
+  // Global alert state
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [alertType, setAlertType] = useState<
+    "success" | "error" | "info" | "warning"
+  >("info");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+
+  // Show alert message function
+  const showAlertMessage = (
+    message: string,
+    type: "success" | "error" | "info" | "warning"
+  ) => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 4000);
+  };
 
   const calculateTotalUnreadCount = async () => {
     try {
@@ -163,6 +184,17 @@ export default function DashboardLayout() {
         open={chatOpen}
         onClose={() => setChatOpen(false)}
         unreadCount={totalUnreadCount}
+        showAlertMessage={showAlertMessage}
+      />
+
+      {/* Global Alert Component */}
+      <AlertCard
+        message={alertMessage}
+        type={alertType}
+        isOpen={showAlert}
+        onClose={() => setShowAlert(false)}
+        autoClose={true}
+        autoCloseTime={4000}
       />
     </div>
   );

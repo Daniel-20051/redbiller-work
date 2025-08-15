@@ -37,10 +37,13 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
   if (!isVisible) return null;
 
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      className="fixed inset-0 flex items-center justify-center"
+      style={{ zIndex: 10001 }}
+    >
       {/* Backdrop */}
       <div
-        className={`absolute flex items-center justify-center inset-0 bg-black/50 transition-opacity duration-300 ease-out ${
+        className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ease-out cursor-pointer ${
           show ? "opacity-100" : "opacity-0"
         }`}
         onClick={onClose}
@@ -50,6 +53,7 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
         className={`relative max-w-lg w-full mx-4 transform transition-all duration-300 ease-out ${
           show ? "opacity-100 scale-100" : "opacity-0 scale-95"
         }`}
+        style={{ zIndex: 10002 }}
       >
         {children}
       </div>

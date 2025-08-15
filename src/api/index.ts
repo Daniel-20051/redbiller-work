@@ -491,4 +491,66 @@ export class AuthApis {
   //   }
   // }
   
+  async createGroupChat(data: { participantIds: string[], groupName: string }) {
+    try {
+      const token = localStorage.getItem("authToken")
+      if (!token) {
+        return null
+      }
+      
+      const payload = {
+        participantIds: data.participantIds,
+        metadata: {
+          name: data.groupName,
+          isPublic: true,
+          approvalRequired: false,
+          onlyAdminsCanSend: false
+        }
+      }
+
+      const response = await axios.post(`${BASE_URL}/api/v1/chat/group`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      console.log("response", response);
+      return response
+    } catch (err) {
+      console.log(err)
+      return err
+    }
+  }
+
+  async addParticipantToGroup(chatId: string, participantId: string) {
+    try {
+      const token = localStorage.getItem("authToken")
+      if (!token) {
+        return null
+      }
+      
+      const payload = {
+        participantId: participantId
+      }
+
+      const response = await axios.post(`${BASE_URL}/api/v1/chat/${chatId}/participants`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      console.log("response", response);
+      return response
+    } catch (err) {
+      console.log(err)
+      return err
+    }
+  }
+  
 }

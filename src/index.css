@@ -25,6 +25,14 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+.clamp-responsive-1  {
+  display: -webkit-box;
+  display: box;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 /* Chat message animations */
 @keyframes fadeIn {
