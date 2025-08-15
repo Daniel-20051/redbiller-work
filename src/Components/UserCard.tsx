@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, use } from "react";
 import { Link } from "react-router-dom";
 import { UserDetailsContext } from "../context/AuthContext";
 import ProfileName from "./ProfileName";
+import { removeAuthToken } from "../utils/cookieUtils";
 
 interface Props {
   username: string;
@@ -39,7 +40,7 @@ const UserCard = ({ username, role, fullName }: Props) => {
   // }
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    removeAuthToken();
     localStorage.removeItem("userDetails");
     window.location.href = "/login";
   };

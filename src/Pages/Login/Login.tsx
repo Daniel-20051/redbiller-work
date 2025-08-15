@@ -4,6 +4,7 @@ import Inputfeild from "../../Components/Inputfeild";
 const currentYear = new Date().getFullYear();
 import { AuthApis } from "../../api";
 import AlertCard from "../../messageAlert/AlertCardProps";
+import { setAuthToken } from "../../utils/cookieUtils";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -39,7 +40,7 @@ const Login = () => {
       const response: any = await authApi.loginUser({ email, password });
       const responseData = await response;
       if (responseData?.status === 200 || responseData?.status === 201) {
-        localStorage.setItem("authToken", responseData?.data.data.authToken);
+        setAuthToken(responseData?.data.data.authToken);
         showAlertMessage("Login successful!", "success");
         setTimeout(() => navigate("/home"), 5000);
         setLoginSpiner(false);

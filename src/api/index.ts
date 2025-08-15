@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse, } from 'axios';
+import { getAuthToken } from '../utils/cookieUtils';
 const BASE_URL = "https://r-report-v1.onrender.com";
 
 interface loginPayload {
@@ -27,7 +28,7 @@ export class AuthApis {
 
   async getUserDetails() {
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       if(!token){
         return null
       }
@@ -48,7 +49,7 @@ export class AuthApis {
 
   async getAllUser() {
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       if(!token){
         return null
       }
@@ -69,7 +70,7 @@ export class AuthApis {
 
   async deleteSignleUser(id: number) {
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       if(!token){
         return null
       }
@@ -92,7 +93,7 @@ export class AuthApis {
   }
   async editSignleUser(id: number, data: {firstName: string, lastName: string, middleName: string, email: string, dob: string, occupation: string, gender: string, role: string}) {
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       if(!token){
         return null
       }
@@ -123,7 +124,7 @@ export class AuthApis {
   
   async submitIncidentReport(data: { message: string, subject: string, photo: File , voiceNote: File}){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const formData = new FormData();
       formData.append('message', data.message);
       formData.append('subject', data.subject);
@@ -147,7 +148,7 @@ export class AuthApis {
 
   async getAllIncidentReport(){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const response = await axios.get(`${BASE_URL}/api/v1/report/admin-get/all-report`,
         {
           headers: {
@@ -164,7 +165,7 @@ export class AuthApis {
 
   async submitEvent(data: { title: string, description: string, date: string, time: string }){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const payload = {
         eventTitle: data.title,
         eventDescription: data.description,
@@ -188,7 +189,7 @@ export class AuthApis {
   }
   async getAllEvents(){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const response = await axios.get(`${BASE_URL}/api/v1/admin/get-all/event?limit=100&page=1`,
         {
           headers: {
@@ -204,7 +205,7 @@ export class AuthApis {
   }
   async submitWeeklyReport(data: { actionItems: string, ongoingItems: string, completedItems: string }){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const payload = {
         ActionItem: data.actionItems,
         OngoingTask: data.ongoingItems,
@@ -227,7 +228,7 @@ export class AuthApis {
   }
   async getAllReports(){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const response = await axios.get(`${BASE_URL}/api/v1/user/getAll-weeklyReport`,
         {
           headers: {
@@ -244,7 +245,7 @@ export class AuthApis {
 
   async updateWeeklyReport(userId: number, data: { actionItemsId: string, actionItemsdescription:string, ongoingTaskId: string, ongoingTaskdescription:string, completedTaskId: string, completedTaskdescription:string }){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const payload = {
         ActionItem: [{
           id: data.actionItemsId,
@@ -277,7 +278,7 @@ export class AuthApis {
 
   async updateEditEvent(eventId: number, data: { title: string, description: string, date: string, time: string }){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const payload = {
         "eventTitle": data.title,
         "eventDescription": data.description,
@@ -301,7 +302,7 @@ export class AuthApis {
   }
   async deleteEvent(eventId: number){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       
 
       const response = await axios.delete(`${BASE_URL}/api/v1/admin/delete-event/${eventId}`,
@@ -321,7 +322,7 @@ export class AuthApis {
 
   async getUserAllChats(){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const response = await axios.get(`${BASE_URL}/api/v1/chat/user`,
         {
           headers: {
@@ -337,7 +338,7 @@ export class AuthApis {
   }
   async getAllMessages(chatId: string){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const response = await axios.get(`${BASE_URL}/api/v1/chat/${chatId}/messages`,
         {
           headers: {
@@ -354,7 +355,7 @@ export class AuthApis {
   
   async submitDirectMessage(data: { recipientId: string }){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const payload = {
         "recipientId": data.recipientId
       }
@@ -376,7 +377,7 @@ export class AuthApis {
   }
   async sendMessage(chatId: string, data: { content: string }){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const payload = {
         "content": data.content
       }
@@ -397,7 +398,7 @@ export class AuthApis {
   }
   async subscribeUser(data: { endpoint: string, keys: { p256dh: string, auth: string } }){
     try{
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       const payload = {
         "subscription":{
           "endpoint": data.endpoint,
@@ -426,7 +427,7 @@ export class AuthApis {
   async uploadFile(file: File, chatId: string) {
     try {
       
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       
       
       const formData = new FormData();
@@ -493,7 +494,7 @@ export class AuthApis {
   
   async createGroupChat(data: { participantIds: string[], groupName: string }) {
     try {
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       if (!token) {
         return null
       }
@@ -527,7 +528,7 @@ export class AuthApis {
 
   async addParticipantToGroup(chatId: string, participantId: string) {
     try {
-      const token = localStorage.getItem("authToken")
+      const token = getAuthToken()
       if (!token) {
         return null
       }

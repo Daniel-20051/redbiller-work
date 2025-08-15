@@ -18,6 +18,10 @@ import { UserDetailsContext } from "./context/AuthContext.tsx";
 import IncidentView from "./Pages/IncidentReport/IncidentView.tsx";
 import DashboardLayout from "./Layouts/DashboardLayout.tsx";
 import { AuthApis } from "./api";
+import {
+  isAuthenticated as checkIsAuthenticated,
+  removeAuthToken,
+} from "./utils/cookieUtils";
 // Only import useContext and useEffect once from react
 
 const VAPID_PUBLIC_KEY =
@@ -85,10 +89,8 @@ const App = () => {
   const INACTIVE_TIMEOUT = 10 * 60 * 1000; // 10 minutes in milliseconds
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      setIsAuthenticated(true);
-    }
+    const authenticated = checkIsAuthenticated();
+    setIsAuthenticated(authenticated);
   }, []);
 
   useEffect(() => {
@@ -98,7 +100,7 @@ const App = () => {
   }, []);
 
   const logoutDueToInactivity = useCallback(() => {
-    localStorage.removeItem("authToken");
+    removeAuthToken();
     localStorage.removeItem("lastActiveTime");
     setIsAuthenticated(false);
     alert("You have been logged out due to inactivity");
