@@ -41,6 +41,7 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
   const [isGroupModalOpen, setIsGroupModalOpen] = useState<boolean>(false);
   const [isCreatingGroup, setIsCreatingGroup] = useState<boolean>(false);
   const [isGroup, setIsGroup] = useState<boolean>(false);
+  const [groupParticipantIds, setGroupParticipantIds] = useState<string[]>([]);
   const userIdToName = useMemo(() => {
     const mapping: Record<string, string> = {};
     for (const user of users) {
@@ -186,6 +187,17 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
 
       if (foundChatId) {
         setChatId(foundChatId);
+        // If this is a group chat, compute participants list for header
+        const chatObj = previousChats.find((c: any) => c._id === foundChatId);
+        const isGroupChat = chatObj?.chatType === "group";
+        if (isGroupChat) {
+          setIsGroup(true);
+          const currentUserId = userDetails?.data?.user?.id;
+          const ids: string[] = (chatObj?.participants || [])
+            .map((p: any) => String(p.userId))
+            .filter((id: string) => id !== String(currentUserId));
+          setGroupParticipantIds(ids);
+        }
         // Load existing messages with nice transition
         const chatMessages = await handleGetMessages(foundChatId);
         setMessages(chatMessages || []);
@@ -509,6 +521,7 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
             refetchChats={handleChats}
             isGroup={isGroup}
             userIdToName={userIdToName}
+            participantIds={groupParticipantIds}
           />
         </div>
       </div>

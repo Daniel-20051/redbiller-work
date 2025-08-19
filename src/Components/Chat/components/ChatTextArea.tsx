@@ -32,6 +32,7 @@ export interface ChatTextAreaProps {
   refetchChats?: () => void;
   isGroup: boolean;
   userIdToName?: Record<string, string>;
+  participantIds?: string[];
 }
 
 // const authApis = new AuthApis(); // Removed since we're now handling chat creation in ChatDialog
@@ -49,6 +50,7 @@ const ChatTextArea = ({
   refetchChats,
   isGroup,
   userIdToName,
+  participantIds = [],
 }: ChatTextAreaProps) => {
   const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);
@@ -615,11 +617,17 @@ const ChatTextArea = ({
           />
           <div>
             <p className="text-[15px] font-[500] ">{name}</p>
-            {!isGroup && isUserOnline(recipientId) && typingInfo ? (
+            {isGroup ? (
+              <p className="text-[10px] font-[400] text-[#808080] truncate max-w-[210px]">
+                {`${
+                  participantIds.filter((id) => isUserOnline(id)).length
+                } online`}
+              </p>
+            ) : isUserOnline(recipientId) && typingInfo ? (
               <p className="text-[10px] font-[400] text-[#808080] ">
                 typing...
               </p>
-            ) : !isGroup && isUserOnline(recipientId) ? (
+            ) : isUserOnline(recipientId) ? (
               <p className="text-[10px] font-[400] text-[#808080] ">online</p>
             ) : (
               <p className="text-[10px] font-[400] text-[#808080] ">offline</p>
@@ -679,97 +687,98 @@ const ChatTextArea = ({
                               : "justify-start"
                           } animate-fadeIn`}
                         >
-                          <div
-                            className={`max-w-[70%] md:max-w-[60%]  lg:max-w-[50%] px-2 py-1 rounded-2xl shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.02] ${
-                              message.senderId === userId
-                                ? "bg-[#f2f2f2] text-gray-800 rounded-br-md"
-                                : "bg-primary text-white rounded-bl-md"
-                            }`}
-                            onContextMenu={(e) => {
-                              if (message.senderId !== userId) return; // Only allow for own messages
-                              e.preventDefault();
-                              setContextMenu({
-                                visible: true,
-                                x: e.clientX,
-                                y: e.clientY,
-                                message,
-                              });
-                            }}
-                          >
-                            {/* Sender label for group chats */}
+                          <div className="flex flex-col max-w-[70%] md:max-w-[60%] lg:max-w-[50%]">
                             {isGroup && message.senderId !== userId && (
-                              <p className="text-xs font-semibold mb-1 opacity-85">
+                              <p className="text-xs font-semibold mb-1 text-gray-600">
                                 {message.senderName ||
                                   userIdToName?.[String(message.senderId)] ||
                                   "Member"}
                               </p>
                             )}
-                            {message.messageType === "voice" ? (
-                              <CustomAudioPlayer
-                                src={message.fileData?.filename}
-                                isOwnMessage={message.senderId === userId}
-                                duration={
-                                  message.fileData?.duration ||
-                                  extractDurationFromContent(message.content)
-                                }
-                              />
-                            ) : message.messageType === "file" ||
-                              message.messageType === "photo" ? (
-                              <DocumentMessage
-                                message={message}
-                                isOwnMessage={message.senderId === userId}
-                                isUploading={
-                                  isUploading &&
-                                  message._id ===
-                                    messages[messages.length - 1]?._id
-                                }
-                                uploadProgress={uploadProgress}
-                              />
-                            ) : (
-                              <p className="text-sm leading-relaxed break-words">
-                                {message.content}
-                              </p>
-                            )}
-                            <p
-                              className={`flex justify-between items-center gap-1 text-[10.5px] mt-1 ${
+                            <div
+                              className={`px-2 py-1 rounded-2xl shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.02] ${
                                 message.senderId === userId
-                                  ? "text-gray-500 text-right"
-                                  : "text-gray-200 text-left"
+                                  ? "bg-[#f2f2f2] text-gray-800 rounded-br-md"
+                                  : "bg-primary text-white rounded-bl-md"
                               }`}
+                              onContextMenu={(e) => {
+                                if (message.senderId !== userId) return; // Only allow for own messages
+                                e.preventDefault();
+                                setContextMenu({
+                                  visible: true,
+                                  x: e.clientX,
+                                  y: e.clientY,
+                                  message,
+                                });
+                              }}
                             >
-                              {formatTime(new Date(message.createdAt))}
-                              {message.isEdited && (
-                                <span
-                                  style={{
-                                    fontSize: 10,
-                                    marginLeft: 4,
-                                    color:
-                                      message.senderId === userId
-                                        ? "#888"
-                                        : "#f2f2f2",
-                                  }}
-                                >
-                                  edited
-                                </span>
+                              {message.messageType === "voice" ? (
+                                <CustomAudioPlayer
+                                  src={message.fileData?.filename}
+                                  isOwnMessage={message.senderId === userId}
+                                  duration={
+                                    message.fileData?.duration ||
+                                    extractDurationFromContent(message.content)
+                                  }
+                                />
+                              ) : message.messageType === "file" ||
+                                message.messageType === "photo" ? (
+                                <DocumentMessage
+                                  message={message}
+                                  isOwnMessage={message.senderId === userId}
+                                  isUploading={
+                                    isUploading &&
+                                    message._id ===
+                                      messages[messages.length - 1]?._id
+                                  }
+                                  uploadProgress={uploadProgress}
+                                />
+                              ) : (
+                                <p className="text-sm leading-relaxed break-words">
+                                  {message.content}
+                                </p>
                               )}
-                              {message.senderId === userId &&
-                                index === lastUserMessageIndex &&
-                                (messageStatus === "sending" ? (
-                                  <Icon
-                                    icon="svg-spinners:clock"
-                                    width="15"
-                                    height="15"
-                                    style={{ color: "#000" }}
-                                  />
-                                ) : messageStatus === "delivered" ? (
-                                  <Icon
-                                    icon="material-symbols:check-rounded"
-                                    width="15"
-                                    height="15"
-                                    style={{ color: "#000" }}
-                                  />
-                                ) : null)}
-                            </p>
+                              <p
+                                className={`flex justify-between items-center gap-1 text-[10.5px] mt-1 ${
+                                  message.senderId === userId
+                                    ? "text-gray-500 text-right"
+                                    : "text-gray-200 text-left"
+                                }`}
+                              >
+                                {formatTime(new Date(message.createdAt))}
+                                {message.isEdited && (
+                                  <span
+                                    style={{
+                                      fontSize: 10,
+                                      marginLeft: 4,
+                                      color:
+                                        message.senderId === userId
+                                          ? "#888"
+                                          : "#f2f2f2",
+                                    }}
+                                  >
+                                    edited
+                                  </span>
+                                )}
+                                {message.senderId === userId &&
+                                  index === lastUserMessageIndex &&
+                                  (messageStatus === "sending" ? (
+                                    <Icon
+                                      icon="svg-spinners:clock"
+                                      width="15"
+                                      height="15"
+                                      style={{ color: "#000" }}
+                                    />
+                                  ) : messageStatus === "delivered" ? (
+                                    <Icon
+                                      icon="material-symbols:check-rounded"
+                                      width="15"
+                                      height="15"
+                                      style={{ color: "#000" }}
+                                    />
+                                  ) : null)}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </React.Fragment>

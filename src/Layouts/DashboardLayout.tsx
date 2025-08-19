@@ -135,10 +135,10 @@ export default function DashboardLayout() {
       });
     }
     socketService.onOnlineUsersList((data: any) => {
-      setOnlineUsers(data.map((user: any) => user.userId));
+      setOnlineUsers(data.map((user: any) => String(user.userId)));
     });
     socketService.onUserGlobalStatus((data: any) => {
-      const userId = data.userId;
+      const userId = String(data.userId);
       if (data.status === "online") {
         addOnlineUser(userId);
       } else if (data.status === "offline") {
