@@ -407,6 +407,14 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
               >
                 <div className="w-full flex place-self-start gap-2 items-center">
                   <img src="./assets/redlogodashboard.svg" alt="" />
+                  {isPreviousChatLoading && (
+                    <Icon
+                      icon="svg-spinners:3-dots-scale"
+                      width="18"
+                      height="18"
+                      className="text-primary"
+                    />
+                  )}
                 </div>
                 <div className="relative w-[97%]">
                   <Icon
@@ -471,7 +479,7 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
                             online={isUserOnline(recipientId)}
                             unreadCount={unreadCount}
                             lastMessage={chat?.lastMessage?.content ?? ""}
-                            isMetaLoading={isPreviousChatLoading}
+                            isMetaLoading={false}
                             onClick={() => {
                               if (groupID) {
                                 setIsGroup(true);
