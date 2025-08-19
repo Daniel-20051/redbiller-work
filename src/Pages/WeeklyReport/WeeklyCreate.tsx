@@ -3,14 +3,29 @@ import AlertCard from "../../messageAlert/AlertCardProps";
 import { Icon } from "@iconify/react";
 import { SuccessCard } from "../../messageAlert/SuccessCard";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AuthApis } from "../../api";
+import {
+  loadDraftFromStorage,
+  clearDraftFromStorage,
+  parseItemsFromStorage,
+} from "../../utils/draftStorage";
 const authApis = new AuthApis();
 
 const WeeklyCreate = () => {
   const [actionItems, setActionItems] = useState("");
   const [ongoingItems, setOngoingItems] = useState("");
   const [completedItems, setCompletedItems] = useState("");
+  // Draft data state for initial loading
+  const [draftActionItems, setDraftActionItems] = useState<
+    string[] | undefined
+  >(undefined);
+  const [draftOngoingItems, setDraftOngoingItems] = useState<
+    string[] | undefined
+  >(undefined);
+  const [draftCompletedItems, setDraftCompletedItems] = useState<
+    string[] | undefined
+  >(undefined);
   //loaders
   const [loading, setLoading] = useState(false);
   //alerts
@@ -42,6 +57,34 @@ const WeeklyCreate = () => {
     setShowSuccess(true);
   };
 
+  // Load draft data on component mount
+  useEffect(() => {
+    const draftData = loadDraftFromStorage();
+    console.log("Draft data loaded:", draftData);
+    if (draftData.timestamp > 0) {
+      // Parse stored data into individual items (split by newlines)
+      const actionItems = parseItemsFromStorage(draftData.actionItems);
+      const ongoingItems = parseItemsFromStorage(draftData.ongoingItems);
+      const completedItems = parseItemsFromStorage(draftData.completedItems);
+
+      console.log("Parsed draft items:", {
+        actionItems,
+        ongoingItems,
+        completedItems,
+      });
+
+      setDraftActionItems(actionItems);
+      setDraftOngoingItems(ongoingItems);
+      setDraftCompletedItems(completedItems);
+    } else {
+      console.log("No draft data found, setting empty arrays");
+      // No draft data, set to empty arrays
+      setDraftActionItems([]);
+      setDraftOngoingItems([]);
+      setDraftCompletedItems([]);
+    }
+  }, []);
+
   const handleSubmit = async () => {
     if (loading) {
       return;
@@ -70,9 +113,20 @@ const WeeklyCreate = () => {
       if (response.data.status === "successful" || response.status === 201) {
         setLoading(false);
         showSuccessMessage("Your report has been Recorded");
+        console.log("Report submitted successfully, clearing localStorage");
+        // Clear localStorage draft data on successful submission
+        clearDraftFromStorage();
+        console.log(
+          "localStorage cleared, checking:",
+          localStorage.getItem("weekly_report_draft")
+        );
         setActionItems("");
         setOngoingItems("");
         setCompletedItems("");
+        // Also reset draft state
+        setDraftActionItems([]);
+        setDraftOngoingItems([]);
+        setDraftCompletedItems([]);
         setResetCards(true);
         setTimeout(() => setResetCards(false), 100);
       }
@@ -126,18 +180,24 @@ const WeeklyCreate = () => {
             color="bg-primary"
             onValueChange={setActionItems}
             reset={resetCards}
+            draftItems={draftActionItems}
+            storageKey="actionItems"
           />
           <ReportCard
             name="Ongoing"
             color="bg-[#B0AB51]"
             onValueChange={setOngoingItems}
             reset={resetCards}
+            draftItems={draftOngoingItems}
+            storageKey="ongoingItems"
           />
           <ReportCard
             name="Completed"
             color="bg-[#931D4E]"
             onValueChange={setCompletedItems}
             reset={resetCards}
+            draftItems={draftCompletedItems}
+            storageKey="completedItems"
           />
         </div>
         <button

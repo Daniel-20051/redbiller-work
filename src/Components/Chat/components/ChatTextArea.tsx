@@ -30,6 +30,8 @@ export interface ChatTextAreaProps {
   setIsLoading: (isLoading: boolean) => void;
   recipientId: string;
   refetchChats?: () => void;
+  isGroup: boolean;
+  userIdToName?: Record<string, string>;
 }
 
 // const authApis = new AuthApis(); // Removed since we're now handling chat creation in ChatDialog
@@ -45,6 +47,8 @@ const ChatTextArea = ({
   setIsLoading,
   recipientId,
   refetchChats,
+  isGroup,
+  userIdToName,
 }: ChatTextAreaProps) => {
   const { userDetails, socketConnected, isUserOnline } =
     use(UserDetailsContext);
@@ -105,6 +109,10 @@ const ChatTextArea = ({
               createdAt: message.createdAt,
               senderId: message.senderId,
               isSent: false,
+              senderName:
+                isGroup && userIdToName
+                  ? userIdToName[String(message.senderId)] || undefined
+                  : undefined,
             },
           ]);
           // Set loading to false after receiving first message
@@ -601,14 +609,17 @@ const ChatTextArea = ({
               }
             }}
           />
-          <ProfileName name={name} online={isUserOnline(recipientId)} />
+          <ProfileName
+            name={name}
+            online={!isGroup && isUserOnline(recipientId)}
+          />
           <div>
             <p className="text-[15px] font-[500] ">{name}</p>
-            {isUserOnline(recipientId) && typingInfo ? (
+            {!isGroup && isUserOnline(recipientId) && typingInfo ? (
               <p className="text-[10px] font-[400] text-[#808080] ">
                 typing...
               </p>
-            ) : isUserOnline(recipientId) ? (
+            ) : !isGroup && isUserOnline(recipientId) ? (
               <p className="text-[10px] font-[400] text-[#808080] ">online</p>
             ) : (
               <p className="text-[10px] font-[400] text-[#808080] ">offline</p>
@@ -685,6 +696,14 @@ const ChatTextArea = ({
                               });
                             }}
                           >
+                            {/* Sender label for group chats */}
+                            {isGroup && message.senderId !== userId && (
+                              <p className="text-xs font-semibold mb-1 opacity-85">
+                                {message.senderName ||
+                                  userIdToName?.[String(message.senderId)] ||
+                                  "Member"}
+                              </p>
+                            )}
                             {message.messageType === "voice" ? (
                               <CustomAudioPlayer
                                 src={message.fileData?.filename}

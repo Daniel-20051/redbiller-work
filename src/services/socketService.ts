@@ -60,7 +60,6 @@ connect(userId: string, onConnect?: () => void, serverUrl: string = "https://r-r
       console.error('Socket not connected');
       return;
     }
-
     console.log(`📨 Joining chat room: ${chatId}`);
     this.socket.emit('join_chat', { chatId });
 

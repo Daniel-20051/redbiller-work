@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useEffect, useState, use } from "react";
+import { useEffect, useMemo, useState, use } from "react";
 import ChatCard from "./ChatCard.js";
 import { AuthApis } from "../../../api/index.js";
 import UserSkeleton from "./UserSkeleton.js";
@@ -40,7 +40,17 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
   const [recipientId, setRecipientId] = useState<string>("");
   const [isGroupModalOpen, setIsGroupModalOpen] = useState<boolean>(false);
   const [isCreatingGroup, setIsCreatingGroup] = useState<boolean>(false);
-
+  const [isGroup, setIsGroup] = useState<boolean>(false);
+  const userIdToName = useMemo(() => {
+    const mapping: Record<string, string> = {};
+    for (const user of users) {
+      const first = (user.firstName || "").toString();
+      const last = (user.lastName || "").toString();
+      const full = `${capitalizeName(first)} ${capitalizeName(last)}`.trim();
+      mapping[String(user.id)] = full || String(user.email || "");
+    }
+    return mapping;
+  }, [users]);
   const handleUsers = async () => {
     setIsUserLoading(true);
     try {
@@ -57,8 +67,14 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
 
   // Find existing chat with a user or create new one
   const findOrCreateChat = async (userId: string): Promise<string | null> => {
-    // First check if we already have a chat with this user
-    const existingChat = previousChats.find((chat) => {
+    // If the provided ID matches an existing chat (e.g., a group chat ID), return it directly
+    const existingChatById = previousChats.find((chat) => chat._id === userId);
+    if (existingChatById) {
+      return existingChatById._id;
+    }
+
+    // Otherwise, check if we already have a direct chat with this user
+    const existingDirectChat = previousChats.find((chat) => {
       const otherUserId =
         chat.metadata?.recipientId === userDetails?.data?.user?.id
           ? chat.metadata?.senderId
@@ -66,12 +82,12 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
       return otherUserId === userId;
     });
 
-    if (existingChat) {
+    if (existingDirectChat) {
       // Return existing chat ID - this will load previous messages
-      return existingChat._id;
+      return existingDirectChat._id;
     }
 
-    // Create new chat if none exists
+    // Create new direct chat if none exists
     try {
       const response: any = await authApis.submitDirectMessage({
         recipientId: userId,
@@ -129,6 +145,7 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
     setIsPreviousChatLoading(true);
     try {
       const response: any = await authApis.getUserAllChats();
+      console.log(response.data.data.chats);
       setPreviousChats(response.data.data.chats);
     } catch (error) {
     } finally {
@@ -427,20 +444,36 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
                             ? chat.metadata.senderId
                             : chat.metadata?.recipientId);
 
+                        const groupID =
+                          chat.chatType === "group" ? chat._id : null;
+
                         return (
                           <ChatCard
                             key={index}
                             isChat={false}
-                            name={capitalizeName(recipientName)}
+                            name={
+                              chat.chatType === "group"
+                                ? chat.metadata?.name
+                                : capitalizeName(recipientName)
+                            }
                             online={isUserOnline(recipientId)}
                             unreadCount={unreadCount}
                             lastMessage={chat?.lastMessage?.content ?? ""}
                             isMetaLoading={isPreviousChatLoading}
                             onClick={() => {
-                              openChatWithUser(
-                                recipientId,
-                                capitalizeName(recipientName)
-                              );
+                              if (groupID) {
+                                setIsGroup(true);
+                                openChatWithUser(
+                                  groupID,
+                                  capitalizeName(chat.metadata?.name)
+                                );
+                              } else {
+                                setIsGroup(false);
+                                openChatWithUser(
+                                  recipientId,
+                                  capitalizeName(recipientName)
+                                );
+                              }
                             }}
                           />
                         );
@@ -474,6 +507,8 @@ const ChatDialog = ({ open, onClose, showAlertMessage }: ChatDialogProps) => {
             setIsLoading={setIsLoading}
             recipientId={recipientId}
             refetchChats={handleChats}
+            isGroup={isGroup}
+            userIdToName={userIdToName}
           />
         </div>
       </div>

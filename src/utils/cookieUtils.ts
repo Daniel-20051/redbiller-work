@@ -4,7 +4,7 @@
  */
 
 const AUTH_TOKEN_KEY = 'authToken';
-const TOKEN_EXPIRY_HOURS = 5;
+const TOKEN_EXPIRY_HOURS = 2;
 
 /**
  * Set a cookie with the auth token that expires in 5 hours

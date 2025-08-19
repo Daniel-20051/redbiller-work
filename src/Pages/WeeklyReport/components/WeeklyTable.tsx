@@ -196,7 +196,11 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
                         row.ActionItems[0].description
                           .split("\n")
                           .map((desc: string, i: number) =>
-                            desc.trim() ? <p key={i}>{desc.trim()}</p> : null
+                            desc.trim() ? (
+                              <li key={i}>
+                                <span>{desc.trim()}</span>
+                              </li>
+                            ) : null
                           )}
                     </ul>
                   </td>
@@ -208,22 +212,30 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
                         row.OngoingTasks[0].description
                           .split("\n")
                           .map((desc: string, i: number) =>
-                            desc.trim() ? <p key={i}>{desc.trim()}</p> : null
+                            desc.trim() ? (
+                              <li key={i}>
+                                <span>{desc.trim()}</span>
+                              </li>
+                            ) : null
                           )}
                     </ul>
                   </td>
                   <td className="md:px-4 md:py-4 text-[12px] md:text-[15px] border-1 border-[#F2F2F2] relative">
-                    <ul className=" flex gap-2 list-disc pl-5">
-                      <p>
+                    <div className="flex gap-2">
+                      <ul className="list-disc pl-5">
                         {row.CompletedTasks &&
                           Array.isArray(row.CompletedTasks) &&
                           row.CompletedTasks.length > 0 &&
                           row.CompletedTasks[0].description
                             .split("\n")
                             .map((desc: string, i: number) =>
-                              desc.trim() ? <p key={i}>{desc.trim()}</p> : null
-                            )}{" "}
-                      </p>
+                              desc.trim() ? (
+                                <li key={i}>
+                                  <span>{desc.trim()}</span>
+                                </li>
+                              ) : null
+                            )}
+                      </ul>
                       <button
                         className="md:block hidden cursor-pointer place-items-end "
                         onClick={() => {
@@ -246,7 +258,7 @@ const WeeklyTable: React.FC<Props> = ({ selectedUser, searchTerm }) => {
                           alt=""
                         />
                       </button>
-                    </ul>
+                    </div>
                   </td>
                 </tr>
               ))

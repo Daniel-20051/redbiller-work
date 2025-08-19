@@ -145,11 +145,11 @@ export default function DashboardLayout() {
         removeOnlineUser(userId);
       }
     });
-    socketService.onLastMessageUpdate((data: any) => {
-      console.log("last_message_update", data);
-      // Recalculate unread count when last message updates
-      calculateTotalUnreadCount();
-    });
+    // socketService.onLastMessageUpdate((data: any) => {
+    //   console.log("last_message_update", data);
+    //   // Recalculate unread count when last message updates
+    //   calculateTotalUnreadCount();
+    // });
     socketService.onMedia_Error((data: any) => {
       console.log("media_error", data);
     });

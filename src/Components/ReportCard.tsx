@@ -1,27 +1,66 @@
 import Textbox from "./Textbox";
 import { useState, useEffect } from "react";
-interface Props {
+import { saveDraftToStorage } from "../utils/draftStorage";
+export interface ReportCardProps {
   name: string;
   color: string;
   onValueChange?: (value: string) => void;
   reset?: boolean;
+  draftItems?: string[] | undefined;
+  storageKey?: string;
 }
 
-const ReportCard = ({ name, color, onValueChange, reset }: Props) => {
+const ReportCard = ({
+  name,
+  color,
+  onValueChange,
+  reset,
+  draftItems,
+  storageKey,
+}: ReportCardProps) => {
   const [textboxes, setTextboxes] = useState<{ id: number; value: string }[]>(
     []
   );
   const [number, setNumber] = useState(1);
+  const [draftLoaded, setDraftLoaded] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+
+  // Initialize textboxes with draft data if available
+  useEffect(() => {
+    // Only proceed if draftItems is defined (not undefined)
+    if (draftItems !== undefined && !draftLoaded) {
+      console.log(`${name} - Loading draft items:`, draftItems);
+      if (draftItems.length > 0) {
+        const initialTextboxes = draftItems
+          .filter((item) => item.trim() !== "") // Filter out empty strings
+          .map((item, index) => ({
+            id: Date.now() + index,
+            value: item,
+          }));
+        console.log(`${name} - Created textboxes:`, initialTextboxes);
+        if (initialTextboxes.length > 0) {
+          setTextboxes(initialTextboxes);
+          setNumber(initialTextboxes.length + 1);
+        }
+      }
+      setDraftLoaded(true); // Mark as loaded whether there was data or not
+    }
+  }, [draftItems, draftLoaded, name]);
 
   useEffect(() => {
-    if (reset) {
+    if (reset && draftLoaded) {
+      console.log(`${name} - Resetting component`);
+      setIsResetting(true);
       setTextboxes([]);
       setNumber(1);
+      setDraftLoaded(false); // Reset draft loaded flag
       if (onValueChange) {
         onValueChange("");
       }
+      // Reset the resetting flag after a short delay
+      setTimeout(() => setIsResetting(false), 200);
     }
-  }, [reset, onValueChange]);
+  }, [reset, onValueChange, draftLoaded, name]);
 
   const handleAddTextbox = () => {
     if (number <= 20) {
@@ -48,7 +87,14 @@ const ReportCard = ({ name, color, onValueChange, reset }: Props) => {
     if (onValueChange) {
       onValueChange(combined);
     }
-  }, [textboxes, onValueChange]);
+
+    // Save to localStorage as draft (only after draft is loaded and not during reset)
+    if (storageKey && draftLoaded && !isResetting) {
+      console.log(`${name} - Saving to localStorage:`, combined);
+      const draftData = { [storageKey]: combined };
+      saveDraftToStorage(draftData);
+    }
+  }, [textboxes, onValueChange, storageKey, draftLoaded, isResetting, name]);
 
   return (
     <div className="w-[85%] md:w-[26.5%] justify-self-center mb-8 md:mb-0 ">
